@@ -1,2 +1,3 @@
-class A_Star():
+class A_Star:
     pass
+    
