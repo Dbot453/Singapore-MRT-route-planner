@@ -1,5 +1,13 @@
+import math
+
+# add place holder for stations that are not in the list blue line, red line, yellow line, brown line
+# add times to placeholder station to be 0
+# add interchange stations so that they have the correct station codes
+
+
 #blue line
-DT_stations = ["Bukit Panjang","Cashew", "Hillview", "Beauty World", "King Albert Park", "Sixth Avenue", 
+#add a place holder station at dt4
+DT_stations = ["Bukit Panjang","Cashew", "Hillview" , "Beauty World", "King Albert Park", "Sixth Avenue", 
  "Tan Kah Kee", "Botanic Gardens", "Stevens", "Newton", "Little India", "Rochor", "Bugis", 
  "Promenade", "Bayfront", "Downtown", "Telok Ayer", "Chinatown", "Fort Canning", "Bencoolen", 
  "Jalan Besar", "Bendemeer", "Geylang Bahru", "Mattar", "MacPherson", "Ubi", "Kaki Bukit",
@@ -23,25 +31,31 @@ EW_stations = ["Tuas Link","Tuas West Road", "Tuas Crescent", "Gul Circle", "Joo
 
 EW_stations= [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 3, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2, 3, 2]
 
-#red line
-NS_stations= ["Jurong East","Bukit Batok", "Bukit Gombak", "Choa Chu Kang", "Yew Tee", "Kranji", 
+#red line 
+#place holder at ns4✓ and ns6 ✓
+#times added ✓
+NS_stations= ["Jurong East","Bukit Batok", "Bukit Gombak", "PLACEHOLDER FOR Brickland" , "Choa Chu Kang", "PLACE HOLDER FOR Sungei Kadut", "Yew Tee", "Kranji", 
 "Marsiling", "Woodlands", "Admiralty", "Sembawang", "Canberra" ,"Yishun", "Khatib", "Yio Chu Kang", "Ang Mo Kio", 
 "Bishan", "Braddell", "Toa Payoh", "Novena", "Newton", "Orchard", "Somerset", "Dhoby Ghaut", 
 "City Hall", "Raffles Place", "Marina Bay", "Marina South Pier"]
 
-NS_times = [3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 4, 2, 3, 2]
+NS_times = [3, 3, 0, 0, 3, 0, 0, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 4, 2, 3, 2]
 
 #yellow line
+#add a place holder station at cc18 bukit brown and add times
 C_stations = ["Dhoby Ghaut","Bras Basah", "Esplanade", "Promenade", "Nicoll Highway", "Stadium", 
 "Mountbatten", "Dakota", "Paya Lebar", "MacPherson", "Tai Seng", "Bartley", "Serangoon", 
-"Lorong Chuan", "Bishan", "Marymount", "Caldecott", "Botanic Gardens", "Farrer Road", "Holland Village", 
+"Lorong Chuan", "Bishan", "Marymount", "Caldecott", "PLACEHOLDER FOR Bukit Brown", "Botanic Gardens", "Farrer Road", "Holland Village", 
 "Buona Vista", "One-north", "Kent Ridge", "Haw Par Villa", "Pasir Pajang", "Labrador Park", 
 "Telok Blangah", "Harbour Front"]
 
-C_times= [3,3,3,2,2,2,2,2,3,3,3,3,3,3,2,2,4,3,2,2,2,2,2,2,2,2,2]
+C_times= [3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 4, 0, 0, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
 #brown line
-TE_stations = ["Woodlands North","Woodlands","Woodlands South","Springleaf","Lentor","Mayflower","Bright Hill","Upper Thomson","Caldecott","Stevens","Napier","Orchard Boulevard","Orchard","Great World","Havelock","Outram Park","Maxwell","Shenton Way","Marina Bay","Gardens by the Bay"]
+#add a place holder at te10 and te21
+TE_stations = ["Woodlands North","Woodlands","Woodlands South","Springleaf","Lentor",
+"Mayflower","Bright Hill","Upper Thomson","Caldecott","Stevens","Napier","Orchard Boulevard",
+"Orchard","Great World","Havelock","Outram Park","Maxwell","Shenton Way","Marina Bay","Gardens by the Bay"]
 
 TE_times = [3,2,2,2,2,2,2,2,3,2,2,2,2,2,4,2,3,2,4]
 
@@ -67,9 +81,9 @@ def create_station_code():
     for i in range(len(TE_stations)):
         station_code[TE_stations[i]] = "TE" + str(i+1)
 
-    for station in interchange_Stations.keys()
-        x = interchange_Stations.keys()
-        print(interchange_Stations[x[i]])
+
+    for station in station_code.keys():
+        print(str(station) + " : " + station_code[station])
         # print(station_code[interchange_Stations[i]])
         
 
