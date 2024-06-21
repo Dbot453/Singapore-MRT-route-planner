@@ -56,44 +56,74 @@ class map:
         pass
 
     def __repr__():
-        print(map.create_station_and_code())
+        print(map.create_graph())
 
-    def create_station_and_line_code():
+    def create_graph():
+        station_code = map.station_codes()
+        stations = map.add_line(station_code)
+        return stations
 
+    def station_codes():
+        #create codes for each station and add the line name
         #dictionary so repeat station names due to insections
         station_code = {}
 
         # creates station codes 
         for i in range(len(DT_stations)):
-            station_code[DT_stations[i]] = ["DTL",f"DT{str(i+1)}"]
+            station_code[DT_stations[i]] = [[f"DT{str(i+1)}"]]
         for i in range(len(NE_stations)):
-            station_code[NE_stations[i]] = ["NEL",f"NE{str(i+1)}"]
+            station_code[NE_stations[i]] = [[f"NE{str(i+1)}"]]
         for i in range(len(EW_stations)):
-            station_code[EW_stations[i]] = ["EWL",f"EW{str(i+1)}"]
+            station_code[EW_stations[i]] = [[f"EW{str(i+1)}"]]
         for i in range(len(NS_stations)):
-            station_code[NS_stations[i]] = ["NSL",f"NS{str(i+1)}"]
+            station_code[NS_stations[i]] = [[f"NS{str(i+1)}"]]
         for i in range(len(C_stations)):
-            station_code[C_stations[i]] = ["CCL",f"CC{str(i+1)}"]
+            station_code[C_stations[i]] = [[f"CC{str(i+1)}"]]
         for i in range(len(TE_stations)):
-            station_code[TE_stations[i]] = ["TEL",f"TE{str(i+1)}"]
+            station_code[TE_stations[i]] = [[f"TE{str(i+1)}"]]
 
         #adding the station codes for interchanges
         for s in interchange_stations.keys():
             codes = interchange_stations[s]
-            line_id = []
+            station_id = []
+            # print(codes)
             for i in range(len(codes)):
-                line_id.append(line_code[codes[i][:2]])
-            
-            station_code[s] = [line_id,interchange_stations[s]]
+                station_id.append([codes[i],line_code[codes[i][:2]]])
+            print(station_id)
+            station_code[s] = station_id
 
         return station_code
     
+    def add_line(station_code):
+        # add the line name to the edges
 
-    
-    def add_things_to_values():
+        for station in station_code.keys():
+            station_id = station_code[station]
+            result = []
+            # print(station_id[0])###############
+            for i in range(len(station_id[0])):
+                # print(i,station_id[0][i])###############
+                line = station_id[0][i][:2]
+                result.append([line,station_id[0][i]])
+            station_code[station] = result
+
+        return station_code
+
+
+    def add_timings():
+        # add
+        pass
+
+
+    def add_timings_for_interchanges():
         f = open("MRT transfer timing.csv","r")
+        x = map.create_codes()
         for line in f:
-            line.strip(",")
+            line = line.strip()
+            fields = line.split(",")
+            # if 
+            print([fields[1],fields[3]],[fields[2],fields[4]])
+
 
         #each station's value is a list with 4 things connected stations, time between them stored as a list of length 2 and distance
         pass
