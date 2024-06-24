@@ -7,42 +7,68 @@ import math
 
 #blue line
 #add a place holder station at dt4
-DT_stations = ["Bukit Panjang","Cashew", "Hillview" ,"PLACEHOLDER FOR Hume", "Beauty World", "King Albert Park", "Sixth Avenue", "Tan Kah Kee", "Botanic Gardens", "Stevens", "Newton", "Little India", "Rochor", "Bugis", "Promenade", "Bayfront", "Downtown", "Telok Ayer", "Chinatown", "Fort Canning", "Bencoolen", "Jalan Besar", "Bendemeer", "Geylang Bahru", "Mattar", "MacPherson", "Ubi", "Kaki Bukit","Bedok North", "Bedok Reservoir", "Tampines West", "Tampines", "Tampines East", "Upper Changi", "Expo"]
+DTl_stations = ["Bukit Panjang","Cashew", "Hillview" ,"PLACEHOLDER FOR Hume", "Beauty World", "King Albert Park", 
+               "Sixth Avenue", "Tan Kah Kee", "Botanic Gardens", "Stevens", "Newton", "Little India", "Rochor", 
+               "Bugis", "Promenade", "Bayfront", "Downtown", "Telok Ayer", "Chinatown", "Fort Canning", "Bencoolen", 
+               "Jalan Besar", "Bendemeer", "Geylang Bahru", "Mattar", "MacPherson", "Ubi", "Kaki Bukit","Bedok North", 
+               "Bedok Reservoir", "Tampines West", "Tampines", "Tampines East", "Upper Changi", "Expo"]
 
 DT_times= [2,2,2,2,2,3,3,3,3,4,2,3,3,3,2,3,4,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 
 #purple line
-NE_stations = ["Punggol","Sengkang", "Buangkok", "Hougang", "Kovan", "Serangoon", "Woodleigh", "Potong Pasir", "Boon Keng", "Farrer Park", "Little India", "Dhoby Ghaut", "Clark Quay", "Chinatown", "Outram Park", "Harbour Front"]
+NEL_stations = ["Punggol","Sengkang", "Buangkok", "Hougang", "Kovan", "Serangoon", "Woodleigh", "Potong Pasir", 
+               "Boon Keng", "Farrer Park", "Little India", "Dhoby Ghaut", "Clark Quay", "Chinatown", "Outram Park", 
+               "Harbour Front"]
 
-NE_stations= [4,2,2,2,2,3,3,2,2,2,4,2,2,3,4]
+NEL_times= [4,2,2,2,2,3,3,2,2,2,4,2,2,3,4]
 
 # green line
 # find a way to add a separate line with Changi Airport Branch Line (CAL)
-EW_stations = ["Tuas Link","Tuas West Road", "Tuas Crescent", "Gul Circle", "Joo Koon", "Pioneer", "Boon Lay", "Lakeside", "Chinese Garden", "Jurong East", "Clementi", "Dover", "Buona Vista", "Commonwealth", "Queenstown", "Redhill", "Tiong Bahru", "Outram Park", "Tanjong Pagar", "Raffles Place", "City Hall", "Bugis", "Lavender", "Kallang", "Aljunied", "Paya Lebar", "Eunos", "Kembangan", "Bedok", "Tanah Merah", "Simei", "Tampines", "Pasir Ris"]
+EWL_stations = ["Tuas Link","Tuas West Road", "Tuas Crescent", "Gul Circle", "Joo Koon", "Pioneer", "Boon Lay", 
+               "Lakeside", "Chinese Garden", "Jurong East", "Clementi", "Dover", "Buona Vista", "Commonwealth", 
+               "Queenstown", "Redhill", "Tiong Bahru", "Outram Park", "Tanjong Pagar", "Raffles Place", "City Hall", 
+               "Bugis", "Lavender", "Kallang", "Aljunied", "Paya Lebar", "Eunos", "Kembangan", "Bedok", "Tanah Merah", 
+               "Simei", "Tampines", "Pasir Ris"]
 
-EW_times= [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 3, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2, 3, 2]
+EWL_times= [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4, 2, 3, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2, 3, 2]
 
 #red line 
 #place holder at ns4✓ and ns6 ✓
 #times added ✓
-NS_stations= ["Jurong East","Bukit Batok", "Bukit Gombak", "PLACEHOLDER FOR Brickland" , "Choa Chu Kang", "PLACE HOLDER FOR Sungei Kadut", "Yew Tee", "Kranji", "Marsiling", "Woodlands", "Admiralty", "Sembawang", "Canberra" ,"Yishun", "Khatib", "Yio Chu Kang", "Ang Mo Kio", "Bishan", "Braddell", "Toa Payoh", "Novena", "Newton", "Orchard", "Somerset", "Dhoby Ghaut", "City Hall", "Raffles Place", "Marina Bay", "Marina South Pier"]
+NSL_stations= ["Jurong East","Bukit Batok", "Bukit Gombak", "PLACEHOLDER FOR Brickland" , "Choa Chu Kang", 
+              "PLACE HOLDER FOR Sungei Kadut", "Yew Tee", "Kranji", "Marsiling", "Woodlands", "Admiralty", 
+              "Sembawang", "Canberra" ,"Yishun", "Khatib", "Yio Chu Kang", "Ang Mo Kio", "Bishan", "Braddell", 
+              "Toa Payoh", "Novena", "Newton", "Orchard", "Somerset", "Dhoby Ghaut", "City Hall", "Raffles Place", 
+              "Marina Bay", "Marina South Pier"]
 
-NS_times = [3, 3, 0, 0, 3, 0, 0, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 4, 2, 3, 2]
+NSL_times = [3, 3, 0, 0, 3, 0, 0, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 4, 2, 3, 2]
 
 #yellow line
-#add a place holder station at cc18 bukit brown and add times
-C_stations = ["Dhoby Ghaut","Bras Basah", "Esplanade", "Promenade", "Nicoll Highway", "Stadium", "Mountbatten", "Dakota", "Paya Lebar", "MacPherson", "Tai Seng", "Bartley", "Serangoon", "Lorong Chuan", "Bishan", "Marymount", "Caldecott", "PLACEHOLDER FOR Bukit Brown", "Botanic Gardens", "Farrer Road", "Holland Village", "Buona Vista", "One-north", "Kent Ridge", "Haw Par Villa", "Pasir Pajang", "Labrador Park", "Telok Blangah", "Harbour Front"]
+#add a place holder station at cc18 bukit brown ✓ and add times
+CCL_stations = ["Dhoby Ghaut","Bras Basah", "Esplanade", "Promenade", "Nicoll Highway", "Stadium", "Mountbatten", 
+              "Dakota", "Paya Lebar", "MacPherson", "Tai Seng", "Bartley", "Serangoon", "Lorong Chuan", "Bishan", 
+              "Marymount", "Caldecott", "PLACEHOLDER FOR Bukit Brown", "Botanic Gardens", "Farrer Road", "Holland Village", 
+              "Buona Vista", "One-north", "Kent Ridge", "Haw Par Villa", "Pasir Pajang", "Labrador Park", "Telok Blangah", 
+              "Harbour Front"]
 
-C_times= [3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 4, 0, 0, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+CCL_times= [3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 4, 0, 0, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
 #brown line
 #add a place holder at te10 and te21
-TE_stations = ["Woodlands North","Woodlands","Woodlands South","Springleaf","Lentor","Mayflower","Bright Hill","Upper Thomson","Caldecott","Stevens","Napier","Orchard Boulevard","Orchard","Great World","Havelock","Outram Park","Maxwell","Shenton Way","Marina Bay","Gardens by the Bay"]
+TEL_stations = ["Woodlands North","Woodlands","Woodlands South","Springleaf","Lentor","Mayflower","Bright Hill",
+               "Upper Thomson","Caldecott", 
+               "PLACEHOLDER FOR Mount Pleasant","Stevens","Napier","Orchard Boulevard","Orchard","Great World","Havelock",
+               "Outram Park","Maxwell","Shenton Way","Marina Bay","Gardens by the Bay"]
 
-TE_times = [3,2,2,2,2,2,2,2,3,2,2,2,2,2,4,2,3,2,4]
+TEL_times = [3,2,2,2,2,2,2,2,3,0,0,2,2,2,2,2,4,2,3,2,4]
 
 interchange_stations = {
-"Chinatown":["NE3", "DT19"], "Little India": ["NE6", "DT11"], "Bugis" : ["DT13", "EW12"], "Outram Park" : ["NE2", "EW16", "TE16"], "Tampines": ["DT31", "EW2"], "Jurong East": ["NS1", "EW24"], "Newton": ["NS20", "DT10"], "Dhoby Ghaut": ["NS23", "NE5", "CC1"], "City Hall": ["NS24", "EW13"], "Raffles Place": ["NS25", "EW14"],"Promenade": ["CC4", "DT14"], "Bayfront":["CE1", "DT15"], "Marina Bay": ["NS26","TE19"], "Paya Lebar": ["CC9", "EW8"], "MacPherson": ["CC10", "DT25"], "Serangoon":["NE11", "CC13"], "Bishan":["NS16", "CC15"], "Caldecott":["CC17","TE9"], "Botanic Gardens":["CC18", "DT8"], "Buona Vista":["CC22", "EW21"],"Harbour Front":["CC29", "NE1"],"Woodlands":["NS8","TE2"],"Stevens":["TE10","DT9"],"Orchard":["TE13","NS21"]
+    "Chinatown":["NE3", "DT19"], "Little India": ["NE6", "DT11"], "Bugis" : ["DT13", "EW12"], "Outram Park" : ["NE2", "EW16", "TE16"],
+    "Tampines": ["DT31", "EW2"], "Jurong East": ["NS1", "EW24"], "Newton": ["NS20", "DT10"], "Dhoby Ghaut": ["NS23", "NE5", "CC1"], 
+    "City Hall": ["NS24", "EW13"], "Raffles Place": ["NS25", "EW14"],"Promenade": ["CC4", "DT14"], "Bayfront":["CE1", "DT15"], 
+    "Marina Bay": ["NS26","TE19"], "Paya Lebar": ["CC9", "EW8"], "MacPherson": ["CC10", "DT25"], "Serangoon":["NE11", "CC13"], 
+    "Bishan":["NS16", "CC15"], "Caldecott":["CC17","TE9"], "Botanic Gardens":["CC18", "DT8"], "Buona Vista":["CC22", "EW21"], 
+    "Harbour Front":["CC29", "NE1"],"Woodlands":["NS8","TE2"],"Stevens":["TE10","DT9"],"Orchard":["TE13","NS21"]
 }
 
 
@@ -56,78 +82,80 @@ class map:
         pass
 
     def __repr__():
-        print(map.create_graph())
+        print(map.create_nodes())
 
     def create_graph():
-        station_code = map.station_codes()
-        stations = map.add_line(station_code)
-        return stations
-
-    def station_codes():
-        #create codes for each station and add the line name
-        #dictionary so repeat station names due to insections
-        station_code = {}
+        # station_code = map.station_codes()
+        # return stations
+        pass
+    
+    def create_nodes():
+        station_nodes = []
 
         # creates station codes 
-        for i in range(len(DT_stations)):
-            station_code[DT_stations[i]] = [[f"DT{str(i+1)}"]]
-        for i in range(len(NE_stations)):
-            station_code[NE_stations[i]] = [[f"NE{str(i+1)}"]]
-        for i in range(len(EW_stations)):
-            station_code[EW_stations[i]] = [[f"EW{str(i+1)}"]]
-        for i in range(len(NS_stations)):
-            station_code[NS_stations[i]] = [[f"NS{str(i+1)}"]]
-        for i in range(len(C_stations)):
-            station_code[C_stations[i]] = [[f"CC{str(i+1)}"]]
-        for i in range(len(TE_stations)):
-            station_code[TE_stations[i]] = [[f"TE{str(i+1)}"]]
+        for i in range(len(DTl_stations)):
+            station_nodes.append((DTl_stations[i],f"DT{str(i+1)}","DTL"))
+        for i in range(len(NEL_stations)):
+            station_nodes.append((NEL_stations[i],f"NE{str(i+1)}","NEL"))
+        for i in range(len(EWL_stations)):
+            station_nodes.append((EWL_stations[i],f"EW{str(i+1)}","EWL"))
+        for i in range(len(NSL_stations)):
+            station_nodes.append((NSL_stations[i],f"NS{str(i+1)}","NSL"))
+        for i in range(len(CCL_stations)):
+            station_nodes.append((CCL_stations[i],f"CC{str(i+1)}","CCL"))
+        for i in range(len(TEL_stations)):
+            station_nodes.append((TEL_stations[i],f"TE{str(i+1)}","TEL"))
+        
+        return station_nodes
 
-        #adding the station codes for interchanges
-        for s in interchange_stations.keys():
-            codes = interchange_stations[s]
-            station_id = []
-            # print(codes)
-            for i in range(len(codes)):
-                station_id.append([codes[i],line_code[codes[i][:2]]])
-            print(station_id)
-            station_code[s] = station_id
-
-        return station_code
-    
-    def add_line(station_code):
-        # add the line name to the edges
-
-        for station in station_code.keys():
-            station_id = station_code[station]
-            result = []
-            # print(station_id[0])###############
-            for i in range(len(station_id[0])):
-                # print(i,station_id[0][i])###############
-                line = station_id[0][i][:2]
-                result.append([line,station_id[0][i]])
-            station_code[station] = result
-
-        return station_code
-
-
-    def add_timings():
-        # add
-        pass
-
-
-    def add_timings_for_interchanges():
-        f = open("MRT transfer timing.csv","r")
-        x = map.create_codes()
-        for line in f:
-            line = line.strip()
-            fields = line.split(",")
-            # if 
-            print([fields[1],fields[3]],[fields[2],fields[4]])
-
-
+    def create_edges(nodes):
+        MRT_graph = {}
+        for i in range(len(nodes)):
+            station_name = nodes[i][0]
+            station_code = nodes[i][1]
+            line = nodes[i][2] 
+            station_num = station_code[2:]
+            adjacent_stations = []
+            
+            # print(nodes[i])
+            print(station_name,station_code,line)
+            print("after" + nodes[i+1][0],nodes[i+1][1],nodes[i+1][2])
+            
+            #find adjacent stations
+            #add times between adjacent stations
+            #edges in the form of time between stations, distance between stations, travelling method (train or walking)
+            # need to add distance between stations!!!!!
+            
+            # if line == "DTL":
+            #     if station_num == "1":
+            #         adjacent_stations = 0
+            #     elif station_num == "35":
+            #         adjacent_stations = [f"DT{int(station_num)-1}"]
+            #     else:
+            #         adjacent_stations = [f"DT{int(station_num)+1}"],[f"DT{int(station_num)-1}"]
+                    
+            #     if len(adjacent_stations) == 1:
+            #         MRT_graph[node] = [DT_times[int(station_num)-1],DTL_distance[],"train"]
+            #     else:
+            #         MRT_graph[(station_code,adjacent_stations[0],line)] = [DT_times[int(station_num)-1],distance,"train"]
+            #         MRT_graph[(station_code,adjacent_stations[1],line)] = [DT_times[int(station_num)-1],distance,"train"]    
+                    
+            
+                           
+        # f = open("MRT transfer timing.csv","r")
+        # x = map.create_nodes()
+        # for line in f:
+        #     line = line.strip()
+        #     fields = line.split(",")
+        #     #['Start Line', 'End Line'] ['Start Code', 'End Code']
+        #     print([fields[1],fields[3]],[fields[2],fields[4]])
         #each station's value is a list with 4 things connected stations, time between them stored as a list of length 2 and distance
         pass
+    
+    
+    def add_timings(nodes):
+        #add timings for each station create a dictionary with tuples as key and a list of timings as values
+        for i in range(len(nodes)):
+            pass
 
-
-
-map.__repr__()
+map.create_edges(map.create_nodes())
