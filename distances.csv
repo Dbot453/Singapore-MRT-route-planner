@@ -1,4 +1,4 @@
-Station Pair,Line,Distance (km)
+Station1,Station2,Line,Distance (km)
 BP6,BP7,BPLRT,0.4
 BP6,BP14,BPLRT,0.4
 PE1,PE2,PGLRT,0.4
