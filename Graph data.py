@@ -11,16 +11,18 @@ DTL_stations = ["Bukit Panjang","Cashew", "Hillview" ,"PLACEHOLDER FOR Hume", "B
                "Sixth Avenue", "Tan Kah Kee", "Botanic Gardens", "Stevens", "Newton", "Little India", "Rochor", 
                "Bugis", "Promenade", "Bayfront", "Downtown", "Telok Ayer", "Chinatown", "Fort Canning", "Bencoolen", 
                "Jalan Besar", "Bendemeer", "Geylang Bahru", "Mattar", "MacPherson", "Ubi", "Kaki Bukit","Bedok North", 
-               "Bedok Reservoir", "Tampines West", "Tampines", "Tampines East", "Upper Changi", "Expo"]
+               "Bedok Reservoir", "Tampines West", "Tampines", "Tampines East", "Upper Changi", "Expo"]#len 36
 
-DT_times= [2,2,0,0,2,2,2,3,3,3,3,4,2,3,3,3,2,3,4,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+DT_times= [2,2,0,0,2,2,2,3,3,3,3,4,2,3,3,3,2,3,4,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2]#len 36
+DT_times = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
 
 #purple line
 NEL_stations = ["Punggol","Sengkang", "Buangkok", "Hougang", "Kovan", "Serangoon", "Woodleigh", "Potong Pasir", 
                "Boon Keng", "Farrer Park", "Little India", "Dhoby Ghaut", "Clark Quay", "Chinatown", "Outram Park", 
-               "Harbour Front"]#len = 16
+               "Harbour Front"]
 
-NEL_times= [4,2,2,2,2,3,3,2,2,2,4,2,2,3,4]#len = 15
+NEL_times= [4,2,2,2,2,3,3,2,2,2,4,2,2,3,4]
+NEL_times = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 # green line
 # find a way to add a separate line with Changi Airport Branch Line (CAL)
@@ -120,47 +122,55 @@ class map:
 
                 if line == "DTL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[DTL_stations[int(station_number)],DT_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[DTL_stations[int(station_number)-1],DT_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(DTL_stations):
                         adjacent_stations = [[DTL_stations[int(station_number)-1],DT_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[DTL_stations[int(station_number)-1],DT_times[int(station_number)-1],0,"train"],[DTL_stations[int(station_number)],DT_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[DTL_stations[int(station_number)-2],DT_times[int(station_number)-2],0,"train"],
+                                             [DTL_stations[int(station_number)-1],DT_times[int(station_number)-1],0,"train"]]
                 elif line == "NEL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[NEL_stations[int(station_number)],NEL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[NEL_stations[int(station_number)-1],NEL_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(NEL_stations):
                         adjacent_stations = [[NEL_stations[int(station_number)-1],NEL_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[NEL_stations[int(station_number)-1],NEL_times[int(station_number)-1],0,"train"],[NEL_stations[int(station_number)],NEL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[NEL_stations[int(station_number)-2],NEL_times[int(station_number)-2],0,"train"],
+                                             [NEL_stations[int(station_number)-1],NEL_times[int(station_number)-1],0,"train"]]
                 elif line == "EWL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[EWL_stations[int(station_number)],EWL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[EWL_stations[int(station_number)-1],EWL_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(EWL_stations):
                         adjacent_stations = [[EWL_stations[int(station_number)-1],EWL_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[EWL_stations[int(station_number)-1],EWL_times[int(station_number)-1],0,"train"],[EWL_stations[int(station_number)],EWL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[EWL_stations[int(station_number)-2],EWL_times[int(station_number)-2],0,"train"],
+                                             [EWL_stations[int(station_number)-1],EWL_times[int(station_number)-1],0,"train"]]
                 elif line == "NSL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[NSL_stations[int(station_number)],NSL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[NSL_stations[int(station_number)-1],NSL_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(NSL_stations):
                         adjacent_stations = [[NSL_stations[int(station_number)-1],NSL_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[NSL_stations[int(station_number)-1],NSL_times[int(station_number)-1],0,"train"],[NSL_stations[int(station_number)],NSL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[NSL_stations[int(station_number)-2],NSL_times[int(station_number)-2],0,"train"],
+                                             [NSL_stations[int(station_number)-1],NSL_times[int(station_number)-1],0,"train"]]
                 elif line == "CCL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[CCL_stations[int(station_number)],CCL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[CCL_stations[int(station_number)-1],CCL_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(CCL_stations):
                         adjacent_stations = [[CCL_stations[int(station_number)-1],CCL_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[CCL_stations[int(station_number)-1],CCL_times[int(station_number)-1],0,"train"],[CCL_stations[int(station_number)],CCL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[CCL_stations[int(station_number)-2],CCL_times[int(station_number)-2],0,"train"],
+                                             [CCL_stations[int(station_number)-1],CCL_times[int(station_number)-1],0,"train"]]
                 elif line == "TEL":
                     if int(station_number) == 1:
-                        adjacent_stations = [[TEL_stations[int(station_number)],TEL_times[int(station_number)],0,"train"]]
+                        adjacent_stations = [[TEL_stations[int(station_number)-1],TEL_times[int(station_number)-1],0,"train"]]
                     elif int(station_number) == len(TEL_stations):
                         adjacent_stations = [[TEL_stations[int(station_number)-1],TEL_times[int(station_number)-1],0,"train"]]
                     else:
-                        adjacent_stations = [[TEL_stations[int(station_number)-1],TEL_times[int(station_number)-1],0,"train"],[TEL_stations[int(station_number)],TEL_times[int(station_number)],0,"train"]]
-                        
+                        adjacent_stations = [[TEL_stations[int(station_number)-2],TEL_times[int(station_number)-2],0,"train"],
+                                             [TEL_stations[int(station_number)-1],TEL_times[int(station_number)-1],0,"train"]]
+
+                mrt_graph[nodes[i]] = adjacent_stations
+
         print(mrt_graph)
         return mrt_graph
     
