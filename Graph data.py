@@ -171,6 +171,8 @@ class map:
 
                 mrt_graph[nodes[i]] = adjacent_stations
 
+                
+
         print(mrt_graph)
         return mrt_graph
     
