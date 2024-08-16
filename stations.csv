@@ -162,5 +162,5 @@ TE16,Havelock,Brown,Thomson East Coast Line,1.2902,103.8332,TE15#TE17
 TE17,Outram Park,Brown,Thomson East Coast Line,1.2802,103.8394,TE16#TE18#EW16#NE3
 TE18,Maxwell,Brown,Thomson East Coast Line,1.2807,103.8441,TE17#TE19
 TE19,Shenton Way,Brown,Thomson East Coast Line,1.2777, 103.8507,TE18#TE20
-TE20,Marina Bay,Brown,Thomson East Coast Line,1.2761, 103.8550,TE19#TE21#NS27#CE2
+TE20,Marina Bay,Brown,Thomson East Coast Line,1.2761, 103.8550,TE19#TE22#NS27#CE2
 TE22,Gardens by the Bay,Brown,Thomson East Coast Line,1.2797,103.8680,TE20
