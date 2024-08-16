@@ -130,7 +130,7 @@ DT6,King Albert Park,Blue,Downtown Line,1.335721,103.783203,DT7#DT5
 DT7,Sixth Avenue,Blue,Downtown Line,1.331221,103.79718,DT8#DT6
 DT8,Tan Kah Kee,Blue,Downtown Line,1.325826,103.807959,DT7#DT9
 DT10,Stevens,Blue,Downtown Line,1.320012,103.825964,TE11#DT9#DT11
-TE11,Stevens,Brown,Thomson East Coast Line,1.320012,103.825964,DT10
+TE11,Stevens,Brown,Thomson East Coast Line,1.320012,103.825964,DT10#TE12#TE9
 DT13,Rochor,Blue,Downtown Line,1.303601,103.852581,DT12#DT14
 DT17,Downtown,Blue,Downtown Line,1.27949,103.852802,DT16#DT18
 DT18,Telok Ayer,Blue,Downtown Line,1.282285,103.848584,DT19#DT17
@@ -154,3 +154,13 @@ TE5,Lentor,Brown,Thomson East Coast Line,1.3844,103.8368,TE6#TE4
 TE6,Mayflower,Brown,Thomson East Coast Line,1.3726,103.837,TE7#TE5
 TE7,Bright Hill,Brown,Thomson East Coast Line,1.3632,103.8332,TE8#TE6
 TE8,Upper Thomson,Brown,Thomson East Coast Line,1.3542,103.8332,TE9#TE7
+TE12,Napier,Brown,Thomson East Coast Line,1.3060,103.8196,TE11#TE13
+TE13,Orchard Boulevard,Brown,Thomson East Coast Line,1.3025,103.8238,TE12#TE14
+TE14,Orchard,Brown,Thomson East Coast Line,1.3037,103.8318,TE13#TE15#NS22
+TE15,Great World,Brown,Thomson East Coast Line,1.2949,103.8334,TE14#TE16
+TE16,Havelock,Brown,Thomson East Coast Line,1.2902,103.8332,TE15#TE17
+TE17,Outram Park,Brown,Thomson East Coast Line,1.2802,103.8394,TE16#TE18#EW16#NE3
+TE18,Maxwell,Brown,Thomson East Coast Line,1.2807,103.8441,TE17#TE19
+TE19,Shenton Way,Brown,Thomson East Coast Line,1.2777, 103.8507,TE18#TE20
+TE20,Marina Bay,Brown,Thomson East Coast Line,1.2761, 103.8550,TE19#TE21#NS27#CE2
+TE22,Gardens by the Bay,Brown,Thomson East Coast Line,1.2797,103.8680,TE20
