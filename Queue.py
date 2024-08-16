@@ -1,4 +1,4 @@
-class emptyqueueerror(Exception):
+class EmptyQueueError(Exception):
     pass
 
 class PriorityQueue:
@@ -7,14 +7,14 @@ class PriorityQueue:
         self.__head = 0
         self.__tail = 0
         
-    def empty(self):
+    def isempty(self):
         return self.__head == self.__tail
     
     def isfull(self):
         return False
     
-    def enqueue(self, value):
-        if self.empty():
+    def enq(self, value):
+        if self.isempty():
             self.__queue = [value]
             self.__tail += 1
             return
@@ -25,10 +25,10 @@ class PriorityQueue:
                 self.__tail += 1
                 return
  
-    def dequeue(self):
-        if not self.empty():
+    def dq(self):
+        if not self.isempty():
             value = self.__queue[self.__head]
             self.__head += 1
             return value
         else:
-            return emptyqueueerror("Queue is empty")
+            return EmptyQueueError("Queue is empty")
