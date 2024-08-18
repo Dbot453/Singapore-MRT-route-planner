@@ -4,17 +4,18 @@
 #######################################################################################################################
 
 class Station:
-    def __init__(self, code, name, line, adjacent, distance):
-        self.__name = ""
-        self.__line = ""
-        self.__code = "" 
-        self.__adjacentDistance = {}
-        self.__adjacentTime = {}
-        self.__stationFile = "stations.csv"
-        self.__distancesFile = "distances.csv"
-        self.__transfersFile = "transfer timings.csv"
+    # def __init__(self, code, name, line, longitude, latitiude):
+    #     self.name = name
+    #     self.code = code
+    #     self.line = line
+    #     self.long = longitude
+    #     self.lat = latitiude
+    #     self.adjacentStations = []
         
-    def generateStations():  
+    # def getName(self):
+        
+        
+    def generateData():  
         #adding stations   
         with open("stations.csv", 'r') as stationsFile:
             stations = {}
@@ -72,24 +73,43 @@ class Station:
                     connections = {}
                     info = stations[s1]
                     connections = info[6]
-                    connections[s2] = float(fields[5]) #TODO: work out how to change time to distnace
+                    connections[s2] = float(fields[5])*1.3/1000 #TODO: work out how to change time to distnace
                     info[6] = connections 
                     stations[s1] = info
                     
                     info = stations[s2]
                     connections = info[6]
-                    connections[s1] = float(fields[5])
+                    connections[s1] = float(fields[5])*1.3/1000
                     info[6] = connections
                     stations[s2] = info
         
+        errors = []
         for k in stations:
             temp = stations[k]
             if len(temp[6].keys()) != len(temp[5]):
                 for i in temp[5]:
                     if i not in temp[6].keys():
-                        print(f"{k} to {i} is missing in stations")
+                        errors.append(f"{k} to {i} is missing in stations")
 
-        print(stations)
+        if len(errors) > 0:
+            for i in errors:
+                raise Exception(i)
+        
         return stations 
-
-Station().generateStations("stations.csv", "transfer timings.csv", "distances.csv")
+    
+    def generateAdjacencyList():
+        stations = Station.generateData()
+        adjacencyList = {}
+        for k in stations:
+            temp = stations[k]
+            adjacencyList[k] = temp[6]
+        return adjacencyList
+    
+    def generateStationData():
+        stations = Station.generateData()
+        info = {}
+        for k in stations:
+            temp = stations[k]
+            info[k] = temp[0:5]
+        return info
+    

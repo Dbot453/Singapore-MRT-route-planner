@@ -1,3 +1,4 @@
+Station_Code,Station_Name,Line_Color,Line_Name,lat,lng,adjacent_stations
 NS1,Jurong East,Red,North South Line,1.333207,103.742308,NS2#EW24
 EW24,Jurong East,Green,East West Line,1.333207,103.742308,EW23#EW25#NS1
 NS2,Bukit Batok,Red,North South Line,1.349069,103.749596,NS3#NS1
