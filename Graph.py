@@ -3,17 +3,7 @@
 #TODO: work out a way to change the distance between stations to time for djikstra
 #######################################################################################################################
 
-class Station:
-    # def __init__(self, code, name, line, longitude, latitiude):
-    #     self.name = name
-    #     self.code = code
-    #     self.line = line
-    #     self.long = longitude
-    #     self.lat = latitiude
-    #     self.adjacentStations = []
-        
-    # def getName(self):
-        
+class Graph:       
         
     def generateData():  
         #adding stations   
@@ -73,7 +63,7 @@ class Station:
                     connections = {}
                     info = stations[s1]
                     connections = info[6]
-                    connections[s2] = float(fields[5])*1.3/1000 #TODO: work out how to change time to distnace
+                    connections[s2] = float(fields[5])*1.3/1000 #TODO: work out how to change time to distance currently it is walking distance
                     info[6] = connections 
                     stations[s1] = info
                     
@@ -98,7 +88,7 @@ class Station:
         return stations 
     
     def generateAdjacencyList():
-        stations = Station.generateData()
+        stations = Graph.generateData()
         adjacencyList = {}
         for k in stations:
             temp = stations[k]
@@ -106,7 +96,7 @@ class Station:
         return adjacencyList
     
     def generateStationData():
-        stations = Station.generateData()
+        stations = Graph.generateData()
         info = {}
         for k in stations:
             temp = stations[k]

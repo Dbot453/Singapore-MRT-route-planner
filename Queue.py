@@ -1,4 +1,3 @@
-from queue import PriorityQueue
 class EmptyQueueError(Exception):
     pass
 
@@ -51,11 +50,12 @@ class BinaryHeap:
     
     def _bubble_down(self, index):
         while index < len(self.heap):
-            leftIndex = self.left(index)
+            left_index = self.left(index)
             right_index = self.right(index)
             min_index = index
-            if leftIndex < len(self.heap) and self.heap[leftIndex] < self.heap[min_index]:
-                min_index = leftIndex
+            
+            if left_index < len(self.heap) and self.heap[left_index] < self.heap[min_index]:
+                min_index = left_index
             if right_index < len(self.heap) and self.heap[right_index] < self.heap[min_index]:
                 min_index = right_index
             if min_index != index:
