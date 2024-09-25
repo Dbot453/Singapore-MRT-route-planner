@@ -26,4 +26,4 @@ class Station:
 
     def getLong(self):
         return self.__info[self.__stationCode][4]
-        
+

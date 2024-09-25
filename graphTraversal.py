@@ -16,7 +16,7 @@ class getShortestPath:
         self.cost = 0
         self.s = s()
         
-    def haversine(lat1, lng1, lat2, lng2):
+    def haversine(lat1:float, lng1:float, lat2:float, lng2:float):
         lat1 = m.radians(lat1)
         lat2 = m.radians(lat2)
         lon1 = m.radians(lng1)
@@ -108,12 +108,14 @@ class getShortestPath:
         return [stations[start][0],stations[end][0],f"{distances[end]:.2f} ",names]
     
     def Astar(start, end): 
-        graph = s.generateAdjacencyList()
+        graph = g.generateAdjacencyList()
+        stations = g.generateStationData()
         q = PQ()
         visited = {}
         distances = {}
         previous = {}
         current = start
+        
         
         for v in graph:
             if v != start:
@@ -122,14 +124,15 @@ class getShortestPath:
             else:
                 visited[start] = True
                 distances[start] = 0
-                
-        # {station : { adj_station : distance}}
         
         for station in graph.keys():
             if station != start:
                 previous[station] = None
                 distances[station] = m.inf
             q.enqueue((0, start))
+        
+        end_long = float(stations[end][3])
+        end_lat = float(stations[end][4])
         
         while not q.is_empty():
             current = q.dequeue()[1]
@@ -140,13 +143,13 @@ class getShortestPath:
                     if distances[current] + graph[current][neighbour] < distances[neighbour]:
                         distances[neighbour] = distances[current] + graph[current][neighbour]
                         previous[neighbour] = current
-                        q.enqueue((distances[neighbour], neighbour))
+                        q.enqueue((distances[neighbour] + getShortestPath.haversine(float(stations[neighbour][3]), float(stations[neighbour][4]), end_lat, end_long), neighbour))
                         
                         
-        stations = s.generateStationData()
         current = end
         path = []
         temp = ""
+        
         while current != start:
             path.append(current)
             current = previous[current]
@@ -171,3 +174,7 @@ class getShortestPath:
                 
 
         return [stations[start][0],stations[end][0],f"{distances[end]:.2f} ",names]
+
+
+print(getShortestPath.djikstra("NS5", "NS20"))
+print(getShortestPath.Astar("NS5", "NS20"))

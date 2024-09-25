@@ -3,8 +3,7 @@
 #TODO: work out a way to change the distance between stations to time for djikstra
 #######################################################################################################################
 
-class Graph:       
-        
+class Graph:
     def generateData():  
         #adding stations   
         with open("stations.csv", 'r') as stationsFile:
