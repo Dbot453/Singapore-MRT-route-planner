@@ -1,4 +1,4 @@
-from Graph import Graph as g
+from OOPGraph import Graph as g
 
 class Station:
     
@@ -6,7 +6,7 @@ class Station:
         self.__info = g.generateData()
         self.__graph = g.generateAdjacencyList()
     
-    def getStationiInfo(self, stationCode):
+    def getStationInfo(self, stationCode):
         return self.__info[stationCode]
     
     def getGraph(self):
@@ -26,4 +26,8 @@ class Station:
 
     def getLong(self):
         return self.__info[self.__stationCode][4]
+    
+    def getNeighbours(self):
+        return self.__graph[self.__stationCode]
+
 

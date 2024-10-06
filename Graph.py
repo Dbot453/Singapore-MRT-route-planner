@@ -4,7 +4,24 @@
 #######################################################################################################################
 
 class Graph:
-    def generateData():  
+
+    def generateAdjacencyList(self):
+        stations = Graph.generateStationData()
+        adjacencyList = {}
+        for k in stations:
+            temp = stations[k]
+            adjacencyList[k] = temp[6]
+        return adjacencyList
+    
+    def generateStationInfo(self):
+        stations = Graph.generateStationData()
+        info = {}
+        for k in stations:
+            temp = stations[k]
+            info[k] = temp[0:5]
+        return info
+    
+    def generateStationData():  
         #adding stations   
         with open("stations.csv", 'r') as stationsFile:
             stations = {}
@@ -17,14 +34,14 @@ class Graph:
                 if fields[0] != "Station_Code":
                     result = []
                     result.append(fields[1])
-                    for i in range(2, len(fields)-1):
-                        result.append(fields[i])
+                    for field_index in range(2, len(fields)-1):
+                        result.append(fields[field_index])
                     adj_stations = fields[len(fields)-1].split("#")
                     result.append(adj_stations)
                     result.append({})
                     stations[fields[0]] = result
-                           
-        #adding the distances            
+
+        #adding the distances
         with open("distances.csv", 'r') as distancesFile:
             for line in distancesFile:
                 line = line.strip()
@@ -32,21 +49,21 @@ class Graph:
                 
                 #Station1,Station2,Line,Distance (km)
                 if fields[0] != "Station1":
-                    s1 = fields[0]
-                    s2 = fields[1]
-                    d = float(fields[3])
+                    station1 = fields[0]
+                    station2 = fields[1]
+                    distance = float(fields[3])
                     
-                    info = stations[s1]
-                    connections = info[6]
-                    connections[s2] = d
-                    info[6] = connections 
-                    stations[s1] = info
+                    info = stations[station1]#get the station info
+                    connections = info[6]#get the connections
+                    connections[station2] = distance#add the distance to the connections
+                    info[6] = connections #update the connections
+                    stations[station1] = info #update the station info
                     
-                    info = stations[s2]
+                    info = stations[station2]
                     connections = info[6]
-                    connections[s1] = d
+                    connections[station1] = distance
                     info[6] = connections
-                    stations[s2] = info
+                    stations[station2] = info
                                 
         # add transfer distances   
         with open("transfer timings.csv", 'r') as transfersFile:
@@ -56,21 +73,21 @@ class Graph:
                 
                 #Station Name,Start Line,Start Code,End Line,End Code,Transfer time in seconds
                 if fields[0] != "Station Name":
-                    s1 = fields[2]
-                    s2 = fields[4]
+                    station1 = fields[2]
+                    station2 = fields[4]
                     
                     connections = {}
-                    info = stations[s1]
+                    info = stations[station1]
                     connections = info[6]
-                    connections[s2] = float(fields[5])*1.3/1000 #TODO: work out how to change time to distance currently it is walking distance
+                    connections[station2] = float(fields[5])*1.3 #TODO: work out how to change time to distance currently it is walking distance
                     info[6] = connections 
-                    stations[s1] = info
+                    stations[station1] = info
                     
-                    info = stations[s2]
+                    info = stations[station2]
                     connections = info[6]
-                    connections[s1] = float(fields[5])*1.3/1000
+                    connections[station1] = float(fields[5])*1.3
                     info[6] = connections
-                    stations[s2] = info
+                    stations[station2] = info
         
         errors = []
         for k in stations:
@@ -85,20 +102,4 @@ class Graph:
                 raise Exception(i)
         
         return stations 
-    
-    def generateAdjacencyList():
-        stations = Graph.generateData()
-        adjacencyList = {}
-        for k in stations:
-            temp = stations[k]
-            adjacencyList[k] = temp[6]
-        return adjacencyList
-    
-    def generateStationData():
-        stations = Graph.generateData()
-        info = {}
-        for k in stations:
-            temp = stations[k]
-            info[k] = temp[0:5]
-        return info
     
