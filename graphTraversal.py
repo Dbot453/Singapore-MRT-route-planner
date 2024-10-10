@@ -1,7 +1,8 @@
-from Graph import Graph
+from graphold import Graph#works but other does not
+# from Graph import Graph
 from Utilities import maths
 from Queue import PriorityQueue as PQ
-from Station import Station
+# from Station import Station
 import numpy as np
 import math as m
 
@@ -10,6 +11,8 @@ class GetShortestPath:
         self.__start = start
         self.__end = end
         self.__closed = []
+        # self.__adjacency_list = Graph().get_adjacency_list()
+        # self.__stations = Graph().generate_station_data()
         self.__adjacency_list = Graph().generateAdjacencyList()
         self.__stations = Graph().generateStationInfo()
 
@@ -137,10 +140,10 @@ class GetShortestPath:
     
     
 # Example usage
-finder = GetShortestPath("CC22", "CC9")
+finder = GetShortestPath("CC9", "CC22")
 d_start, d_end, d_distance, d_path_codes, d_path_names = finder.dijkstra()
-print(f"{d_start} to {d_end} takes {d_distance}km \n {d_path_codes} \n {d_path_names}")
+print(f"{d_start} to {d_end} takes {d_distance:.2f}km \n{d_path_codes} \n{d_path_names}")
 a_start, a_end, a_distance, a_path_codes, a_path_names= finder.astar()
-print(f"{a_start} to {a_end} takes {a_distance}km \n {a_path_codes} \n {a_path_names}")
+print(f"{a_start} to {a_end} takes {a_distance:.2f}km \n{a_path_codes} \n{a_path_names}")
 
 #Buona Vista to Paya Lebar takes 14.25 km through

@@ -1,10 +1,10 @@
-from OOPGraph import Graph as g
+from Graph import Graph as g
 
 class Station:
     
     def __init__(self):
-        self.__info = g.generateData()
-        self.__graph = g.generateAdjacencyList()
+        self.__graph = g().generateAdjacencyList()
+        self.__info = g().generateStationInfo()
     
     def getStationInfo(self, stationCode):
         return self.__info[stationCode]
@@ -29,5 +29,4 @@ class Station:
     
     def getNeighbours(self):
         return self.__graph[self.__stationCode]
-
-
+    

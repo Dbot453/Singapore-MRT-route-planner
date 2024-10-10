@@ -27,11 +27,4 @@ class GUI:
         self.root.mainloop()
         
         
-    def findPath():
-        start=self.__.start.get()
-        end=self.__end.get()
-        self.__start.set("")
-        self.__end.set("")
-        print(gt.getShortestPath(start,end)) 
-        
 GUI()
