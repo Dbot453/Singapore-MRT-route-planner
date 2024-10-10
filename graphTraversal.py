@@ -1,8 +1,8 @@
-from graphold import Graph#works but other does not
-# from Graph import Graph
+# from graphold import Graph#works but other does not
+from Graph import Graph
 from Utilities import maths
 from Queue import PriorityQueue as PQ
-# from Station import Station
+#from Station import Station
 import numpy as np
 import math as m
 
@@ -11,10 +11,8 @@ class GetShortestPath:
         self.__start = start
         self.__end = end
         self.__closed = []
-        # self.__adjacency_list = Graph().get_adjacency_list()
-        # self.__stations = Graph().generate_station_data()
-        self.__adjacency_list = Graph().generateAdjacencyList()
-        self.__stations = Graph().generateStationInfo()
+        self.__adjacency_list = Graph().get_adjacency_list()
+        self.__stations = Graph().get_station_info()
 
     def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
         lat1 = m.radians(lat1)

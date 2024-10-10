@@ -93,7 +93,9 @@ class Graph:
             self.station_info[k] = temp[0:5]
 
     def get_adjacency_list(self):
+        Graph.generate_station_data(self)
         return self.adjacency_list
 
     def get_station_info(self):
+        Graph.generate_station_data(self)
         return self.station_info
