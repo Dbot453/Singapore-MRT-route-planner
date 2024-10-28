@@ -48,6 +48,7 @@ class Graph:
 
                     self._update_connections(station1, station2, distance)
                     self._update_connections(station2, station1, distance)
+                    
     def _add_transfer_distances(self):
         with open("data/transfer timings.csv", 'r') as transfers_file:
             for line in transfers_file:
