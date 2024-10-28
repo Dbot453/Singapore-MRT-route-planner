@@ -1,8 +1,6 @@
-# from graphold import Graph#works but other does not
-from Graph import Graph
-from Utilities import maths
-from Queue import PriorityQueue as PQ
-#from Station import Station
+from graph import Graph
+from utilities import maths
+from custom_queue import PriorityQueue as PQ
 import numpy as np
 import math as m
 
@@ -144,4 +142,4 @@ print(f"{d_start} to {d_end} takes {d_distance:.2f}km \n{d_path_codes} \n{d_path
 a_start, a_end, a_distance, a_path_codes, a_path_names= finder.astar()
 print(f"{a_start} to {a_end} takes {a_distance:.2f}km \n{a_path_codes} \n{a_path_names}")
 
-#Buona Vista to Paya Lebar takes 14.25 km through
+#number of lines in the mrt is 6 which are the red line / north south line, green line / east west line, purple line / north east line, yellow line / circle line and blue line / downtown line, brown line / thomson east coast line
