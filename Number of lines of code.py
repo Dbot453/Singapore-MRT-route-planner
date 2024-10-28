@@ -6,4 +6,20 @@ for file in python:
     with open(file) as f:
         lines += sum([line.strip() != "" and not line.startswith('#') for line in f]) 
 
-print("{} code lines in {} files.".format(lines, len(python)))
+html = glob('website/templates/*.html')
+for file in html:
+    with open(file) as f:
+        lines += sum([line.strip() != "" and not line.startswith('#') for line in f]) 
+        
+csv = glob('data/*.csv')
+for file in csv:
+    with open(file) as f:
+        lines += sum([line.strip() != "" and not line.startswith('#') for line in f]) 
+
+svg = glob('website/templates/*.svg')
+for file in svg:
+    with open(file) as f:
+        lines += sum([line.strip() != "" and not line.startswith('#') for line in f]) 
+
+
+print("{} code lines in {} files.".format(lines, len(python) + len(html) + len(csv) + len(svg)))

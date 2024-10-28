@@ -141,5 +141,3 @@ d_start, d_end, d_distance, d_path_codes, d_path_names = finder.dijkstra()
 print(f"{d_start} to {d_end} takes {d_distance:.2f}km \n{d_path_codes} \n{d_path_names}")
 a_start, a_end, a_distance, a_path_codes, a_path_names= finder.astar()
 print(f"{a_start} to {a_end} takes {a_distance:.2f}km \n{a_path_codes} \n{a_path_names}")
-
-#number of lines in the mrt is 6 which are the red line / north south line, green line / east west line, purple line / north east line, yellow line / circle line and blue line / downtown line, brown line / thomson east coast line

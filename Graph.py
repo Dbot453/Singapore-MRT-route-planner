@@ -19,7 +19,7 @@ class Graph:
         self._populate_station_info()
 
     def _add_stations(self):
-        with open("stations.csv", 'r') as stations_file:
+        with open("data/stations.csv", 'r') as stations_file:
             for line in stations_file:
                 line = line.strip()
                 fields = line.split(",")
@@ -36,7 +36,7 @@ class Graph:
                     self.stations[fields[0]] = result
 
     def _add_connection_distances(self):
-        with open("distances.csv", 'r') as distances_file:
+        with open("data/distances.csv", 'r') as distances_file:
             for line in distances_file:
                 line = line.strip()
                 fields = line.split(",")
@@ -48,9 +48,8 @@ class Graph:
 
                     self._update_connections(station1, station2, distance)
                     self._update_connections(station2, station1, distance)
-
     def _add_transfer_distances(self):
-        with open("transfer timings.csv", 'r') as transfers_file:
+        with open("data/transfer timings.csv", 'r') as transfers_file:
             for line in transfers_file:
                 line = line.strip()
                 fields = line.split(",")
