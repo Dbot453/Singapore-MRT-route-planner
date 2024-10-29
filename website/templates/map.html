@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %}Map{% endblock %} {% block content%}
+    <form method="POST">
+      <h3 align="center">Map</h3>
+      <div class="form-group">
+        <label for="start">Start Location</label>
+        <input
+          type="startLocation"
+          class="form-control"
+          id="start"    
+          name="start"
+          placeholder="Enter start location"
+        />
+      </div>
+      <div class="form-group">
+        <label for="dest">Destination</label>
+        <input
+          type="destination"
+          class="form-control"
+          id="dest"
+          name="dest"
+          placeholder="Enter destination"
+        />
+      </div>
+      <br />
+      <button type="calculate" class="btn btn-primary">calculate</button>
+    </form>
+    {% endblock %}

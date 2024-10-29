@@ -1,12 +1,13 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from os import path
 from flask_login import LoginManager
+from os import path
+
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
 app = Flask(__name__)
+login_manager = LoginManager()
 
 def create_app():
     app.config['SECRET_KEY'] = 'secret_key'
@@ -23,15 +24,15 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
-    
     return app
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+    
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
@@ -41,3 +42,8 @@ def create_database(app):
 @app.route('/lines')
 def show_lines():
     return render_template('lines.svg')
+
+@app.route('/map')
+def calculate_route():
+    start = request.args.get('start')
+    dest = request.args.get('dest')

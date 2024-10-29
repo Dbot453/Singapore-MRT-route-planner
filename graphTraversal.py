@@ -76,9 +76,9 @@ class GetShortestPath:
         path.append(self.__start)
         path.reverse()
 
-        name = [self.__stations[station][0] for station in path]
+        station_names = [self.__stations[station][0] for station in path]
 
-        return self.__start, self.__end, distances[self.__end], path, name
+        return self.__start, self.__end, distances[self.__end], path, station_names
     
     def astar(self) -> str:
         q = PQ()
@@ -129,15 +129,6 @@ class GetShortestPath:
         path.append(self.__start)
         path.reverse()
 
-        name = [self.__stations[station][0] for station in path]
+        station_names = [self.__stations[station][0] for station in path]
 
-        return self.__start, self.__end, distances[self.__end], path, name
-    
-    
-    
-# Example usage
-finder = GetShortestPath("CC9", "CC22")
-d_start, d_end, d_distance, d_path_codes, d_path_names = finder.dijkstra()
-print(f"{d_start} to {d_end} takes {d_distance:.2f}km \n{d_path_codes} \n{d_path_names}")
-a_start, a_end, a_distance, a_path_codes, a_path_names= finder.astar()
-print(f"{a_start} to {a_end} takes {a_distance:.2f}km \n{a_path_codes} \n{a_path_names}")
+        return self.__start, self.__end, distances[self.__end], path, station_names
