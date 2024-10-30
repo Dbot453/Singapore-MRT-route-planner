@@ -17,9 +17,12 @@ def create_app():
     
     from .views import views
     from .auth import auth
+    from .models import User, Note
+    from .map import map
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(map, url_prefix='/')
     
     with app.app_context():
         db.create_all()
@@ -27,23 +30,14 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    return app
-
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
     
+    return app 
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
         db.create_all(app=app)
         print('Created Database!')
 
-@app.route('/lines')
-def show_lines():
-    return render_template('lines.svg')
-
-@app.route('/map')
-def calculate_route():
-    start = request.args.get('start')
-    dest = request.args.get('dest')

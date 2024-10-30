@@ -35,3 +35,17 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+
+@views.route('/lines')
+def show_lines():
+    return render_template('lines.svg')
+
+@views.route('/actual-map')
+def show_map():
+    return render_template('Singapore_MRT_Network.svg', user=current_user)
+
+@views.route('/map')
+def calculate_route():
+    return render_template('map.html', user=current_user)
+

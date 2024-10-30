@@ -7,7 +7,6 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -38,28 +37,21 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        username = request.form.get('usrname')
-        first_name = request.form.get('firstName')
         email = request.form.get('email')
+        first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        username = User.query.filter_by(username=username).first()
-        email = User.query.filter_by(email=email).first()
-        
-        if username:
-            flash('Username already exists.', category='error')
-        elif email:
+        user = User.query.filter_by(email=email).first()
+        if user:
             flash('Email already exists.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'))
+                password1, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
-    
-    # print(username, first_name, email, password1, password2)
-    return render_template("sign_up.html", user=current_user)
 
+    return render_template("sign_up.html", user=current_user)

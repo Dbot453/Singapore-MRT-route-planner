@@ -4,6 +4,10 @@ from custom_queue import PriorityQueue as PQ
 import numpy as np
 import math as m
 
+def GetShortestPathStatic(start: str, end: str):
+    instance = GetShortestPath(start, end)
+    return instance.astar()
+    
 class GetShortestPath:
     def __init__(self, start: str, end: str):
         self.__start = start
@@ -13,6 +17,9 @@ class GetShortestPath:
         self.__stations = Graph().get_station_info()
 
     def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+        """
+        Haversine formula to calculate the distance between two points takes latitude and longitude of two points as arguments returns the absolute value of the distance as float
+        """
         lat1 = m.radians(lat1)
         lat2 = m.radians(lat2)
         lng1 = m.radians(lng1)
@@ -36,6 +43,9 @@ class GetShortestPath:
         return maths.mod(latitude_distance) + maths.mod(longitude_distance)
 
     def dijkstra(self) -> str:
+        """
+        Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
+        """
         q = PQ()
         visited = {}
         distances = {}
@@ -78,9 +88,12 @@ class GetShortestPath:
 
         station_names = [self.__stations[station][0] for station in path]
 
-        return self.__start, self.__end, distances[self.__end], path, station_names
+        return distances[self.__end], path, station_names
     
     def astar(self) -> str:
+        """
+        A* algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
+        """
         q = PQ()
         visited = {}
         distances = {}
@@ -131,4 +144,4 @@ class GetShortestPath:
 
         station_names = [self.__stations[station][0] for station in path]
 
-        return self.__start, self.__end, distances[self.__end], path, station_names
+        return distances[self.__end], path, station_names
