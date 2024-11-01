@@ -5,6 +5,9 @@ import numpy as np
 import math as m
 
 def GetShortestPathStatic(start: str, end: str):
+    """
+    GetShortestPathStatic function is used as a static method to get the shortest path between two stations
+    """
     instance = GetShortestPath(start, end)
     return instance.astar()
     
@@ -18,7 +21,7 @@ class GetShortestPath:
 
     def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
         """
-        Haversine formula to calculate the distance between two points takes latitude and longitude of two points as arguments returns the absolute value of the distance as float
+        Haversine formula used to calculate the distance between two points takes latitude and longitude of two points as arguments returns the absolute value of the distance as float
         """
         lat1 = m.radians(lat1)
         lat2 = m.radians(lat2)

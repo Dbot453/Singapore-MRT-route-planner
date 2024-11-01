@@ -1,98 +1,110 @@
 {% extends "base.html" %} {% block title %}Map{% endblock %} {% block content%}
 <style>
-#sidebar, #map {
-    width: 50%;
-    float: left;
-}
-
-@media handheld, only screen and (max-width: 500px), only screen and (max-device-width: 500px) {
-    #map, #form {
-        width: auto;
-        float: none;
-    }
-}
-/* @media (max-width: 600px) {
-  section {
-    -webkit-flex-direction: column;
-    flex-direction: column;
+  #sidebar, #map {
+      width: 50%;
+      float: left;
   }
-} */ 
 
+  @media handheld, only screen and (max-width: 500px), only screen and (max-device-width: 500px) {
+      #map, #form {
+          width: auto;
+          float: none;
+      }
+  }
+  /* @media (max-width: 600px) {
+    section {
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    }
+  } */ 
 </style>
-
-<form method="POST">
-  <section>
-    <div id="sidebar" class="section" align = "left" style = "float:left">
-      <div class="row">
-        <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw;">
-          <h4>Journey Details</h4>
-          <div class="station-info">
-            <p><strong>Start Station:</strong></p>
-            <div class="form-group">
-              <input
-              type="text"
-              class="form-control"
-              id="start"    
-              name="start"
-              placeholder="Enter start location"
-              />
-              <hr>
-              <p><strong>End Station:</strong></p> 
+<html>
+  <form method="POST">
+    <section>
+      <div id="sidebar" class="section" align = "left" style = "float:left">
+        <div class="row">
+          <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw;">
+            <h4>Journey Details</h4>
+            <div class="station-info">
+              <p><strong>Start Station:</strong></p>
               <div class="form-group">
                 <input
                 type="text"
                 class="form-control"
-                id="dest"
-                name="dest"
-                placeholder="Enter destination"
+                id="start"    
+                name="start"
+                placeholder="Enter start location"
                 />
-              </div>
+                <hr>
+                <p><strong>End Station:</strong></p> 
+                <div class="form-group">
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="dest"
+                  name="dest"
+                  placeholder="Enter destination"
+                  />
+                </div>
+            </div>
+              <button type="calculate" class="btn btn-primary">calculate</button>
+            </div>
+            <div id = "distance">
+              <p>Distance: </p>
+              <p>{{ distance }}</p>
+            </div>
+            <label>Shortest Route (codes): </label>
+            {% for code in path_codes %} 
+            <li>
+              {{ code }}
+            </li>
+            {% endfor %}
+            <br>
+            <label>Shortest Route (names): </label>
+            {% for name in path_names %} 
+            <li>
+              {{ name }}
+            </li>
+            {% endfor %}
           </div>
-            <button type="calculate" class="btn btn-primary">calculate</button>
-          </div>
-          <div id = "distance">
-            <p>Distance: </p>
-            <p>{{ distance }}</p>
-          </div>
-          <label>Shortest Route (codes): </label>
-          {% for code in path_codes %} 
-          <li>
-            {{ code }}
-          </li>
-          {% endfor %}
-          <br>
-          <label>Shortest Route (names): </label>
-          {% for name in path_names %} 
-          <li>
-            {{ name }}
-          </li>
-          {% endfor %}
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <article-->
-    <div class="container-fluid" style="float:right">
-      <div id="map" style="height: 100vh; background-color: white; width: 75vw; width: 75vw;">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-          crossorigin=""></script>
-        <script>
-          var map = L.map('map').setView([1.3521, 103.8198], 12);
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 17,
-            minZoom: 10,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          }).addTo(map);
-        </script>
-      </div> 
-    </div>
-  </article>
-</form>
+    <div id="overview-map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;">
+      <svg id="modal-close" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <circle cx="50" cy="50" r="40" fill="#ddf" stroke="#008" stroke-width="10"></circle>
+        <line x1="35" x2="65" y1="35" y2="65" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="35" x2="65" y1="65" y2="35" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
+      </svg>
+    <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-295px, -165px, 0px);">
+      <div class="leaflet-pane leaflet-tile-pane"></div>
+      <div class="leaflet-pane leaflet-shadow-pane"></div>
+      <div class="leaflet-pane leaflet-overlay-pane"></div>
+      <div class="leaflet-pane leaflet-marker-pane"></div>
+      <div class="leaflet-pane leaflet-tooltip-pane"></div>
+      <div class="leaflet-pane leaflet-popup-pane"></div>
+      <div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(743738px, 468122px, 0px) scale(1842.33);"></div>
+        </div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left">
+          <div class="leaflet-control-scale leaflet-control">
+            <div class="leaflet-control-scale-line" style="width: 71px;">3 km</div>
+          </div>
+        </div>
+        <div class="leaflet-top leaflet-right">
+          <div class="leaflet-control-zoom leaflet-bar leaflet-control">
+            <a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
+            <a class="leaflet-control-zoom-out leaflet-disabled" href="#" title="Zoom out" role="button" aria-label="Zoom out">-</a>
+          </div>
+        </div>
+        <div class="leaflet-bottom leaflet-left"></div>
+        <div class="leaflet-bottom leaflet-right">
+          <div class="leaflet-control-attribution leaflet-control">
+            <a href="/map/about">More info</a> | CC-BY-SA 4.0 Wikipedia user:Seloloving</div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </form>
 
-
+</html>
 {% endblock %}

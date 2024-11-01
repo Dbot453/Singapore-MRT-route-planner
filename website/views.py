@@ -43,7 +43,7 @@ def show_lines():
 
 @views.route('/actual-map')
 def show_map():
-    return render_template('Singapore_MRT_Network.svg', user=current_user)
+    return render_template('map-test.html', user=current_user)
 
 @views.route('/map')
 def calculate_route():
