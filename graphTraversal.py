@@ -8,10 +8,10 @@ def GetShortestPathStatic(start: str, end: str):
     """
     GetShortestPathStatic function is used as a static method to get the shortest path between two stations
     """
-    instance = GetShortestPath(start, end)
-    return instance.astar()
+    instance = get_shortest_path(start, end)
+    return instance.a_star()
     
-class GetShortestPath:
+class get_shortest_path:
     def __init__(self, start: str, end: str):
         self.__start = start
         self.__end = end
@@ -46,9 +46,7 @@ class GetShortestPath:
         return maths.mod(latitude_distance) + maths.mod(longitude_distance)
 
     def dijkstra(self) -> str:
-        """
-        Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        """
+        #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
         q = PQ()
         visited = {}
         distances = {}
@@ -56,12 +54,12 @@ class GetShortestPath:
         current = self.__start
 
         for v in self.__adjacency_list:
-            if v != self.__start:
-                visited[v] = False
-                distances[v] = m.inf
-            else:
+            if v == self.__start:
                 visited[self.__start] = True
                 distances[self.__start] = 0
+            else:
+                visited[v] = False
+                distances[v] = m.inf
 
         for station in self.__adjacency_list.keys():
             if station != self.__start:
@@ -93,10 +91,8 @@ class GetShortestPath:
 
         return distances[self.__end], path, station_names
     
-    def astar(self) -> str:
-        """
-        A* algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        """
+    def a_star(self) -> str:
+        #A* algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
         q = PQ()
         visited = {}
         distances = {}
@@ -136,10 +132,18 @@ class GetShortestPath:
                     heuristic = self.haversine(float(self.__stations[neighbour][3]), float(self.__stations[neighbour][4]), end_lat, end_long)
                     q.enqueue((distances[neighbour] + heuristic, neighbour))
 
+        if self.__end not in previous and current != self.__end:
+            return float('inf'), [], []
+
         current = self.__end
         path = []
 
+        if current not in previous or previous[current] is None:
+            return float('inf'), [], []
+
         while current != self.__start:
+            if current is None or current not in previous:
+                return float('inf'), [], []
             path.append(current)
             current = previous[current]
         path.append(self.__start)
@@ -148,3 +152,61 @@ class GetShortestPath:
         station_names = [self.__stations[station][0] for station in path]
 
         return distances[self.__end], path, station_names
+    
+    def k_shortest_path(self):
+        k = 4
+        A = []
+        B = []
+        
+        first_distance, first_path, first_names = self.a_star()
+        A.append((first_distance, first_path))
+        
+        for i in range(k-1):
+            prev_path = A[-1][1]
+            
+            for j in range(len(prev_path)-1):
+                spur_node = prev_path[j]
+                root_path = prev_path[:j+1]
+                
+                edges_removed = {}
+                for path_distance, path in A:
+                    if len(path) > j and path[:j+1] == root_path:
+                        if path[j] in self.__adjacency_list and path[j+1] in self.__adjacency_list[path[j]]:
+                            if path[j] not in edges_removed:
+                                edges_removed[path[j]] = {}
+                            edges_removed[path[j]][path[j+1]] = self.__adjacency_list[path[j]][path[j+1]]
+                            del self.__adjacency_list[path[j]][path[j+1]]
+                
+                nodes_removed = []
+                for node in root_path[:-1]:
+                    if node not in self.__closed:
+                        self.__closed.append(node)
+                        nodes_removed.append(node)
+                
+                self.__start = spur_node
+                spur_distance, spur_path, _ = self.a_star()
+                
+                if spur_path:
+                    total_path = root_path[:-1] + spur_path
+                    total_distance = 0
+                    
+                    for p in range(len(total_path)-1):
+                        if total_path[p] in self.__adjacency_list and total_path[p+1] in self.__adjacency_list[total_path[p]]:
+                            total_distance += self.__adjacency_list[total_path[p]][total_path[p+1]]
+                    
+                    potential_k = (total_distance, total_path)
+                    if potential_k not in B:
+                        B.append(potential_k)
+            
+            if not B: break
+            B.sort(key=lambda x: x[0]) 
+            A.append(B[0])
+            B.pop(0)
+            self.__start = A[0][1][0]
+        
+        result = []
+        for distance, path in A:
+            station_names = [self.__stations[station][0] for station in path]
+            result.append((distance, path, station_names))
+            
+        return result
