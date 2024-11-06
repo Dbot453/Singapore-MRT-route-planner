@@ -48,4 +48,3 @@ def show_map():
 @views.route('/map')
 def calculate_route():
     return render_template('map.html', user=current_user)
-

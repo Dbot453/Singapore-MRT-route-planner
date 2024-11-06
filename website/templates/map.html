@@ -1,137 +1,126 @@
-{% extends "base.html" %} {% block title %}Map{% endblock %} {% block content%}
-<style>
-  #sidebar, #map {
-      width: 50%;
-      float: left;
-  }
-
-  @media handheld, only screen and (max-width: 500px), only screen and (max-device-width: 500px) {
-      #map, #form {
-          width: auto;
-          float: none;
-      }
-  }
-  /* @media (max-width: 600px) {
-    section {
-      -webkit-flex-direction: column;
-      flex-direction: column;
-    }
-  } */ 
-</style>
+{% extends "base.html" %}
+{% block title %}Map{% endblock %}
+{% block content %}
 <html>
-  <form method="POST">
-    <section>
-      <div id="sidebar" class="section" align = "left" style = "float:left">
-        <div class="row">
-          <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw;">
-            <h4>Journey Details</h4>
-            <div class="station-info">
-              <p><strong>Start Station:</strong></p>
-              <div class="form-group">
-                <input
-                type="text"
-                class="form-control"
-                id="start"    
-                name="start"
-                placeholder="Enter start location"
-                />
-                <hr>
-                <p><strong>End Station:</strong></p> 
+  <head>
+    <style>
+      .child{
+        border: 1px solid black;
+        float:left;
+        width: 50%;
+      }
+      .parent{
+        width: 100%;
+      }
+      @media (min-width: 768px) {
+        .parent {
+          display:flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+  <section class="parent">
+    <section class="child">
+      <div style="float:left;">
+        <form method="POST">
+          <div id="sidebar" class="section">
+            <div class="row"></div>
+            <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw;">
+              <h4>Journey Details</h4>
+              <div class="station-info">
+                <p><strong>Start Station:</strong></p>
                 <div class="form-group">
-                  <input
-                  type="text"
-                  class="form-control"
-                  id="dest"
-                  name="dest"
-                  placeholder="Enter destination"
-                  />
+                  <input id="start" class="form-control" type="text" name="start" placeholder="Enter start location"/>
                 </div>
+                <hr>
+                <p><strong>End Station:</strong></p>
+                <div class="form-group">
+                  <input id="dest" class="form-control" type="text" name="dest" placeholder="Enter destination"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+                <div id="distance">
+                  <p>Distance: </p>
+                  <p>{{ distance }}</p>
+                </div>
+                <label>Shortest Route (codes): </label>
+                <ul>
+                  {% for code in path_codes %}
+                  <li>{{ code }}</li>
+                  {% endfor %}
+                </ul>
+                <br>
+                <label>Shortest Route (names): </label>
+                <ul>
+                  {% for name in path_names %}
+                  <li>{{ name }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
             </div>
-              <button type="calculate" class="btn btn-primary">calculate</button>
-            </div>
-            <div id = "distance">
-              <p>Distance: </p>
-              <p>{{ distance }}</p>
-            </div>
-            <label>Shortest Route (codes): </label>
-            {% for code in path_codes %} 
-            <li>
-              {{ code }}
-            </li>
-            {% endfor %}
-            <br>
-            <label>Shortest Route (names): </label>
-            {% for name in path_names %} 
-            <li>
-              {{ name }}
-            </li>
-            {% endfor %}
           </div>
-        </div> 
+        </form>
       </div>
     </section>
-    <article>
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
-    <script type="text/javascript">	
-      window.addEventListener("load", function(event) {
-        history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
-        var e_map = document.getElementById('overview-map');
-        var e_modalx = document.getElementById('modal-close');
-        var imageUrl = "{{ url_for('static', filename='Singapore-MRT-Network.svg') }}"; // Use Flask url_for to generate correct static URL
-        var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
-        var imageOptions = {alt: "Singapore MRT/LRT Map (Geographic)", attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving'};
-        var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
-        var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
-        var zoomfit = mrtmap.getZoom();
-        mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
-        L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
-        L.control.zoom({position:'topright'}).addTo(mrtmap);
-        L.control.scale({imperial:false, position:'topleft'}).addTo(mrtmap);
-    
-    
-        function openMapMax(event) {
-          if (event) {
-            history.pushState({mapmax: 1}, document.title, window.location.pathname);
-          }
-    
-          e_map.style.position = 'fixed';
-          e_map.style.top = '0';
-          e_map.style.left = 0;
-          e_map.style.bottom = '0';
-          e_map.style.paddingBottom = '0';
-          e_map.style.right = '0';
-          e_map.style.zIndex = '9995';
-          e_modalx.style.display = 'inline';
-          mrtmap.invalidateSize();
-          mrtmap.fitBounds(imageBounds);
-        }
-    
-        document.getElementById("button-fs-map").addEventListener("click", openMapMax);
-        e_modalx.addEventListener("click", function() {
-          e_modalx.style.display = 'none';
-          history.back();
-        });
-    
-        window.onpopstate = function(event) {
-          if (event.state && event.state.mapmax === 1) {
-            openMapMax();
-          }
-          else {
-            e_modalx.style.display = 'none';
-            e_map.style.position = 'relative';
-            e_map.style.top = 0;
-            e_map.style.paddingBottom = '56%';
+
+    <section id="map" class="child">
+      <div id="overview-map" style="height: 100%;"></div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+      <script type="text/javascript">
+        window.addEventListener("load", function(event) {
+          history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
+          var e_map = document.getElementById('overview-map');
+          var e_modalx = document.getElementById('modal-close');
+          var imageUrl = "{{ url_for('static', filename='Singapore-MRT-Network.svg') }}";
+          var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
+          var imageOptions = {alt: "Singapore MRT/LRT Map (Geographic)", attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving'};
+          var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
+          var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
+          var zoomfit = mrtmap.getZoom();
+          mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
+          L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
+          L.control.zoom({position:'topright'}).addTo(mrtmap);
+          L.control.scale({imperial:false, position:'topleft'}).addTo(mrtmap);
+          
+          function openMapMax(event) {
+            if (event) {
+              history.pushState({mapmax: 1}, document.title, window.location.pathname);
+            }
+      
+            e_map.style.position = 'fixed';
+            e_map.style.top = '0';
+            e_map.style.left = 0;
+            e_map.style.bottom = '0';
+            e_map.style.paddingBottom = '0';
+            e_map.style.right = '0';
+            e_map.style.zIndex = '9995';
+            e_modalx.style.display = 'inline';
             mrtmap.invalidateSize();
             mrtmap.fitBounds(imageBounds);
           }
-        };
-    
-      });
       
-    </script>
-    </article>
-  </form>
-
+          document.getElementById("button-fs-map").addEventListener("click", openMapMax);
+          e_modalx.addEventListener("click", function() {
+            e_modalx.style.display = 'none';
+            history.back();
+          });
+      
+          window.onpopstate = function(event) {
+            if (event.state && event.state.mapmax === 1) {
+              openMapMax();
+            } else {
+              e_modalx.style.display = 'none';
+              e_map.style.position = 'relative';
+              e_map.style.top = 0;
+              e_map.style.paddingBottom = '56%';
+              mrtmap.invalidateSize();
+              mrtmap.fitBounds(imageBounds);
+            }
+          };
+        });
+      </script>
+    </section>
+  </section>
+  </body>
 </html>
 {% endblock %}

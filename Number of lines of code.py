@@ -9,7 +9,7 @@ for file in python:
 html = glob('website/templates/*.html')
 for file in html:
     with open(file) as f:
-        lines += sum([line.strip() != "" and not line.startswith('#') for line in f]) 
+        lines += sum([line.strip() != "" and not line.startswith('') for line in f]) 
         
 csv = glob('data/*.csv')
 for file in csv:
