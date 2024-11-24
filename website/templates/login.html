@@ -1,27 +1,90 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content%}
-    <form method="POST">
-      <h3 align="center">Login</h3>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          placeholder="Enter password"
-        />
-      </div>
-      <br />
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    {% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<style>
+  .container-md {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .form-control {
+    margin-bottom: 15px;
+  }
+  .btn-primary {
+    width: 100%;
+  }
+  .message {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+  }
+  .message p {
+    margin: 0;
+  }
+  .invalid {
+    color: red;
+  }
+  .valid {
+    color: green;
+  }
+</style>
+
+<form method="POST">
+  <div class="container-md" data-bs-theme="dark">
+    <h3 align="center">Login</h3>
+    <!-- Email -->
+    <label for="email">Email Address</label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      placeholder="Enter email"
+    />
+
+    <!-- Password -->
+    <label for="psw">Password</label>
+    <input 
+      type="password" 
+      id="password" 
+      name="password" 
+      required 
+      placeholder="Enter password"
+      class="form-control"
+    />
+
+    <!-- Show Password Checkbox -->
+    <div class="form-check">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        id="showPassword" 
+        onclick="togglePassword()"
+      />
+      <label class="form-check-label" for="showPassword">Show Password</label>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+
+<script>
+  function togglePassword() {
+    var passwordInput = document.getElementById("password");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+    } else {
+      passwordInput.type = "password";
+    }
+  }
+</script>
+
+{% endblock %}

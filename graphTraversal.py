@@ -23,27 +23,64 @@ class get_shortest_path:
         """
         Haversine formula used to calculate the distance between two points takes latitude and longitude of two points as arguments returns the absolute value of the distance as float
         """
-        lat1 = m.radians(lat1)
-        lat2 = m.radians(lat2)
-        lng1 = m.radians(lng1)
-        lng2 = m.radians(lng2)
+        lat1,lat2,lng1,lng2 = map(m.radians, [lat1,lat2,lng1,lng2])
         d_lat = lat2 - lat1
         d_lon = lng2 - lng1
+        # radius of the Earth in km
         R = 6371.0
+        # Convert latitude and longitude from degrees to radians
+        lat1_rad, lat2_rad, lng1_rad, lng2_rad = map(m.radians, [lat1, lat2, lng1, lng2])
 
-        a = pow(np.sin(d_lat / 2), 2)
-        root_a = m.sqrt(a)
-        root_1_a = m.sqrt(1 - a)
-        c = 2 * m.atan2(root_a, root_1_a)
-        latitude_distance = R * c
+        # Haversine formula
+        d_lat = lat2_rad - lat1_rad
+        d_lon = lng2_rad - lng1_rad
 
-        a = pow(np.sin(d_lon / 2), 2)
-        root_a = m.sqrt(a)
-        root_1_a = m.sqrt(1 - a)
-        c = 2 * m.atan2(root_a, root_1_a)
-        longitude_distance = R * c
+        a = m.sin(d_lat / 2) ** 2 + m.cos(lat1_rad) * m.cos(lat2_rad) * m.sin(d_lon / 2) ** 2
+        c = 2 * m.atan2(m.sqrt(a), m.sqrt(1 - a))
 
-        return maths.mod(latitude_distance) + maths.mod(longitude_distance)
+        return R * c
+    
+    def bfs(self) -> str:
+        #Breadth First Search algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
+        q = []
+        visited = {}
+        distances = {}
+        previous = {}
+        current = self.__start
+
+        for v in self.__adjacency_list:
+            if v == self.__start:
+                visited[self.__start] = True
+                distances[self.__start] = 0
+            else:
+                visited[v] = False
+                distances[v] = m.inf
+
+        q.append(self.__start)
+
+        while q:
+            current = q.pop(0)
+            visited[current] = True
+
+            for neighbour in self.__adjacency_list[current]:
+                if not visited[neighbour]:
+                    if distances[current] + self.__adjacency_list[current][neighbour] < distances[neighbour]:
+                        distances[neighbour] = distances[current] + self.__adjacency_list[current][neighbour]
+                        previous[neighbour] = current
+                        q.append(neighbour)
+
+        current = self.__end
+        path = []
+
+        while current != self.__start:
+            path.append(current)
+            current = previous[current]
+        path.append(self.__start)
+        path.reverse()
+
+        station_names = [self.__stations[station][0] for station in path]
+
+        return f"{distances[self.__end]:.2f}", path, station_names
 
     def dijkstra(self) -> str:
         #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
@@ -89,7 +126,7 @@ class get_shortest_path:
 
         station_names = [self.__stations[station][0] for station in path]
 
-        return distances[self.__end], path, station_names
+        return f"{distances[self.__end]:.2f}", path, station_names
     
     def a_star(self) -> str:
         #A* algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
@@ -151,7 +188,7 @@ class get_shortest_path:
 
         station_names = [self.__stations[station][0] for station in path]
 
-        return distances[self.__end], path, station_names
+        return f"{distances[self.__end]:.2f}", path, station_names
     
     def k_shortest_path(self):
         k = 4

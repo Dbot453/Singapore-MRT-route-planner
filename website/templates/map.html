@@ -3,20 +3,27 @@
 {% block content %}
 <html>
   <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
     <style>
-      .child{
+      .child {
         border: 1px solid black;
-        float:left;
-        width: 50%;
+        float: left;
+        width: 80%;
+        margin-left: 20%;
       }
-      .parent{
+      .parent {
         width: 100%;
       }
       @media (min-width: 768px) {
         .parent {
-          display:flex;
+          display: flex;
+          flex-direction: row-reverse;
+        }
+        .sidebar {
+          width: 80%;
         }
       }
+      
     </style>
   </head>
   <body>
@@ -26,7 +33,7 @@
         <form method="POST">
           <div id="sidebar" class="section">
             <div class="row"></div>
-            <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw;">
+            <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw; overflow-y: auto;">
               <h4>Journey Details</h4>
               <div class="station-info">
                 <p><strong>Start Station:</strong></p>
@@ -63,9 +70,9 @@
       </div>
     </section>
 
-    <section id="map" class="child">
-      <div id="overview-map" style="height: 100%;"></div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+    <section id="map-container" class="child">
+      <div class="map mrtmap" id="overview-map" style="height: 100vh; width: 75vw; position: relative;"></div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
       <script type="text/javascript">
         window.addEventListener("load", function(event) {
           history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
@@ -73,7 +80,14 @@
           var e_modalx = document.getElementById('modal-close');
           var imageUrl = "{{ url_for('static', filename='Singapore-MRT-Network.svg') }}";
           var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
-          var imageOptions = {alt: "Singapore MRT/LRT Map (Geographic)", attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving'};
+          var imageOptions = {
+            alt: "Singapore MRT/LRT Map (Geographic)", 
+            attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving',
+            interactive: true,
+            opacity: 1,
+            crossOrigin: true,
+            className: 'map-overlay'
+          };
           var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
           var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
           var zoomfit = mrtmap.getZoom();
@@ -86,7 +100,6 @@
             if (event) {
               history.pushState({mapmax: 1}, document.title, window.location.pathname);
             }
-      
             e_map.style.position = 'fixed';
             e_map.style.top = '0';
             e_map.style.left = 0;

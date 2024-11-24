@@ -17,6 +17,7 @@ class Graph:
         self._validate_station_data()
         self._populate_adjacency_list()
         self._populate_station_info()
+        
 
     def _add_stations(self):
         with open("data/stations.csv", 'r') as stations_file:
