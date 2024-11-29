@@ -109,3 +109,39 @@
 </script>
 
 {% endblock %}
+<!-- Checkbox that gets ticked when password requirements are met -->
+<input type="checkbox" id="passwordValidCheckbox" disabled>
+<label for="passwordValidCheckbox">Password meets all requirements</label>
+
+<script>
+  var passwordInput = document.getElementById('password1');
+  var checkbox = document.getElementById('passwordValidCheckbox');
+
+  passwordInput.onkeyup = function() {
+    var password = passwordInput.value;
+    var valid = true;
+
+    // Check for lowercase letters
+    if (!/[a-z]/.test(password)) {
+      valid = false;
+    }
+
+    // Check for uppercase letters
+    if (!/[A-Z]/.test(password)) {
+      valid = false;
+    }
+
+    // Check for numbers
+    if (!/[0-9]/.test(password)) {
+      valid = false;
+    }
+
+    // Check for length
+    if (password.length < 8) {
+      valid = false;
+    }
+
+    // Update checkbox
+    checkbox.checked = valid;
+  };
+</script>

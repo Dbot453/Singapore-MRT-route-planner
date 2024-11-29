@@ -42,7 +42,7 @@ class get_shortest_path:
     
     def bfs(self) -> str:
         #Breadth First Search algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        q = []
+        queue = []
         visited = {}
         distances = {}
         previous = {}
@@ -56,10 +56,10 @@ class get_shortest_path:
                 visited[v] = False
                 distances[v] = m.inf
 
-        q.append(self.__start)
+        queue.append(self.__start)
 
-        while q:
-            current = q.pop(0)
+        while queue:
+            current = queue.pop(0)
             visited[current] = True
 
             for neighbour in self.__adjacency_list[current]:
@@ -67,7 +67,7 @@ class get_shortest_path:
                     if distances[current] + self.__adjacency_list[current][neighbour] < distances[neighbour]:
                         distances[neighbour] = distances[current] + self.__adjacency_list[current][neighbour]
                         previous[neighbour] = current
-                        q.append(neighbour)
+                        queue.append(neighbour)
 
         current = self.__end
         path = []
@@ -80,11 +80,11 @@ class get_shortest_path:
 
         station_names = [self.__stations[station][0] for station in path]
 
-        return f"{distances[self.__end]:.2f}", path, station_names
+        return f"{distances[self.end]:.2f}", path, station_names
 
     def dijkstra(self) -> str:
         #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        q = PQ()
+        priority_queue = PQ()
         visited = {}
         distances = {}
         previous = {}
@@ -102,10 +102,10 @@ class get_shortest_path:
             if station != self.__start:
                 previous[station] = None
                 distances[station] = m.inf
-            q.enqueue((0, self.__start))
+            priority_queue.enqueue((0, self.__start))
 
-        while not q.is_empty():
-            current = q.dequeue()[1]
+        while not priority_queue.is_empty():
+            current = priority_queue.dequeue()[1]
             visited[current] = True
 
             for neighbour in self.__adjacency_list[current]:
@@ -113,7 +113,7 @@ class get_shortest_path:
                     if distances[current] + self.__adjacency_list[current][neighbour] < distances[neighbour]:
                         distances[neighbour] = distances[current] + self.__adjacency_list[current][neighbour]
                         previous[neighbour] = current
-                        q.enqueue((distances[neighbour], neighbour))
+                        priority_queue.enqueue((distances[neighbour], neighbour))
 
         current = self.__end
         path = []
@@ -130,7 +130,7 @@ class get_shortest_path:
     
     def a_star(self) -> str:
         #A* algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        q = PQ()
+        priority_queue = PQ()
         visited = {}
         distances = {}
         previous = {}
@@ -148,13 +148,13 @@ class get_shortest_path:
             if station != self.__start:
                 previous[station] = None
                 distances[station] = m.inf
-            q.enqueue((0, self.__start))
+            priority_queue.enqueue((0, self.__start))
 
         end_long = float(self.__stations[self.__end][3])
         end_lat = float(self.__stations[self.__end][4])
 
-        while not q.is_empty():
-            current = q.dequeue()[1]
+        while not priority_queue.is_empty():
+            current = priority_queue.dequeue()[1]
             if current == self.__end:
                 break
             visited[current] = True
@@ -167,7 +167,7 @@ class get_shortest_path:
                     distances[neighbour] = tentative_g_score
                     previous[neighbour] = current
                     heuristic = self.haversine(float(self.__stations[neighbour][3]), float(self.__stations[neighbour][4]), end_lat, end_long)
-                    q.enqueue((distances[neighbour] + heuristic, neighbour))
+                    priority_queue.enqueue((distances[neighbour] + heuristic, neighbour))
 
         if self.__end not in previous and current != self.__end:
             return float('inf'), [], []

@@ -10,3 +10,5 @@ class Gui:
         app = create_app()
         app.run(debug=True)
         
+
+Gui()
