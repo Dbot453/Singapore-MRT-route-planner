@@ -16,8 +16,15 @@ class ShortestPath:
         self.__start = start
         self.__end = end
         self.__closed = []
-        self.__adjacency_list = Graph().get_adjacency_list()
-        self.__stations = Graph().get_station_info()
+
+        # *** only need to call graph() once to get an instance
+        my_graph = Graph()
+        self.__adjacency_list = my_graph.get_adjacency_list()
+        self.__stations = my_graph.get_station_info()
+
+        # check and compare if these are the same as above
+        self.__stations_new = my_graph.get_all_stations()
+        self.__adjacency_list_new = my_graph.get_adjacency_list_new()
 
     def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
         """
@@ -80,6 +87,9 @@ class ShortestPath:
 
         station_names = [self.__stations[station][0] for station in path]
 
+        #*** compare to the above line if they are the same
+        station_names_new = [self.__stations_new[station].get_station_name() for station in path]
+
         return f"{distances[self.end]:.2f}", path, station_names
 
     def dijkstra(self) -> str:
@@ -126,6 +136,9 @@ class ShortestPath:
 
         station_names = [self.__stations[station][0] for station in path]
 
+        #*** compare to the above line if they are the same
+        station_names_new = [self.__stations_new[station].get_station_name() for station in path]
+
         return f"{distances[self.__end]:.2f}", path, station_names
     
     def a_star(self) -> str:
@@ -153,6 +166,9 @@ class ShortestPath:
         end_long = float(self.__stations[self.__end][3])
         end_lat = float(self.__stations[self.__end][4])
 
+        end_long_new = float(self.__stations_new[self.__end].get_lng())
+        end_lat_new = float(self.__stations_new[self.__end].get_lat())
+
         while not priority_queue.is_empty():
             current = priority_queue.dequeue()[1]
             if current == self.__end:
@@ -167,6 +183,8 @@ class ShortestPath:
                     distances[neighbour] = tentative_g_score
                     previous[neighbour] = current
                     heuristic = self.haversine(float(self.__stations[neighbour][3]), float(self.__stations[neighbour][4]), end_lat, end_long)
+                    heuristic_new = self.haversine(float(self.__stations_new[neighbour].get_lat()), float(self.__stations_new[neighbour].get_lng()), end_lat, end_long)
+
                     priority_queue.enqueue((distances[neighbour] + heuristic, neighbour))
 
         if self.__end not in previous and current != self.__end:
@@ -187,6 +205,7 @@ class ShortestPath:
         path.reverse()
 
         station_names = [self.__stations[station][0] for station in path]
+        station_names_new = [self.__stations[station].get_station_name() for station in path]
 
         return f"{distances[self.__end]:.2f}", path, station_names
     
@@ -244,6 +263,8 @@ class ShortestPath:
         result = []
         for distance, path in A:
             station_names = [self.__stations[station][0] for station in path]
+            station_names_new = [self.__stations[station].get_station_name() for station in path]
+
             result.append((distance, path, station_names))
             
         return result
