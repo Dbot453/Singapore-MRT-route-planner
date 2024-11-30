@@ -8,10 +8,10 @@ def GetShortestPathStatic(start: str, end: str):
     """
     GetShortestPathStatic function is used as a static method to get the shortest path between two stations
     """
-    instance = get_shortest_path(start, end)
+    instance = ShortestPath(start, end)
     return instance.a_star()
     
-class get_shortest_path:
+class ShortestPath:
     def __init__(self, start: str, end: str):
         self.__start = start
         self.__end = end
