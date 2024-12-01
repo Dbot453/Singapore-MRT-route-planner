@@ -13,13 +13,13 @@ def calculate_route():
     if request.method == 'POST':
         start = request.form.get('start')
         dest = request.form.get('dest')
+        algorithm = request.form.get('algorithm_selection')
         
         if start == dest:
             flash(category='error', message='Start and destination cannot be the same')
-            return redirect(url_for('map.display_map'))
         
         else:   
-            d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start,dest) 
+            d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start, dest, algorithm) 
             return render_template('map.html', user=current_user,
                                  distance=d_distance,
                                  path_codes=d_path_codes,

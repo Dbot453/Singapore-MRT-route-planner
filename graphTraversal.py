@@ -4,12 +4,24 @@ from custom_queue import PriorityQueue as PQ
 import numpy as np
 import math as m
 
-def GetShortestPathStatic(start: str, end: str):
+def GetShortestPathStatic(start: str, end: str, algorithm: SyntaxError):
     """
     GetShortestPathStatic function is used as a static method to get the shortest path between two stations
     """
     instance = ShortestPath(start, end)
-    return instance.a_star()
+
+    #<option value='1'>Breadth First Search</option>
+    #<option value='2'>Dijkstra</option>
+    #<option value='3'>K Shortest Path</option>
+    #<option value='4'>A Star</option>
+    if algorithm == '1' : #'Breadth First Search':
+        return instance.bfs()
+    elif algorithm == '2': # 'Dijkstra':
+        return instance.dijkstra()
+    elif algorithm == '3': #'K Shortest Path':
+        return instance.k_shortest_path()
+    else: 
+        return instance.a_star()
     
 class ShortestPath:
     def __init__(self, start: str, end: str):
@@ -21,10 +33,6 @@ class ShortestPath:
         my_graph = Graph()
         self.__adjacency_list = my_graph.get_adjacency_list()
         self.__stations = my_graph.get_station_info()
-
-        # check and compare if these are the same as above
-        self.__stations_new = my_graph.get_all_stations()
-        self.__adjacency_list_new = my_graph.get_adjacency_list_new()
 
     def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
         """
@@ -85,12 +93,12 @@ class ShortestPath:
         path.append(self.__start)
         path.reverse()
 
-        station_names = [self.__stations[station][0] for station in path]
+        #station_names = [self.__stations[station][0] for station in path]
 
         #*** compare to the above line if they are the same
-        station_names_new = [self.__stations_new[station].get_station_name() for station in path]
+        station_names = [self.__stations[station].get_station_name() for station in path]
 
-        return f"{distances[self.end]:.2f}", path, station_names
+        return f"{distances[self.__end]:.2f}", path, station_names
 
     def dijkstra(self) -> str:
         #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
@@ -134,10 +142,10 @@ class ShortestPath:
         path.append(self.__start)
         path.reverse()
 
-        station_names = [self.__stations[station][0] for station in path]
+        #station_names = [self.__stations[station][0] for station in path]
 
         #*** compare to the above line if they are the same
-        station_names_new = [self.__stations_new[station].get_station_name() for station in path]
+        station_names = [self.__stations[station].get_station_name() for station in path]
 
         return f"{distances[self.__end]:.2f}", path, station_names
     
@@ -163,11 +171,15 @@ class ShortestPath:
                 distances[station] = m.inf
             priority_queue.enqueue((0, self.__start))
 
-        end_long = float(self.__stations[self.__end][3])
-        end_lat = float(self.__stations[self.__end][4])
+        # *** this is wrong, otherway around
+        #end_long = float(self.__stations[self.__end][3])
+        #end_lat = float(self.__stations[self.__end][4])
+        #
+        #end_long = float(self.__stations[self.__end][4])
+        #end_lat = float(self.__stations[self.__end][3])
 
-        end_long_new = float(self.__stations_new[self.__end].get_lng())
-        end_lat_new = float(self.__stations_new[self.__end].get_lat())
+        end_long = float(self.__stations[self.__end].get_lng())
+        end_lat = float(self.__stations[self.__end].get_lat())
 
         while not priority_queue.is_empty():
             current = priority_queue.dequeue()[1]
@@ -182,8 +194,7 @@ class ShortestPath:
                 if tentative_g_score < distances[neighbour]:
                     distances[neighbour] = tentative_g_score
                     previous[neighbour] = current
-                    heuristic = self.haversine(float(self.__stations[neighbour][3]), float(self.__stations[neighbour][4]), end_lat, end_long)
-                    heuristic_new = self.haversine(float(self.__stations_new[neighbour].get_lat()), float(self.__stations_new[neighbour].get_lng()), end_lat, end_long)
+                    heuristic = self.haversine(float(self.__stations[neighbour].get_lat()), float(self.__stations[neighbour].get_lng()), end_lat, end_long)
 
                     priority_queue.enqueue((distances[neighbour] + heuristic, neighbour))
 
@@ -204,8 +215,7 @@ class ShortestPath:
         path.append(self.__start)
         path.reverse()
 
-        station_names = [self.__stations[station][0] for station in path]
-        station_names_new = [self.__stations[station].get_station_name() for station in path]
+        station_names = [self.__stations[station].get_station_name() for station in path]
 
         return f"{distances[self.__end]:.2f}", path, station_names
     
@@ -260,11 +270,12 @@ class ShortestPath:
             B.pop(0)
             self.__start = A[0][1][0]
         
-        result = []
+        #result = []
         for distance, path in A:
-            station_names = [self.__stations[station][0] for station in path]
-            station_names_new = [self.__stations[station].get_station_name() for station in path]
-
-            result.append((distance, path, station_names))
+            station_names = [self.__stations[station].get_station_name() for station in path]
+            # only need the first best path and exit
+            return (distance, path, station_names)
             
-        return result
+
+            
+        #return result
