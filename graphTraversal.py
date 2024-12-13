@@ -28,7 +28,7 @@ class ShortestPath:
         self.__start = start
         self.__end = end
         self.__closed = []
-
+        # RADIUS = 6371.0 
         # *** only need to call graph() once to get an instance
         my_graph = Graph()
         self.__adjacency_list = my_graph.get_adjacency_list()
@@ -55,50 +55,7 @@ class ShortestPath:
 
         return R * c
     
-    def bfs(self) -> str:
-        #Breadth First Search algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
-        queue = []
-        visited = {}
-        distances = {}
-        previous = {}
-        current = self.__start
-
-        for v in self.__adjacency_list:
-            if v == self.__start:
-                visited[self.__start] = True
-                distances[self.__start] = 0
-            else:
-                visited[v] = False
-                distances[v] = m.inf
-
-        queue.append(self.__start)
-
-        while queue:
-            current = queue.pop(0)
-            visited[current] = True
-
-            for neighbour in self.__adjacency_list[current]:
-                if not visited[neighbour]:
-                    if distances[current] + self.__adjacency_list[current][neighbour] < distances[neighbour]:
-                        distances[neighbour] = distances[current] + self.__adjacency_list[current][neighbour]
-                        previous[neighbour] = current
-                        queue.append(neighbour)
-
-        current = self.__end
-        path = []
-
-        while current != self.__start:
-            path.append(current)
-            current = previous[current]
-        path.append(self.__start)
-        path.reverse()
-
-        #station_names = [self.__stations[station][0] for station in path]
-
-        #*** compare to the above line if they are the same
-        station_names = [self.__stations[station].get_station_name() for station in path]
-
-        return f"{distances[self.__end]:.2f}", path, station_names
+    
 
     def dijkstra(self) -> str:
         #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
@@ -195,7 +152,6 @@ class ShortestPath:
                     distances[neighbour] = tentative_g_score
                     previous[neighbour] = current
                     heuristic = self.haversine(float(self.__stations[neighbour].get_lat()), float(self.__stations[neighbour].get_lng()), end_lat, end_long)
-
                     priority_queue.enqueue((distances[neighbour] + heuristic, neighbour))
 
         if self.__end not in previous and current != self.__end:
@@ -224,8 +180,8 @@ class ShortestPath:
         A = []
         B = []
         
-        first_distance, first_path, first_names = self.a_star()
-        A.append((first_distance, first_path))
+        disance1, path1, first_names = self.a_star()
+        A.append((disance1, path1))
         
         for i in range(k-1):
             prev_path = A[-1][1]
@@ -234,20 +190,20 @@ class ShortestPath:
                 spur_node = prev_path[j]
                 root_path = prev_path[:j+1]
                 
-                edges_removed = {}
+                removed_edges = {}
                 for path_distance, path in A:
                     if len(path) > j and path[:j+1] == root_path:
                         if path[j] in self.__adjacency_list and path[j+1] in self.__adjacency_list[path[j]]:
-                            if path[j] not in edges_removed:
-                                edges_removed[path[j]] = {}
-                            edges_removed[path[j]][path[j+1]] = self.__adjacency_list[path[j]][path[j+1]]
+                            if path[j] not in removed_edges:
+                                removed_edges[path[j]] = {}
+                            removed_edges[path[j]][path[j+1]] = self.__adjacency_list[path[j]][path[j+1]]
                             del self.__adjacency_list[path[j]][path[j+1]]
                 
-                nodes_removed = []
+                removed_nodes = []
                 for node in root_path[:-1]:
                     if node not in self.__closed:
                         self.__closed.append(node)
-                        nodes_removed.append(node)
+                        removed_nodes.append(node)
                 
                 self.__start = spur_node
                 spur_distance, spur_path, _ = self.a_star()
@@ -270,12 +226,9 @@ class ShortestPath:
             B.pop(0)
             self.__start = A[0][1][0]
         
-        #result = []
+        result = []
         for distance, path in A:
             station_names = [self.__stations[station].get_station_name() for station in path]
-            # only need the first best path and exit
-            return (distance, path, station_names)
+            result.append((distance, path, station_names))
             
-
-            
-        #return result
+        return result

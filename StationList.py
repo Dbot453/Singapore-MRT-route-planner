@@ -23,6 +23,6 @@ def get_all_stations():
                 lng = fields[5]
                 adj_stations = fields[len(fields) - 1].split("#")
                 station_list[station_code] = Station(station_code, station_name, line_color, line_name, lat, lng, adj_stations)
-    return station_list;
+    return station_list
 
 g_station_list = get_all_stations()
