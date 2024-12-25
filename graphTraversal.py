@@ -5,21 +5,35 @@ from custom_queue import PriorityQueue as PQ
 import numpy as np
 import math as m
 
-def GetShortestPathStatic(start: str, end: str):
+def GetShortestPathStatic(start: str, end: str, algorithm: SyntaxError):
     """
     GetShortestPathStatic function is used as a static method to get the shortest path between two stations
     """
-    instance = get_shortest_path(start, end)
-    return instance.a_star()
+    instance = ShortestPath(start, end)
+
+    #<option value='1'>Breadth First Search</option>
+    #<option value='2'>Dijkstra</option>
+    #<option value='3'>K Shortest Path</option>
+    #<option value='4'>A Star</option>
+    if algorithm == '1' : #'Breadth First Search':
+        return instance.bfs()
+    elif algorithm == '2': # 'Dijkstra':
+        return instance.dijkstra()
+    elif algorithm == '3': #'K Shortest Path':
+        return instance.k_shortest_path()
+    else: 
+        return instance.a_star()
     
-class get_shortest_path:
+class ShortestPath:
     def __init__(self, start: str, end: str):
         self.__start = start
         self.__end = end
-        self.__closed = []
-        self.__adjacency_list = Graph().get_adjacency_list()
-        self.__stations = Graph().get_station_info()
-        self.__interchange_stations = Graph().get_interchange_stations()
+        # radius of the Earth in km
+        self.RADIUS = 6371.0 
+        graph = Graph()
+        self.__adjacency_list = graph.get_adjacency_list()
+        self.__stations = graph.get_station_info()
+        self.__interchange_stations = graph.get_interchange_stations()
     
     def convert_to_time(self, distance: float) -> str:
         max_speed = 27.8  # m/s
@@ -45,7 +59,6 @@ class get_shortest_path:
         lat1,lat2,lng1,lng2 = map(m.radians, [lat1,lat2,lng1,lng2])
         d_lat = lat2 - lat1
         d_lon = lng2 - lng1
-        # radius of the Earth in km
         R = 6371.0
         # Convert latitude and longitude from degrees to radians
         lat1_rad, lat2_rad, lng1_rad, lng2_rad = map(m.radians, [lat1, lat2, lng1, lng2])
@@ -57,7 +70,7 @@ class get_shortest_path:
         a = m.sin(d_lat / 2) ** 2 + m.cos(lat1_rad) * m.cos(lat2_rad) * m.sin(d_lon / 2) ** 2
         c = 2 * m.atan2(m.sqrt(a), m.sqrt(1 - a))
 
-        return R * c
+        return self.RADIUS * c
     
     def euclidian(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
         #Euclidian formula used to calculate the distance between two points takes latitude and longitude of two points as arguments returns the absolute value of the distance as float
@@ -141,6 +154,7 @@ class get_shortest_path:
         station_names = [self.__stations[station][0] for station in path]
 
         return f"{distances[self.end]:.2f}", path, station_names
+    
 
     def dijkstra(self) -> str:
         #Dijkstra algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
@@ -188,8 +202,15 @@ class get_shortest_path:
         distances[self.__start] = 0
         priority_queue.enqueue((0, self.__start))
 
-        end_long = float(self.__stations[self.__end][3])
-        end_lat = float(self.__stations[self.__end][4])
+        # *** this is wrong, otherway around
+        #end_long = float(self.__stations[self.__end][3])
+        #end_lat = float(self.__stations[self.__end][4])
+        #
+        #end_long = float(self.__stations[self.__end][4])
+        #end_lat = float(self.__stations[self.__end][3])
+
+        end_long = float(self.__stations[self.__end].get_lng())
+        end_lat = float(self.__stations[self.__end].get_lat())
 
         while not priority_queue.is_empty():
             current = priority_queue.dequeue()[1]
@@ -224,8 +245,8 @@ class get_shortest_path:
         A = []
         B = []
         
-        first_distance, first_path, first_names = self.a_star()
-        A.append((first_distance, first_path))
+        disance1, path1, first_names = self.a_star()
+        A.append((disance1, path1))
         
         for i in range(k-1):
             prev_path = A[-1][1]
@@ -234,20 +255,20 @@ class get_shortest_path:
                 spur_node = prev_path[j]
                 root_path = prev_path[:j+1]
                 
-                edges_removed = {}
+                removed_edges = {}
                 for path_distance, path in A:
                     if len(path) > j and path[:j+1] == root_path:
                         if path[j] in self.__adjacency_list and path[j+1] in self.__adjacency_list[path[j]]:
-                            if path[j] not in edges_removed:
-                                edges_removed[path[j]] = {}
-                            edges_removed[path[j]][path[j+1]] = self.__adjacency_list[path[j]][path[j+1]]
+                            if path[j] not in removed_edges:
+                                removed_edges[path[j]] = {}
+                            removed_edges[path[j]][path[j+1]] = self.__adjacency_list[path[j]][path[j+1]]
                             del self.__adjacency_list[path[j]][path[j+1]]
                 
-                nodes_removed = []
+                removed_nodes = []
                 for node in root_path[:-1]:
                     if node not in self.__closed:
                         self.__closed.append(node)
-                        nodes_removed.append(node)
+                        removed_nodes.append(node)
                 
                 self.__start = spur_node
                 spur_distance, spur_path, _ = self.a_star()
@@ -272,7 +293,7 @@ class get_shortest_path:
         
         result = []
         for distance, path in A:
-            station_names = [self.__stations[station][0] for station in path]
+            station_names = [self.__stations[station].get_station_name() for station in path]
             result.append((distance, path, station_names))
             
         return result  

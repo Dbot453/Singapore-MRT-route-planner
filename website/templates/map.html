@@ -36,7 +36,38 @@
             <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw; overflow-y: auto;">
               <h4>Journey Details</h4>
               <div class="station-info">
+
+                <left>
+                  <li>
+                    <label>Start Station: </label>
+                    <select name="start"  >
+                      {% for d in all_station_codes %} 
+                        {% if (d == selectStart) %}
+                          <option selected value="{{d}}">{{ d }}</option>
+                        {% else %}
+                          <option value="{{d}}">{{ d }}</option>
+                        {% endif%}
+                      {% endfor %}
+                    </select>  
+                  </li>
+                  <li>
+                    <label>End Station: </label>
+                    <select name="dest" >
+                      {% for a in all_station_codes %}
+                        {% if (a == selectDest) %}
+                          <option selected value="{{a}}">{{ a }}</option>
+                        {% else %}
+                          <option value="{{a}}">{{ a }}</option>
+                        {% endif%}
+                      {% endfor %}
+                    </select>
+                  </li> 
+                </left>
+
                 <p><strong>Start Station:</strong></p>
+
+                <!-- all_station_codes -->
+                 <!--
                 <div class="form-group">
                   <input id="start" class="form-control" type="text" name="start" placeholder="Enter start location"/>
                 </div>
@@ -45,6 +76,19 @@
                 <div class="form-group">
                   <input id="dest" class="form-control" type="text" name="dest" placeholder="Enter destination"/>
                 </div>
+                -->
+
+                <p><label>Select Algorithm</label></p>
+                <p>
+                <select name="algorithm_selection">
+                  <option value='1'>Breadth First Search</option>
+                  <option value='2'>Dijkstra</option>
+                  <option value='3'>K Shortest Path</option>
+                  <option value='4'>A Star</option>
+                  
+                </select>
+              </p>
+
                 <button type="submit" class="btn btn-primary">Calculate</button>
                 <div id="distance">
                   <p>Distance: </p>
@@ -82,7 +126,7 @@
           history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
           var e_map = document.getElementById('overview-map');
           var e_modalx = document.getElementById('modal-close');
-          var imageUrl = "{{ url_for('static', filename='Singapore-MRT-Network.svg') }}";
+          var imageUrl = "{{ url_for('static', filename='Singapore_MRT_Network_new.svg') }}";
           var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
           var imageOptions = {
             alt: "Singapore MRT/LRT Map (Geographic)", 
