@@ -8,6 +8,7 @@ class Graph:
         self.stations = {}
         self.adjacency_list = {}
         self.station_info = {}
+        self.interchange_stations = []
         Graph.generate_station_data(self)
 
     def generate_station_data(self):
@@ -16,8 +17,7 @@ class Graph:
         self._add_transfer_distances()
         self._validate_station_data()
         self._populate_adjacency_list()
-        self._populate_station_info()
-        
+        self._populate_station_info()  
 
     def _add_stations(self):
         with open("data/stations.csv", 'r') as stations_file:
@@ -45,13 +45,17 @@ class Graph:
                 if fields[0] != "Station1":
                     station1 = fields[0]
                     station2 = fields[1]
-                    distance = float(fields[3])
-
-                    self._update_connections(station1, station2, distance)
-                    self._update_connections(station2, station1, distance)
+                    
+                    max_speed = 27.8  # m/s
+                    acceleration = 1.0  # m/s^2
+                    distance = float(fields[3])*1000
+                    
+                    self._update_connections(station1, station2, distance, "train")
+                    self._update_connections(station2, station1, distance, "train")
                     
     def _add_transfer_distances(self):
         with open("data/transfer timings.csv", 'r') as transfers_file:
+            
             for line in transfers_file:
                 line = line.strip()
                 fields = line.split(",")
@@ -59,15 +63,16 @@ class Graph:
                 if fields[0] != "Station Name":
                     station1 = fields[2]
                     station2 = fields[4]
-                    distance = float(fields[5]) * 1.5 #TODO: work out how to change time to distance currently it is walking distance
+                    self.interchange_stations.append(station1)
+                    self.interchange_stations.append(station2)
+                    transfer_time = float(fields[5])
+                    self._update_connections(station1, station2, transfer_time, "transfer")
+                    self._update_connections(station2, station1, transfer_time, "transfer")
 
-                    self._update_connections(station1, station2, distance)
-                    self._update_connections(station2, station1, distance)
-
-    def _update_connections(self, station1, station2, distance):
+    def _update_connections(self, station1, station2, distance, travel_method):
         info = self.stations[station1]
         connections = info[6]
-        connections[station2] = distance
+        connections[station2] = {"cost": distance, "method": travel_method}
         info[6] = connections
         self.stations[station1] = info
 
@@ -93,9 +98,19 @@ class Graph:
         for k in self.stations:
             temp = self.stations[k]
             self.station_info[k] = temp[0:5]
+            self.station_info[k].append(temp[6])
 
     def get_adjacency_list(self):
         return self.adjacency_list
 
     def get_station_info(self):
         return self.station_info
+    
+    def get_interchange_stations(self):
+        return self.interchange_stations
+
+#stations dictionary is station code : [station name, line, line colour, longitude, latitude, [adjacent stations], {adjacent stations : {distance :" an int", method"train / transfer"}}]"}}]
+# x = Graph()
+# print(x.stations)
+# print(x.adjacency_list)
+# print(x.interchange_stations)

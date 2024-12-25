@@ -59,7 +59,7 @@
     />
 
     <!-- Password -->
-    <label for="psw">Password</label>
+    <label for="password1">Password</label>
     <input 
       type="password" 
       id="password1" 
@@ -70,7 +70,19 @@
       placeholder="Enter password"
       class="form-control"
     />
-    <button type="button" onclick="togglePasswordVisibility('password1')">Show Password</button>
+
+    <!-- Show Password Checkbox -->
+    <div class="form-check">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        id="showPassword" 
+        onclick="togglePasswordVisibility('password1')"
+      />
+      <label class="form-check-label" for="showPassword">Show Password</label>
+    </div>
+
+    <!-- Password confirm -->
     <label for="password2">Password (Confirm)</label>
     <input
       type="password"
@@ -78,24 +90,25 @@
       id="password2"
       name="password2"
       placeholder="Confirm password"
-    />
-    <button type="button" onclick="togglePasswordVisibility('password2')">Show Password</button>
-  
-    <button type="submit" class="btn btn-primary">Submit</button>
+      />
+      
+    <!-- Show Password Checkbox -->
+    <div class="form-check">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        id="showPassword" 
+        onclick="togglePasswordVisibility('password2')"
+      />
+      <label class="form-check-label" for="showPassword">Show Password</label>
+    </div>
+
+    <!-- Submit button-->
+    <button type="submit" class="btn btn-primary" >Submit</button>
+    
+  </div>
   </div>
 </form>
-
-<!-- Password Requirements dynamically displayed-->
-<div class="message" role="alert">
-  <h5>Password must contain the following:</h5>
-  <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-  <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-  <p id="number" class="invalid">A <b>number</b></p>
-  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-</div>
-
-<div id="message"></div>
-<p id="same" class="invalid">Passwords must match</p>
 
 <script>
   function togglePasswordVisibility(id) {
@@ -109,15 +122,24 @@
 </script>
 
 {% endblock %}
+
 <!-- Checkbox that gets ticked when password requirements are met -->
-<input type="checkbox" id="passwordValidCheckbox" disabled>
-<label for="passwordValidCheckbox">Password meets all requirements</label>
+<script>
+var confirmPassword = document.getElementById('password2');
+confirmPassword.addEventListener('input', function() {
+  if (document.getElementById('password1').value !== this.value) {
+    this.setCustomValidity("Passwords do not match.");
+  } else {
+    this.setCustomValidity("");
+  }
+});
+</script>
 
 <script>
   var passwordInput = document.getElementById('password1');
   var checkbox = document.getElementById('passwordValidCheckbox');
 
-  passwordInput.onkeyup = function() {
+  passwordInput.addEventListener('input', function() {
     var password = passwordInput.value;
     var valid = true;
 
@@ -136,12 +158,12 @@
       valid = false;
     }
 
-    // Check for length
+    // Check for le ngth
     if (password.length < 8) {
       valid = false;
     }
 
     // Update checkbox
     checkbox.checked = valid;
-  };
+  });
 </script>

@@ -18,7 +18,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.calculate_route'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -43,15 +43,18 @@ def sign_up():
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
+        if password1 != password2:
+            flash('Passwords don\'t match.', category='error')
         else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='pbkdf2:sha256'))
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+            if user:
+                flash('Email already exists.', category='error')
+            else:
+                new_user = User(email=email, first_name=first_name, password=generate_password_hash(
+                    password1, method='pbkdf2:sha256'))
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user, remember=True)
+                flash('Account created!', category='success')
+                return redirect(url_for('auth.login'))
 
     return render_template("sign_up.html", user=current_user)
