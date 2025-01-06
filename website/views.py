@@ -20,6 +20,7 @@ def create_highlighted_map(shortestRoute, original_svg_file, new_svg_file):
     new_f = open(new_svg_file, "w")
     old_f = open(original_svg_file, "r")
     is_start = False 
+    
     for x in old_f:
         if x. find("<text") > 0:
             is_in_route = False
@@ -40,6 +41,7 @@ def create_highlighted_map(shortestRoute, original_svg_file, new_svg_file):
     new_f.close()
     
     print("Done")
+    
 @views.route('/')
 def home():
     return render_template('home.html', user=current_user)

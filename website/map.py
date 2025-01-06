@@ -57,6 +57,14 @@ def calculate_route():
         dest = request.form.get('dest')
         algorithm = request.form.get('algorithm_selection')
         
+        if start is None:
+            start = ''
+
+        if dest is None:
+            dest = ''
+        
+        
+        
         if start == dest:
             flash(category='error', message='Start and destination cannot be the same')
             return redirect(url_for('map.display_map'))
@@ -82,26 +90,21 @@ def calculate_route():
                                     path_names=d_path_names,
                                     path_codes=d_path_codes)
     
-    return render_template('map.html')
-        # htmo does not talk None
-        if start is None:
-            start = ''
+    # return render_template('map.html')
+    #     # htmo does not talk None
 
-        if dest is None:
-            dest = ''
+    #     if start != dest and len(start) > 1 and len(dest) >1 :
+    #         d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start, dest, algorithm)
 
-        if start != dest and len(start) > 1 and len(dest) >1 :
-            d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start, dest, algorithm)
+    # create_highlighted_map(d_path_names, "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
 
-    create_highlighted_map(d_path_names, "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
+    # all_station_codes = [c  for  c in  g_station_list.keys()]
+    # all_station_codes.sort()
 
-    all_station_codes = [c  for  c in  g_station_list.keys()]
-    all_station_codes.sort()
-
-    return render_template('map.html', user=current_user,
-                            distance=d_distance,
-                            path_codes=d_path_codes,
-                            path_names=d_path_names,
-                            selectedStart = start,
-                            selectedDest = dest,
-                            all_station_codes = all_station_codes)
+    # return render_template('map.html', user=current_user,
+    #                         distance=d_distance,
+    #                         path_codes=d_path_codes,
+    #                         path_names=d_path_names,
+    #                         selectedStart = start,
+    #                         selectedDest = dest,
+    #                         all_station_codes = all_station_codes)

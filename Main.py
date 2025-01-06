@@ -1,4 +1,4 @@
-from gui import Gui
+from Gui import Gui
 from terminal import Terminal
 
 

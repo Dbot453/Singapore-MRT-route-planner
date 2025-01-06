@@ -1,4 +1,4 @@
-class EmptyQueueError(Exception):
+class Error(Exception):
     pass
 
 class BinaryHeap:
@@ -20,7 +20,7 @@ class BinaryHeap:
 
     def get_minimum(self):
         if self.is_empty():
-            raise EmptyQueueError("cannot peek from an empty queue!")
+            raise Error("cannot peek from an tree!")
         return self.heap[0]
 
     def is_empty(self):
@@ -43,8 +43,7 @@ class BinaryHeap:
 
     def extract_min(self):
         if self.is_empty():
-            raise EmptyQueueError("cannot extract from an empty queue!")
-
+            raise Error("cannot extract from an empty tree!")
         min_element = self.heap[0]
         last_element = self.heap.pop()
         if not self.is_empty():
@@ -69,24 +68,3 @@ class BinaryHeap:
             self.heap[index] = self.heap[min_index]
             index = min_index
         self.heap[index] = element
-            
-class PriorityQueue:
-    def __init__(self):
-        self.data = BinaryHeap()
-
-    def enqueue(self, element):
-        self.data.insert(element)
-
-    def dequeue(self):
-        if self.data.is_empty():
-            raise EmptyQueueError("cannot dequeue from an empty queue!")
-        return self.data.extract_min()
-
-    def peek(self):
-        return self.data.get_minimum()
-
-    def is_empty(self):
-        return self.data.is_empty()
-    
-    def size(self):
-        return self.data.size()
