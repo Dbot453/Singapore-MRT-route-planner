@@ -25,7 +25,18 @@ class Terminal:
         res = ""
         start = self.get_valid_station_code("Enter the starting station : ")
         end = self.get_valid_station_code("Enter the ending station : ")
-        distance, codes, names = GetShortestPathStatic(start, end)
+        #<option value='1'>Breadth First Search</option>
+    #<option value='2'>Dijkstra</option>
+    #<option value='3'>K Shortest Path</option>
+    #<option value='4'>A Star</option>
+        algorithm = input("Enter the algorithm you want to use (1: BFS, 2: Dijsktra, 3: K shortest path 4: A star): ")
+        print("Calculating path...")
+        if algorithm not in ['1', '2', '3', '4']:
+            print("Invalid algorithm. Please try again.")
+            Terminal.run(self)
+
+        x = GetShortestPathStatic(start, end, algorithm)
+        distance, time, codes, names =  x[0], x[1], x[2], x[3]
         
         print(f"Distance: {distance}")
         print("Path: ")

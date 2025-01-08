@@ -86,9 +86,4 @@ class Graph:
     
     def get_interchange_stations(self):
         return self.interchange_stations
-
-# stations dictionary is station code : [station name, line, line colour, longitude, latitude, [adjacent stations], {adjacent stations : {distance :" an int", method"train / transfer"}}]"}}]
-# x = Graph()
-# y = x.get_station_info()
-# for k in y:
-#     print(y[k].get_connections())
+    
