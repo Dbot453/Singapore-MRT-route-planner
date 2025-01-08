@@ -7,10 +7,6 @@ from StationList import  g_station_list
 
 map = Blueprint('map', __name__)
 
-# @map.route('/show_lines')
-# def display_map():
-#     return render_template('lines.svg')
-
 def create_highlighted_map(shortestRoute, original_svg_file, new_svg_file):
     import os
 
@@ -40,7 +36,6 @@ def create_highlighted_map(shortestRoute, original_svg_file, new_svg_file):
 
     old_f.close()
     new_f.close()
-    
     print("Done")
 
 
@@ -78,7 +73,8 @@ def calculate_route():
                                      path_names=route.path_names,
                                      path_codes=route.path_codes)
             else:
-                d_distance, d_time, d_path_codes, d_path_names =  GetShortestPathStatic(start,dest) 
+                x = GetShortestPathStatic(start, dest)
+                d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
                 d_path_codes = ','.join(d_path_codes)
                 d_path_names = ','.join(d_path_names)
                 new_route = Route(start=start, dest=dest, distance=d_distance, time=d_time, path_codes=d_path_codes, path_names=d_path_names, user_id=current_user.id)

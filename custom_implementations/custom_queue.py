@@ -9,7 +9,7 @@ class PriorityQueue:
 
     def enqueue(self, element):
         self.data.insert(element)
-
+        
     def dequeue(self):
         if self.data.is_empty():
             raise EmptyQueueError("cannot dequeue from an empty queue!")
@@ -30,11 +30,19 @@ class Node:
         self.next = None
         
 class Queue:
-
     def __init__(self):
         self.head = None
         self.tail = None
         self._size = 0
+
+    def print_queue(self):
+        current = self.head
+        temp = []
+        while current is not None:
+            temp.append(current.value)
+            current = current.next
+        temp.reverse()
+        print(temp)
 
     def enqueue(self, element):
         new_node = Node(element)

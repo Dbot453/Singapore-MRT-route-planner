@@ -13,6 +13,9 @@ class BinaryHeap:
 
     def right(self, index):
         return 2 * index + 2
+    
+    def print_heap(self):
+        print(self.heap)
 
     def insert(self, element):
         self.heap.append(element)

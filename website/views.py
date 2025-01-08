@@ -4,7 +4,7 @@ from . import db
 import json
 
 from graphTraversal import GetShortestPathStatic  
-from StationList import  g_station_list
+from StationList import g_station_list
 
 
 views = Blueprint('views', __name__)
@@ -82,14 +82,16 @@ def calculate_route():
             dest = ''
 
         if start != dest and len(start) > 1 and len(dest) >1 :
-            d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start, dest, algorithm)
+            x = GetShortestPathStatic(start, dest, algorithm)
+            d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
 
+            d_path_names_temp = [g_station_list[c] for c in d_path_codes]
             new_d_path_codes = []
-            for i in range(len(d_path_codes)):
-                new_d_path_codes.append(d_path_codes[i] + " - " + d_path_names[i])
+            for code in d_path_codes:
+                station_name = g_station_list[code].get_station_name()
+                new_d_path_codes.append(f"{code} - {station_name}")
             
-            print(len(d_path_codes), len(d_path_names))
-            d_path_names = [g_station_list[c].get_station_name() for c in d_path_codes]
+            print(len(d_path_codes), len(d_path_names_temp))
 
 
     create_highlighted_map(d_path_names, "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
@@ -99,6 +101,7 @@ def calculate_route():
 
     return render_template('map.html', user=current_user,
                             distance=d_distance,
+                            time = d_time,
                             path_codes=new_d_path_codes,
                             path_names=d_path_names,
                             selectedStart = start,

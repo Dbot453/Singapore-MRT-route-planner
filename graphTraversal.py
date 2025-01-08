@@ -95,11 +95,11 @@ class ShortestPath:
                 current = previous[current]
             path.append(self.__start)
             
-            #same as reversing the path
-            for i in range(len(path)):
-                stack.push(path[i])
+            #same as reversing the path using .reverse
+            while path != []:
+                stack.push(path.pop())
             while not stack.is_empty():
-                path[j] = stack.pop()
+                path.append(stack.pop())
                 
 
             station_names = [self.__stations[station].get_station_name() for station in path]
@@ -110,23 +110,23 @@ class ShortestPath:
             for i in range(len(path)):
                 code = path[i]
                 if i < len(path) - 1:
-                    field = self.__adjacency_list[code][path[i + 1]]
-                    if field["method"] == "train":
-                        distance += field["cost"]
-                        time += self.convert_to_time(field["cost"])
+                    cost = self.__adjacency_list[code][path[i + 1]]
+                    if cost["method"] == "train":
+                        distance += cost["cost"]
+                        time += self.convert_to_time(cost["cost"])
                         if code not in self.__interchange_stations:
                             time += 28
                         elif code in self.__interchange_stations:
                             time += 35
-                    elif field["method"] == "transfer":
-                        time += field["cost"]
+                    elif cost["method"] == "transfer":
+                        time += cost["cost"]
 
             return (f"{distance/1000:.0f} km", f"{time//60:.0f} minutes and {time%60:.0f} seconds", path, station_names)
            
-    #BFS has issues       
-    
+    #BFS has issues
     def bfs(self) -> Tuple[float, float, list, list]:
         #Breadth First Search algorithm to find the shortest path between two stations takes start and end as arguments returns a tuple of start, end, distance, path, station_names
+    
         queue = Q()
         visited = {v: False for v in self.__adjacency_list}
         distances = {v: m.inf for v in self.__adjacency_list}
@@ -134,20 +134,25 @@ class ShortestPath:
         current = self.__start
         queue.enqueue(current)
 
+        visited[current] = True
+        distances[current] = 0
+        previous[current] = None
+
         while not queue.is_empty():
             current = queue.dequeue()
             if current == self.__end:
                 break
             visited[current] = True
 
+            #for each neighbour of the current station if not visited add to queue
             for neighbour in self.__adjacency_list[current]:
                 if not visited[neighbour]:
                     if distances[current] + self.__adjacency_list[current][neighbour]["cost"] < distances[neighbour]:
                         distances[neighbour] = distances[current] + self.__adjacency_list[current][neighbour]["cost"]
                         previous[neighbour] = current
                         queue.enqueue(neighbour)
-                        
-        # print(previous)
+
+
         return self.reconstruct_path(previous)
     
     def dijkstra(self) -> str:
@@ -172,7 +177,7 @@ class ShortestPath:
 
             for neighbour,data in self.__adjacency_list[current].items():
                 cost = data["cost"]
-                #conver distance to time if needed
+                #converts distance to time if method of travel is train
                 if data["method"] == "train":
                     cost = self.convert_to_time(cost)
 
@@ -207,11 +212,9 @@ class ShortestPath:
             current = priority_queue.dequeue()[1]            
             if current == self.__end:
                 break
-            
-            visited[current] = True   
-                     
+
+            visited[current] = True
             for neighbour,data in self.__adjacency_list[current].items():
-                                           
                 if neighbour in self.__closed:
                     continue
                 
@@ -231,7 +234,6 @@ class ShortestPath:
         if self.__end not in previous or current != self.__end:
             return (0.0, 0.0, [], [])
         
-        # print(previous)
         return self.reconstruct_path(previous)
     
     def k_shortest_path(self,k):
@@ -305,37 +307,39 @@ class ShortestPath:
             station_names = [self.__stations[station].get_station_name() for station in path]
             result.append((total_distance, time1, path, station_names))
             
-        return result     
-     
-s1 = ["NS2","CC5","EW20","DT30"]
-s2 = ["NS22","EW20"]
-for item1 in s1:
-    for item2 in s2:
-        print(f"Shortest path from {item1} to {item2}:")
+        return result
+
+
+
+# s1 = ["NS2","CC5","EW20","DT30"]
+# s2 = ["NS22","EW20"]
+# for item1 in s1:
+#     for item2 in s2:
+#         print(f"Shortest path from {item1} to {item2}:")
         
-        # print(f"Breadth First Search")
-        # x = ShortestPath(item1, item2).bfs()
+#         print(f"Breadth First Search")
+#         x = ShortestPath(item1, item2).bfs()
+#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
+#         print(f"Distance: {distance}")
+#         print(f"Time: {time}")
+#         print(f"Station Codes: {', '.join(path)}")
+#         print(f"Station  Names: {', '.join(station_names)}")
+        
+        # x = ShortestPath(item1, item2).dijkstra()
+        # print(f"Dijkstra's algorithm")
         # distance,time,path,station_names = x[0], x[1], x[2], x[3]
         # print(f"Distance: {distance}")
         # print(f"Time: {time}")
         # print(f"Station Codes: {', '.join(path)}")
         # print(f"Station  Names: {', '.join(station_names)}")
         
-        x = ShortestPath(item1, item2).dijkstra()
-        print(f"Dijkstra's algorithm")
-        distance,time,path,station_names = x[0], x[1], x[2], x[3]
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print(f"Station Codes: {', '.join(path)}")
-        print(f"Station  Names: {', '.join(station_names)}")
-        
-        print(f"A* algorithm")
-        x = ShortestPath(item1, item2).a_star()
-        distance,time,path,station_names = x[0], x[1], x[2], x[3]
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print(f"Station Codes: {', '.join(path)}")
-        print(f"Station  Names: {', '.join(station_names)}")
+        # print(f"A* algorithm")
+        # x = ShortestPath(item1, item2).a_star()
+        # distance,time,path,station_names = x[0], x[1], x[2], x[3]
+        # print(f"Distance: {distance}")
+        # print(f"Time: {time}")
+        # print(f"Station Codes: {', '.join(path)}")
+        # print(f"Station  Names: {', '.join(station_names)}")
         
         # print(f"using Yen's algorithm")
         # paths = ShortestPath(item1, item2).k_shortest_path(2)

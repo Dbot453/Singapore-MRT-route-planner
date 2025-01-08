@@ -2,9 +2,9 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-##########################
-# GROUP A Skill : OOP    #
-##########################    
+#####################################################
+# GROUP A Skill : Complex User defined Databases    #
+#####################################################
 class Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start = db.Column(db.String(150))
