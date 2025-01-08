@@ -36,7 +36,6 @@ class ShortestPath:
     def __init__(self, start: str, end: str):
         self.__start = start
         self.__end = end
-        self.__closed = []
         # radius of the Earth in km
         self.RADIUS = 6371.0
         graph = Graph()
@@ -199,6 +198,7 @@ class ShortestPath:
         visited = {v: False for v in self.__adjacency_list}
         times = {v: m.inf for v in self.__adjacency_list}
         previous = {v: None for v in self.__adjacency_list}
+        self.__closed = []
         
         visited[self.__start] = True
         times[self.__start] = 0
@@ -244,6 +244,7 @@ class ShortestPath:
     def k_shortest_path(self,k):
         A = []
         B = []
+        self.closed = []
         
         data = self.a_star()
         distance1, time1, path1 = data[0], data[1], data[2]
@@ -312,48 +313,48 @@ class ShortestPath:
             station_names = [self.__stations[station].get_station_name() for station in path]
             result.append((total_distance, time1, path, station_names))
             
-        return result
+        return result     
+     
+# s1 = ["NS2","CC5","EW20","DT30"]
+# s2 = ["NS22","EW20"]
+# for item1 in s1:
+#     for item2 in s2:
+#         print(f"Shortest path from {item1} to {item2}:")
+        
+#         print(f"Breadth First Search")
+#         x = ShortestPath(item1, item2).bfs()
+#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
+#         print(f"Distance: {distance}")
+#         print(f"Time: {time}")
+#         print(f"Station Codes: {', '.join(path)}")
+#         print(f"Station  Names: {', '.join(station_names)}")
+        
+#         x = ShortestPath(item1, item2).dijkstra()
+#         print(f"Dijkstra's algorithm")
+#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
+#         print(f"Distance: {distance}")
+#         print(f"Time: {time}")
+#         print(f"Station Codes: {', '.join(path)}")
+#         print(f"Station  Names: {', '.join(station_names)}")
+        
+#         print(f"A* algorithm")
+#         x = ShortestPath(item1, item2).a_star()
+#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
+#         print(f"Distance: {distance}")
+#         print(f"Time: {time}")
+#         print(f"Station Codes: {', '.join(path)}")
+#         print(f"Station  Names: {', '.join(station_names)}")
+        
+#         print(f"using Yen's algorithm")
+#         paths = ShortestPath(item1, item2).k_shortest_path(2)
+#         for j in paths:
+#             x = list(j)
+#             # print(data)
+#             print(f"Distance: {x[0]}")
+#             print(f"Time: {x[1]}")
+#             codes = ', '.join(x[2])
+#             names = ', '.join(x[3])
+#             print(f"Station Codes: {codes}")
+#             print(f"Station  Names: {names}")
 
-
-
-s1 = ["NS2","CC5","EW20","DT30"]
-s2 = ["NS22","EW20"]
-for item1 in s1:
-    for item2 in s2:
-        print(f"Shortest path from {item1} to {item2}:")
-        
-        print(f"Breadth First Search")
-        x = ShortestPath(item1, item2).bfs()
-        distance,time,path,station_names = x[0], x[1], x[2], x[3]
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print(f"Station Codes: {', '.join(path)}")
-        print(f"Station  Names: {', '.join(station_names)}")
-        
-        x = ShortestPath(item1, item2).dijkstra()
-        print(f"Dijkstra's algorithm")
-        distance,time,path,station_names = x[0], x[1], x[2], x[3]
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print(f"Station Codes: {', '.join(path)}")
-        print(f"Station  Names: {', '.join(station_names)}")
-        
-        print(f"A* algorithm")
-        x = ShortestPath(item1, item2).a_star()
-        distance,time,path,station_names = x[0], x[1], x[2], x[3]
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print(f"Station Codes: {', '.join(path)}")
-        print(f"Station  Names: {', '.join(station_names)}")
-        
-        print(f"using Yen's algorithm")
-        paths = ShortestPath(item1, item2).k_shortest_path(2)
-        for j in paths:
-            x = list(j)
-            # print(data)
-            print(f"Distance: {x[0]}")
-            print(f"Time: {x[1]}")
-            codes = ', '.join(x[2])
-            names = ', '.join(x[3])
-            print(f"Station Codes: {codes}")
-            print(f"Station  Names: {names}")
+    

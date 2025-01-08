@@ -21,11 +21,14 @@ class Station:
     def get_adjacent_stations(self):
         return self.__adjacent_stations
     
-    def set_connections(self, connections ):
-        self.__connections = connections 
+    def set_connections(self, connections):
+        self.__connections = connections    
 
     def get_connections(self):
         return self.__connections
+    
+    def get_connection(self, station_code):
+        return self.__connections[station_code]
     
     def get_station_code(self):
         return self.__station_code
