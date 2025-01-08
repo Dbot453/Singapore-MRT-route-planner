@@ -62,6 +62,7 @@ def show_map():
 @views.route('/map', methods=['GET', 'POST'])
 def calculate_route():
     d_distance = 0
+    d_time = 0
     d_path_codes = []
     d_path_names = []
     start = ''
