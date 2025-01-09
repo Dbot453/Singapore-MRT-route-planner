@@ -1,4 +1,5 @@
 from custom_implementations.binary_heap import BinaryHeap
+from custom_implementations.linked_list import CustomList
 
 class EmptyQueueError(Exception):
     pass
@@ -24,53 +25,28 @@ class PriorityQueue:
     def size(self):
         return self.data.size()
 
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.next = None
-        
 class Queue:
     def __init__(self):
-        self.head = None
-        self.tail = None
-        self._size = 0
-
-    def print_queue(self):
-        current = self.head
-        temp = []
-        while current is not None:
-            temp.append(current.value)
-            current = current.next
-        temp.reverse()
-        print(temp)
+        self._list = CustomList()
 
     def enqueue(self, element):
-        new_node = Node(element)
-        if self.tail is None:
-            self.head = new_node
-            self.tail = new_node
-        else:
-            self.tail.next = new_node
-            self.tail = new_node
-        self._size += 1
+        self._list.append(element)
 
     def dequeue(self):
-        if self.is_empty():
+        if self._list.is_empty():
             raise EmptyQueueError("cannot dequeue from an empty queue!")
-        value = self.head.value
-        self.head = self.head.next
-        if self.head is None:
-            self.tail = None
-        self._size -= 1
-        return value
+        return self._list.pop(0)
 
     def peek(self):
-        if self.is_empty():
-            raise EmptyQueueError("cannot peek from an empty queue!")
-        return self.head.value
+        if self._list.is_empty():
+            return None
+        return self._list.get(0)
 
     def is_empty(self):
-        return self._size == 0
+        return self._list.is_empty()
 
     def size(self):
-        return self._size
+        return self._list.size()
+    
+    def sort(self):
+        self._list = self._list.sort()
