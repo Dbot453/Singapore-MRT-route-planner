@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from graphTraversal import GetShortestPathStatic  
-from flask_login import current_user
+from flask_login import current_user, login_required
 from .models import Route
 from . import db
 from StationList import  g_station_list
+from custom_implementations.linked_list import CustomList
 
 map = Blueprint('map', __name__)
 
@@ -22,7 +23,6 @@ def create_highlighted_map(shortestRoute, original_svg_file, new_svg_file):
         if x. find("<text") > 0:
             is_in_route = False
             for s in my_shortestRoute:
-                ##print(s, x)
                 if x.find('>' + s + '<') > 0:
                     if x.find('51,51,51') > 0: 
                         x = x.replace("rgb(51,51,51)", "rgb(0,0,251)")
@@ -46,6 +46,17 @@ def calculate_route():
     d_path_names = []
     start = ''
     dest = ''
+
+    # Get all station codes for the dropdowns
+    all_station_codes = CustomList()
+    for c in g_station_list.keys():
+        all_station_codes.append(c)
+    all_station_codes.merge_sort()
+
+    # Get user's past routes if logged in
+    past_routes = []
+    if current_user.is_authenticated:
+        past_routes = Route.query.filter_by(user_id=current_user.id).order_by(Route.id.desc()).limit(5).all()
 
     if request.method == 'POST':
         start = request.form.get('start')
@@ -71,7 +82,11 @@ def calculate_route():
                                      distance=route.distance,
                                      time = route.time,
                                      path_names=route.path_names,
-                                     path_codes=route.path_codes)
+                                     path_codes=route.path_codes,
+                                     past_routes=past_routes,
+                                     all_station_codes=all_station_codes,
+                                     selectStart=start,
+                                     selectDest=dest)
             else:
                 x = GetShortestPathStatic(start, dest)
                 d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
@@ -82,25 +97,24 @@ def calculate_route():
                 db.session.commit()
                 return render_template('map.html', user=current_user,
                                     distance=d_distance,
-                                    time = d_time,
+                                    time=d_time,
                                     path_names=d_path_names,
-                                    path_codes=d_path_codes)
+                                    path_codes=d_path_codes,
+                                    past_routes=past_routes,
+                                    all_station_codes=all_station_codes,
+                                    selectStart=start,
+                                    selectDest=dest)
     
-    # return render_template('map.html')
-    #     # htmo does not talk None
+    return render_template('map.html', user=current_user,
+                         past_routes=past_routes,
+                         all_station_codes=all_station_codes)
 
-    #     if start != dest and len(start) > 1 and len(dest) >1 :
-    #         d_distance, d_path_codes, d_path_names =  GetShortestPathStatic(start, dest, algorithm)
-
-    # create_highlighted_map(d_path_names, "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
-
-    # all_station_codes = [c  for  c in  g_station_list.keys()]
-    # all_station_codes.sort()
-
-    # return render_template('map.html', user=current_user,
-    #                         distance=d_distance,
-    #                         path_codes=d_path_codes,
-    #                         path_names=d_path_names,
-    #                         selectedStart = start,
-    #                         selectedDest = dest,
-    #                         all_station_codes = all_station_codes)
+@map.route('/delete-route/<int:route_id>')
+@login_required
+def delete_route(route_id):
+    route = Route.query.get(route_id)
+    if route and route.user_id == current_user.id:
+        db.session.delete(route)
+        db.session.commit()
+        flash('Route deleted successfully', category='success')
+    return redirect(url_for('map.calculate_route'))

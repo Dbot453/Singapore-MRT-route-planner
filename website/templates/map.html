@@ -182,6 +182,75 @@
       </script>
     </section>
   </section>
+
+  <div style="margin: 20px;">
+    {% if user.is_authenticated %}
+      <button class="btn btn-primary" type="button" onclick="togglePastRoutes()">
+        Show/Hide Past Routes
+      </button>
+      
+      <div id="pastRoutesSection" style="display: none; margin-top: 20px;">
+        {% if past_routes %}
+          <div class="past-routes">
+            <h3>Your Recent Routes</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Distance</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for route in past_routes %}
+                    <tr>
+                        <td>{{ route.start }}</td>
+                        <td>{{ route.dest }}</td>
+                        <td>{{ route.distance }} km</td>
+                        <td>{{ route.time }} min</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
+                            <a href="{{ url_for('map.delete_route', route_id=route.id) }}" 
+                               onclick="return confirm('Are you sure you want to delete this route?')"
+                               class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p>No past routes found.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+  function togglePastRoutes() {
+      const pastRoutes = document.getElementById('pastRoutesSection');
+      if (pastRoutes.style.display === 'none') {
+          pastRoutes.style.display = 'block';
+      } else {
+          pastRoutes.style.display = 'none';
+      }
+  }
+
+  function loadRoute(start, dest) {
+      // Find the select elements
+      const startSelect = document.querySelector('select[name="start"]');
+      const destSelect = document.querySelector('select[name="dest"]');
+      
+      // Set the values
+      startSelect.value = start;
+      destSelect.value = dest;
+      
+      // Submit the form
+      startSelect.closest('form').submit();
+  }
+  </script>
   </body>
 </html>
 {% endblock %}
