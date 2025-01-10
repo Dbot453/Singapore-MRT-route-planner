@@ -17,7 +17,7 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
+                login_user(user, remember=False)
                 return redirect(url_for('views.calculate_route'))
             else:
                 flash('Incorrect password, try again.', category='error')
@@ -53,7 +53,7 @@ def sign_up():
                     password1, method='pbkdf2:sha256'))
                 db.session.add(new_user)
                 db.session.commit()
-                login_user(new_user, remember=True)
+                # login_user(new_user, remember=True)
                 flash('Account created!', category='success')
                 return redirect(url_for('auth.login'))
 
