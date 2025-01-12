@@ -1,8 +1,3 @@
-########################################################################################################################
-#TODO: work out a way to change the transfer time to distance for A* to work due to g(h) going to be manhattan distance
-#TODO: work out a way to change the distance between stations to time for djikstra
-########################################################################################################################
-
 from Station import Station
 from StationList import g_station_list
 

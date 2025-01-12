@@ -23,234 +23,285 @@
           width: 80%;
         }
       }
-      
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+      .popup-content {
+        position: relative;
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-height: 70%;
+        overflow-y: auto;
+      }
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .scrollable-menu {
+        max-height: 400px;
+        overflow-y: auto;
+      }
     </style>
   </head>
   <body>
-  <section class="parent">
-    <section class="child">
-      <div style="float:left;">
-        <form method="POST">
-          <div id="sidebar" class="section">
-            <div class="row"></div>
-            <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw; overflow-y: auto;">
-              <h4>Journey Details</h4>
-              <div class="station-info">
-
-                <left>
-                  <li>
-                    <label>Start Station: </label>
-                    <select name="start"  >
-                      {% for d in all_station_codes %} 
-                        {% if (d == selectStart) %}
-                          <option selected value="{{d}}">{{ d }}</option>
-                        {% else %}
-                          <option value="{{d}}">{{ d }}</option>
-                        {% endif%}
-                      {% endfor %}
-                    </select>  
-                  </li>
-                  <li>
-                    <label>End Station: </label>
-                    <select name="dest" >
-                      {% for a in all_station_codes %}
-                        {% if (a == selectDest) %}
-                          <option selected value="{{a}}">{{ a }}</option>
-                        {% else %}
-                          <option value="{{a}}">{{ a }}</option>
-                        {% endif%}
-                      {% endfor %}
+    <section class="parent">
+      <section class="child">
+        <div style="float:left;">
+          <form method="POST">
+            <div id="sidebar" class="section">
+              <div class="row"></div>
+              <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw; overflow-y: auto;">
+                <h4>Journey Details</h4>
+                <div class="station-info">
+                  <ul>
+                    <li>
+                      <label>Start Station: </label>
+                      <select name="start">
+                        {% for d in all_station_codes %}
+                          {% if d == selectStart %}
+                            <option selected value="{{ d }}">{{ d }}</option>
+                          {% else %}
+                            <option value="{{ d }}">{{ d }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </li>
+                    <li>
+                      <label>End Station: </label>
+                      <select name="dest">
+                        {% for a in all_station_codes %}
+                          {% if a == selectDest %}
+                            <option selected value="{{ a }}">{{ a }}</option>
+                          {% else %}
+                            <option value="{{ a }}">{{ a }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </li>
+                  </ul>
+                  <p><label>Select Algorithm</label></p>
+                  <p>
+                    <select name="algorithm_selection">
+                      <option value="1">Breadth First Search</option>
+                      <option value="2">Dijkstra</option>
+                      <option value="3">K Shortest Path</option>
+                      <option value="4">A Star</option>
                     </select>
-                  </li> 
-                </left>
-
-                <p><strong>Start Station:</strong></p>
-
-                <!-- all_station_codes -->
-                 <!--
-                <div class="form-group">
-                  <input id="start" class="form-control" type="text" name="start" placeholder="Enter start location"/>
+                  </p>
+                  <button type="submit" class="btn btn-primary">Calculate</button>
+                  <div id="distance">
+                    <p>Distance: </p>
+                    <p>{{ distance }}</p>
+                  </div>
+                  <div id="time">
+                    <p>Time: </p>
+                    <p>{{ time }}</p>
+                  </div>
+                  <label>Shortest Route (codes): </label>
+                  <ul>
+                    {% for code in path_codes %}
+                      <li>{{ code }}</li>
+                    {% endfor %}
+                  </ul>
+                  <br>
+                  <label>Shortest Route (names): </label>
+                  <ul>
+                    {% for name in path_names %}
+                      <li>{{ name }}</li>
+                    {% endfor %}
+                  </ul>
                 </div>
-                <hr>
-                <p><strong>End Station:</strong></p>
-                <div class="form-group">
-                  <input id="dest" class="form-control" type="text" name="dest" placeholder="Enter destination"/>
+                <button id="show-old-route" class="btn btn-primary" type="button">Past Routes</button>
+                <button id="settings" class="btn btn-primary" type="button">Settings</button>
+                <div id="oldRoutesPopup" class="popup" style="display: none;">
+                  <div class="popup-content">
+                    <span class="close" id="closePopup">&times;</span>
+                    <h3>Your Recent Routes</h3>
+                    <div class="scrollable-menu">
+                      {% if past_routes %}
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>From</th>
+                              <th>To</th>
+                              <th>Distance</th>
+                              <th>Time</th>
+                              <th>Station Codes</th>
+                              <th>Station names</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for route in past_routes %}
+                              <tr>
+                                <td>{{ route.start }}</td>
+                                <td>{{ route.dest }}</td>
+                                <td>{{ route.distance }} km</td>
+                                <td>{{ route.time }} min</td>
+                                <td>
+                                  <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
+                                  <a href="{{ url_for('map.delete_route', route_id=route.id) }}" onclick="return confirm('Are you sure you want to delete this route?')" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      {% else %}
+                        <p>No past routes found.</p>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
-                -->
-
-                <p><label>Select Algorithm</label></p>
-                <p>
-                <select name="algorithm_selection">
-                  <option value='1'>Breadth First Search</option>
-                  <option value='2'>Dijkstra</option>
-                  <option value='3'>K Shortest Path</option>
-                  <option value='4'>A Star</option>
-                  
-                </select>
-              </p>
-
-                <button type="submit" class="btn btn-primary">Calculate</button>
-                <div id="distance">
-                  <p>Distance: </p>
-                  <p>{{ distance }}</p>
-                </div>
-                <div id="time">
-                  <p>Time: </p>
-                  <p>{{ time }}</p>
-                </div>
-                <label>Shortest Route (codes): </label>
-                <ul>
-                  {% for code in path_codes %}
-                  <li>{{ code }}</li>
-                  {% endfor %}
-                </ul>
-                <br>
-                <label>Shortest Route (names): </label>
-                <ul>
-                  {% for name in path_names %}
-                  <li>{{ name }}</li>
-                  {% endfor %}
-                </ul>
+                <script>
+                  document.getElementById('show-old-route').addEventListener('click', function() {
+                    document.getElementById('oldRoutesPopup').style.display = 'block';
+                  });
+                  document.getElementById('closePopup').addEventListener('click', function() {
+                    document.getElementById('oldRoutesPopup').style.display = 'none';
+                  });
+                  window.onclick = function(event) {
+                    if (event.target == document.getElementById('oldRoutesPopup')) {
+                      document.getElementById('oldRoutesPopup').style.display = 'none';
+                    }
+                  };
+                </script>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section id="map-container" class="child">
-      <div class="map mrtmap" id="overview-map" style="height: 100vh; width: 75vw; position: relative;"></div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-      <script type="text/javascript">
-        window.addEventListener("load", function(event) {
-          history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
-          var e_map = document.getElementById('overview-map');
-          var e_modalx = document.getElementById('modal-close');
-          var imageUrl = "{{ url_for('static', filename='Singapore_MRT_Network_new.svg') }}";
-          var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
-          var imageOptions = {
-            alt: "Singapore MRT/LRT Map (Geographic)", 
-            attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving',
-            interactive: true,
-            opacity: 1,
-            crossOrigin: true,
-            className: 'map-overlay'
-          };
-          var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
-          var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
-          var zoomfit = mrtmap.getZoom();
-          mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
-          L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
-          L.control.zoom({position:'topright'}).addTo(mrtmap);
-          L.control.scale({imperial:false, position:'topleft'}).addTo(mrtmap);
-          
-          function openMapMax(event) {
-            if (event) {
-              history.pushState({mapmax: 1}, document.title, window.location.pathname);
-            }
-            e_map.style.position = 'fixed';
-            e_map.style.top = '0';
-            e_map.style.left = 0;
-            e_map.style.bottom = '0';
-            e_map.style.paddingBottom = '0';
-            e_map.style.right = '0';
-            e_map.style.zIndex = '9995';
-            e_modalx.style.display = 'inline';
-            mrtmap.invalidateSize();
-            mrtmap.fitBounds(imageBounds);
-          }
-      
-          document.getElementById("button-fs-map").addEventListener("click", openMapMax);
-          e_modalx.addEventListener("click", function() {
-            e_modalx.style.display = 'none';
-            history.back();
-          });
-      
-          window.onpopstate = function(event) {
-            if (event.state && event.state.mapmax === 1) {
-              openMapMax();
-            } else {
-              e_modalx.style.display = 'none';
-              e_map.style.position = 'relative';
-              e_map.style.top = 0;
-              e_map.style.paddingBottom = '56%';
+          </form>
+        </div>
+      </section>
+      <section id="map-container" class="child">
+        <div class="map mrtmap" id="overview-map" style="height: 100vh; width: 75vw; position: relative;"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+        <script type="text/javascript">
+          window.addEventListener("load", function(event) {
+            history.replaceState({mapmax: 0}, document.title, window.location.pathname);
+            var e_map = document.getElementById('overview-map');
+            var e_modalx = document.getElementById('modal-close');
+            var imageUrl = "{{ url_for('static', filename='Singapore_MRT_Network_new.svg') }}";
+            var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
+            var imageOptions = {
+              alt: "Singapore MRT/LRT Map (Geographic)",
+              attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving',
+              interactive: true,
+              opacity: 1,
+              crossOrigin: true,
+              className: 'map-overlay'
+            };
+            var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
+            var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
+            var zoomfit = mrtmap.getZoom();
+            mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
+            L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
+            L.control.zoom({position: 'topright'}).addTo(mrtmap);
+            L.control.scale({imperial: false, position: 'topleft'}).addTo(mrtmap);
+            function openMapMax(event) {
+              if (event) {
+                history.pushState({mapmax: 1}, document.title, window.location.pathname);
+              }
+              e_map.style.position = 'fixed';
+              e_map.style.top = '0';
+              e_map.style.left = 0;
+              e_map.style.bottom = '0';
+              e_map.style.paddingBottom = '0';
+              e_map.style.right = '0';
+              e_map.style.zIndex = '9995';
+              e_modalx.style.display = 'inline';
               mrtmap.invalidateSize();
               mrtmap.fitBounds(imageBounds);
             }
-          };
-        });
-      </script>
+            document.getElementById("button-fs-map").addEventListener("click", openMapMax);
+            e_modalx.addEventListener("click", function() {
+              e_modalx.style.display = 'none';
+              history.back();
+            });
+            window.onpopstate = function(event) {
+              if (event.state && event.state.mapmax === 1) {
+                openMapMax();
+              } else {
+                e_modalx.style.display = 'none';
+                e_map.style.position = 'relative';
+                e_map.style.top = 0;
+                e_map.style.paddingBottom = '56%';
+                mrtmap.invalidateSize();
+                mrtmap.fitBounds(imageBounds);
+              }
+            };
+          });
+        </script>
+      </section>
     </section>
-  </section>
-
-  <div style="margin: 20px;">
-    {% if user.is_authenticated %}
-      <button class="btn btn-primary" type="button" onclick="togglePastRoutes()">
-        Show/Hide Past Routes
-      </button>
-      
-      <div id="pastRoutesSection" style="display: none; margin-top: 20px;">
-        {% if past_routes %}
-          <div class="past-routes">
-            <h3>Your Recent Routes</h3>
-            <table class="table table-striped">
+    <div style="margin: 20px;">
+      {% if user.is_authenticated %}
+        <button class="btn btn-primary" type="button" onclick="togglePastRoutes()">
+          Show/Hide Past Routes
+        </button>
+        <div id="pastRoutesSection" style="display: none; margin-top: 20px;">
+          {% if past_routes %}
+            <div class="past-routes">
+              <h3>Your Recent Routes</h3>
+              <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Distance</th>
-                        <th>Time</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Distance</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    {% for route in past_routes %}
+                  {% for route in past_routes %}
                     <tr>
-                        <td>{{ route.start }}</td>
-                        <td>{{ route.dest }}</td>
-                        <td>{{ route.distance }} km</td>
-                        <td>{{ route.time }} min</td>
-                        <td>
-                            <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
-                            <a href="{{ url_for('map.delete_route', route_id=route.id) }}" 
-                               onclick="return confirm('Are you sure you want to delete this route?')"
-                               class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+                      <td>{{ route.start }}</td>
+                      <td>{{ route.dest }}</td>
+                      <td>{{ route.distance }} km</td>
+                      <td>{{ route.time }} min</td>
+                      <td>
+                        <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
+                        <a href="{{ url_for('map.delete_route', route_id=route.id) }}" onclick="return confirm('Are you sure you want to delete this route?')" class="btn btn-danger btn-sm">Delete</a>
+                      </td>
                     </tr>
-                    {% endfor %}
+                  {% endfor %}
                 </tbody>
-            </table>
-          </div>
-        {% else %}
-          <p>No past routes found.</p>
-        {% endif %}
-      </div>
-    {% endif %}
-  </div>
-
-  <script>
-  function togglePastRoutes() {
-      const pastRoutes = document.getElementById('pastRoutesSection');
-      if (pastRoutes.style.display === 'none') {
+              </table>
+            </div>
+          {% else %}
+            <p>No past routes found.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    <script>
+      function togglePastRoutes() {
+        const pastRoutes = document.getElementById('pastRoutesSection');
+        if (pastRoutes.style.display === 'none') {
           pastRoutes.style.display = 'block';
-      } else {
+        } else {
           pastRoutes.style.display = 'none';
+        }
       }
-  }
-
-  function loadRoute(start, dest) {
-      // Find the select elements
-      const startSelect = document.querySelector('select[name="start"]');
-      const destSelect = document.querySelector('select[name="dest"]');
-      
-      // Set the values
-      startSelect.value = start;
-      destSelect.value = dest;
-      
-      // Submit the form
-      startSelect.closest('form').submit();
-  }
-  </script>
+      function loadRoute(start, dest) {
+        const startSelect = document.querySelector('select[name="start"]');
+        const destSelect = document.querySelector('select[name="dest"]');
+        startSelect.value = start;
+        destSelect.value = dest;
+        startSelect.closest('form').submit();
+      }
+    </script>
   </body>
 </html>
 {% endblock %}

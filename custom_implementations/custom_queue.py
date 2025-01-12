@@ -1,5 +1,4 @@
 from custom_implementations.binary_heap import BinaryHeap
-from custom_implementations.linked_list import CustomList
 
 class EmptyQueueError(Exception):
     pass
@@ -27,26 +26,31 @@ class PriorityQueue:
 
 class Queue:
     def __init__(self):
-        self._list = CustomList()
+        self._list = []
+        self._head = 0
+        self._tail = 0
 
     def enqueue(self, element):
         self._list.append(element)
+        self._tail += 1
 
     def dequeue(self):
-        if self._list.is_empty():
+        if self.is_empty():
             raise EmptyQueueError("cannot dequeue from an empty queue!")
-        return self._list.pop(0)
+        value = self._list[self._head]
+        self._head += 1
+        return value
 
     def peek(self):
-        if self._list.is_empty():
-            return None
-        return self._list.get(0)
+        if self.is_empty():
+            raise EmptyQueueError("cannot peek from an empty queue!")
+        return self._list[self._head]
 
     def is_empty(self):
-        return self._list.is_empty()
+        return self._head == self._tail
 
     def size(self):
-        return self._list.size()
+        return self._tail - self._head
     
     def sort(self):
-        self._list = self._list.sort()
+        self._list.sort()

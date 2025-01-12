@@ -7,7 +7,7 @@ class Node:
         self.next = None
         self.prev = None
 
-class CustomList:
+class LinkedList:
     def __init__(self):
         self._size = 0
         self.head = None
@@ -38,9 +38,9 @@ class CustomList:
             current = current.next
         return current.value
     
-    def remove(self, index):
+    def dequeue(self):
         if self.is_empty():
-            raise EmptyListError("cannot remove from an empty list!")
+            raise EmptyListError("cannot dequeue from an empty list!")
         value = self.head.value
         self.head = self.head.next
         if self.head is None:

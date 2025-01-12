@@ -20,10 +20,14 @@ def create_app():
     from .models import User, Route
     from .map import map
     from .home import home
+    # from .settings import render_settings
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(map, url_prefix='/')
+    app.register_blueprint(home, url_prefix='/')
+    # app.register_blueprint(render_settings, url_prefix='/')
+    
     
     with app.app_context():
         db.create_all()

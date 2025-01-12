@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 home = Blueprint('home', __name__)
 
 @home.route('/', methods=['GET', 'POST'])
-def home():
+def home_view():
     if request.method == 'POST':
         if 'login' in request.form:
             return redirect(url_for('auth.login'))
