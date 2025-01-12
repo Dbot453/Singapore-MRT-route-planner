@@ -27,7 +27,12 @@ class Graph:
                 lat = fields[4]
                 lng = fields[5]
                 adj_stations = fields[len(fields) - 1].split("#")
-                self.__station_list[station_code] = Station(station_code, station_name, line_color, line_name, lat, lng, adj_stations)
+                self.__station_list[station_code] = Station(station_code, 
+                                                            station_name, 
+                                                            line_color, 
+                                                            line_name, 
+                                                            lat, lng, 
+                                                            adj_stations)
 
     def _add_connection_cost(self):
         with open("data/distances.csv", 'r') as distances_file:

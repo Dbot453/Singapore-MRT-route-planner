@@ -18,4 +18,6 @@ class DistanceHeuristic:
             return self.RADIUS * c
 
     def euclidian(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
-        return m.sqrt((lat2 - lat1) ** 2 + (lng2 - lng1) ** 2)
+        
+        lat1, lng1, lat2, lng2 = map(m.radians, [lat1, lng1, lat2, lng2])
+        return m.sqrt( self.RADIUS * ( (lat2 - lat1) ** 2 + (lng2 - lng1) ** 2 ))
