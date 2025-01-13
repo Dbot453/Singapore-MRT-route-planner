@@ -5,7 +5,6 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.next = None
-        self.prev = None
 
 class LinkedList:
     def __init__(self):
@@ -25,7 +24,6 @@ class LinkedList:
             self.head = new_node
             self.tail = new_node
         else:
-            new_node.prev = self.tail
             self.tail.next = new_node
             self.tail = new_node
         self._size += 1
@@ -51,10 +49,17 @@ class LinkedList:
     def pop(self):
         if self.is_empty():
             raise EmptyListError("cannot pop from an empty list!")
-        value = self.tail.value
-        self.tail = self.tail.prev
-        if self.tail is None:
+        if self.head == self.tail:
+            value = self.head.value
             self.head = None
+            self.tail = None
+        else:
+            current = self.head
+            while current.next != self.tail:
+                current = current.next
+            value = self.tail.value
+            self.tail = current
+            self.tail.next = None
         self._size -= 1
         return value
     
@@ -66,22 +71,20 @@ class LinkedList:
             current = current.next
         print(temp)
 
-    def insert(self,index,value):
+    def insert(self, index, value):
         if index < 0 or index > self._size:
             raise IndexError("Index out of range")
         new_node = Node(value)
         if index == 0:
             new_node.next = self.head
-            self.head.prev = new_node
             self.head = new_node
+            if self.tail is None:
+                self.tail = new_node
         else:
             current = self.head
-            for _ in range(index-1):
+            for _ in range(index - 1):
                 current = current.next
             new_node.next = current.next
-            new_node.prev = current
-            if current.next is not None:
-                current.next.prev = new_node
             current.next = new_node
             if new_node.next is None:
                 self.tail = new_node
@@ -111,8 +114,6 @@ class LinkedList:
             fast = fast.next.next
         right = slow.next
         slow.next = None
-        if right:
-            right.prev = None
         return head, right
 
     def _merge_lists(self, left, right):
@@ -122,11 +123,7 @@ class LinkedList:
             return left
         if left.value <= right.value:
             left.next = self._merge_lists(left.next, right)
-            if left.next:
-                left.next.prev = left
             return left
         else:
             right.next = self._merge_lists(left, right.next)
-            if right.next:
-                right.next.prev = right
             return right

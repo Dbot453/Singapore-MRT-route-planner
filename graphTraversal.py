@@ -3,7 +3,8 @@ import math as m
 from typing import List, Tuple, Dict
 
 from Graph import Graph
-from Station import Station
+from Station import Station as S
+from Station import Location as L
 from heuristics import DistanceHeuristic as DH
 from custom_implementations.custom_queue import PriorityQueue as PQ
 from custom_implementations.custom_queue import Queue as Q
@@ -32,34 +33,38 @@ class ShortestPath:
     def __init__(self, start_station: str, end_station: str):
         self.start_station = start_station
         self.end_station = end_station
-        self.earth_radius = 6371.0
         self.heuristic = DH()
         self.graph = Graph()
         self.adjacency_list = self.graph.get_adjacency_list()
         self.stations_info = self.graph.get_station_info()
         self.interchange_stations = self.graph.get_interchange_stations()
+        
+        self.INVALID = 0.0, 0.0, [], []
+        self.CRUISE_SPEED = 27.8     # m/s
+        self.ACCELERATION = 1.0      # m/s^2
+        self.REGULAR_STOPPING_TIME = 28
+        self.INTERCHANGE_STOPPING_TIME = 35
 
     def _evaluate_time_for_distance(self, distance_meters: float) -> float:
-        cruise_speed = 27.8     # m/s
-        acceleration = 1.0      # m/s^2
-        accel_decel_distance = (cruise_speed ** 2) / acceleration
+        accel_decel_distance = (self.CRUISE_SPEED ** 2) / self.ACCELERATION
 
         if distance_meters >= accel_decel_distance:
             #This formula is used when the distance is greater than the acceleration distance
-            acceleration_time = cruise_speed / acceleration
-            accel_distance = 0.5 * acceleration * (acceleration_time ** 2)
+            acceleration_time = self.CRUISE_SPEED / self.ACCELERATION
+            accel_distance = 0.5 * self.ACCELERATION * (acceleration_time ** 2)
             cruise_distance = distance_meters - 2 * accel_distance
-            cruise_time = cruise_distance / cruise_speed
+            cruise_time = cruise_distance / self.CRUISE_SPEED
             total_time = 2 * acceleration_time + cruise_time
             
         else:
             #This formula is used when the distance is less than the acceleration distance
-            acceleration_time = m.sqrt(distance_meters / acceleration)
+            acceleration_time = m.sqrt(distance_meters / self.ACCELERATION)
             total_time = 2 * acceleration_time
 
         return total_time
     
-    def _travel_cost(self,code,neighour,total_distance,total_time) -> Tuple[float, float]:
+    def _calculate_travel_cost(self,code,neighour,total_distance,total_time) -> Tuple[float, float]:
+        
         travel_info = self.adjacency_list[code][neighour]
         travel_cost = travel_info["cost"]
         travel_method = travel_info["method"]
@@ -68,9 +73,9 @@ class ShortestPath:
             total_distance += travel_cost
             total_time += self._evaluate_time_for_distance(travel_cost)
             if code not in self.interchange_stations:
-                total_time += 28
+                total_time += self.REGULAR_STOPPING_TIME
             else:
-                total_time += 35
+                total_time += self.INTERCHANGE_STOPPING_TIME
                 
         elif travel_method == "transfer":
             total_distance += total_distance
@@ -82,11 +87,12 @@ class ShortestPath:
         current_station = self.end_station
 
         if current_station not in previous or previous[current_station] is None:
-            return float('inf'), 0.0, [], []
+            return self.INVALID
 
         while current_station != self.start_station:
             if current_station not in previous:
-                return float('inf'), 0.0, [], []
+                return self.INVALID
+            
             path.append(current_station)
             current_station = previous[current_station]
         path.append(self.start_station)
@@ -107,25 +113,10 @@ class ShortestPath:
                 if neighbour not in self.adjacency_list[code]:
                     continue
                 
-                total_distance, total_time = self._travel_cost(code,
-                                                               neighbour,
-                                                               total_distance,
-                                                               total_time)
-                
-                # travel_info = self.adjacency_list[code][neighbour]
-                # travel_cost = travel_info["cost"]
-                # travel_method = travel_info["method"]
-
-                # if travel_method == "train":
-                #     total_distance += travel_cost
-                #     total_time += self._evaluate_time_for_distance(travel_cost)
-                #     if code not in self.interchange_stations:
-                #         total_time += 28
-                #     else:
-                #         total_time += 35
-                        
-                # elif travel_method == "transfer":
-                #     total_time += travel_cost
+                total_distance, total_time = self._calculate_travel_cost(code,
+                                                                         neighbour,
+                                                                         total_distance,
+                                                                         total_time)
 
         return total_distance, total_time, path, station_names
 
@@ -139,6 +130,9 @@ class ShortestPath:
         queue.enqueue(current_station)
         visited_stations[current_station] = True
         distance_map[current_station] = 0
+        
+        if self.start_station == self.end_station:
+            return self.INVALID
 
         while not queue.is_empty():
             current_station = queue.dequeue()
@@ -151,8 +145,7 @@ class ShortestPath:
                     if (distance_map[current_station] +
                             self.adjacency_list[current_station][neighbour]["cost"]
                             < distance_map[neighbour]):
-                        distance_map[neighbour] = (distance_map[current_station] +
-                                                  self.adjacency_list[current_station][neighbour]["cost"])
+                        distance_map[neighbour] = (distance_map[current_station] + self.adjacency_list[current_station][neighbour]["cost"])
                         previous[neighbour] = current_station
                         queue.enqueue(neighbour)
                         
@@ -161,7 +154,7 @@ class ShortestPath:
     def dijkstra(self) -> Tuple[float, float, list, list]:
         
         if self.start_station == self.end_station:
-            return 0.0, 0.0, [], []
+            return self.INVALID
         
         # Initialize data structures
         priority_queue = PQ()
@@ -178,6 +171,7 @@ class ShortestPath:
         #while the priority queue is not empty
         while not priority_queue.is_empty():
             current_station = priority_queue.dequeue()[1]
+            
             #check if the current station is the destination
             if current_station == self.end_station:
                 break
@@ -206,7 +200,7 @@ class ShortestPath:
         
         # If the start and end stations are the same
         if self.start_station == self.end_station:
-            return (0.0, 0.0, [], [])
+            return self.INVALID
         
         # Initialize data structures
         closed_list = []
@@ -264,7 +258,7 @@ class ShortestPath:
         
         #if the end station is not in the previous stations list, return an empty path
         if self.end_station not in previous_stations or current_station != self.end_station:
-            return (0.0, 0.0, [], [])
+            return self.INVALID
         
         return self.reconstruct_path(previous_stations)
 
@@ -273,7 +267,7 @@ class ShortestPath:
         
         # If the start and end stations are the same return an empty path
         if self.start_station == self.end_station:
-            return [(0.0, 0.0, [], [])]
+            return [(self.INVALID)]
         
         # First path using A* algorithm
         first_path = self.a_star()
@@ -323,7 +317,7 @@ class ShortestPath:
                         if v not in self.adjacency_list[u]:
                             continue
                         
-                        distance, time = self._travel_cost(u, v, distance, time)
+                        distance, time = self._calculate_travel_cost(u, v, distance, time)
                         
                     possible_paths.append((distance, time, new_route, names))
 
@@ -337,45 +331,3 @@ class ShortestPath:
             shortest_paths.append(possible_paths.dequeue())
 
         return shortest_paths
-
-# s1 = ["NS2","CC5","EW20","DT30"]
-# s2 = ["NS22","EW20"]
-# for item1 in s1:
-#     for item2 in s2:
-#         print(f"Shortest path from {item1} to {item2}:")
-        
-#         print(f"Breadth First Search")
-#         x = ShortestPath(item1, item2).bfs()
-#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
-#         print(f"Distance: {distance}")
-#         print(f"Time: {time}")
-#         print(f"Station Codes: {', '.join(path)}")
-#         print(f"Station  Names: {', '.join(station_names)}")
-        
-#         x = ShortestPath(item1, item2).dijkstra()
-#         print(f"Dijkstra's algorithm")
-#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
-#         print(f"Distance: {distance}")
-#         print(f"Time: {time}")
-#         print(f"Station Codes: {', '.join(path)}")
-#         print(f"Station  Names: {', '.join(station_names)}")
-        
-#         print(f"A* algorithm")
-#         x = ShortestPath(item1, item2).a_star()
-#         distance,time,path,station_names = x[0], x[1], x[2], x[3]
-#         print(f"Distance: {distance}")
-#         print(f"Time: {time}")
-#         print(f"Station Codes: {', '.join(path)}")
-#         print(f"Station  Names: {', '.join(station_names)}")
-        
-#         print(f"using Yen's algorithm")
-#         paths = ShortestPath(item1, item2).k_shortest_path(3)
-#         for j in paths:
-#             x = list(j)
-#             # print(data)
-#             print(f"Distance: {x[0]}")
-#             print(f"Time: {x[1]}")
-#             codes = ', '.join(x[2])
-#             names = ', '.join(x[3])
-#             print(f"Station Codes: {codes}")
-#             print(f"Station  Names: {names}")
