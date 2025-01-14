@@ -1,3 +1,7 @@
+##############################################
+# GROUP A Skill : Linked list maintenance    #
+##############################################
+
 class EmptyListError(Exception):
     pass
 
@@ -89,6 +93,14 @@ class LinkedList:
             if new_node.next is None:
                 self.tail = new_node
         self._size += 1
+    
+    ##########################################
+    # GROUP A Skill : Recursive algorithm    #
+    ##########################################
+
+    #################################
+    # GROUP A Skill : Merge sort    #
+    #################################
 
     def merge_sort(self):
         if not self.head or not self.head.next:

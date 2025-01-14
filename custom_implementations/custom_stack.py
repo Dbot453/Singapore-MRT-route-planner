@@ -1,20 +1,25 @@
+############################
+# GROUP A Skill : Stack    #
+############################
+
 class EmptyStackError(Exception):
     pass
 
-#custom_stack
 class Stack:
     def __init__(self):
         self.data = []
-        self.head = None
+        self.head = 0
         
     def push(self, element):
         self.data.append(element)
-        self.head = element
+        self.head += 1
     
     def pop(self):
         if self.is_empty():
             raise EmptyStackError("cannot pop from an empty stack!")
-        return self.data.pop()
+        value = self.data[self.head - 1]
+        self.head -= 1
+        return value
     
     def peek(self):
         if self.is_empty():
@@ -25,5 +30,5 @@ class Stack:
         return len(self.data) == 0
     
     def size(self):
-        return len(self.data)
+        return self.head
     
