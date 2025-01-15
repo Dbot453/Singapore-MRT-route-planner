@@ -31,8 +31,8 @@ def create_highlighted_map(shortest_route, original_svg_file, new_svg_file):
     print("Highlighting complete")
 
 @map.route('/map', methods=['GET', 'POST'])
+@login_required
 def calculate_route():
-    distance = 0
     path_codes = []
     path_names = []
     start_station = ''
@@ -53,7 +53,6 @@ def calculate_route():
         start_station = request.form.get('start') or ''
         destination_station = request.form.get('dest') or ''
         algorithm = request.form.get('algorithm_selection')
-
         if 'settings' in request.form:
             return redirect(url_for('settings_page'))
 
@@ -122,6 +121,11 @@ def calculate_route():
         past_routes=user_past_routes,
         all_station_codes=station_codes
     )
+
+@map.route('/map/settings')
+@login_required
+def settings_page():
+    return redirect(url_for('settings.settings_page'))
 
 @map.route('/delete-route/<int:route_id>')
 @login_required

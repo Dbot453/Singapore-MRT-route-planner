@@ -24,40 +24,38 @@ class Station(Location):
             raise ValueError("Invalid station name")
         # Add more validation as needed
 
-    @property
-    def adjacent_stations(self) -> list[str]:
+    def get_adjacent_stations(self) -> list[str]:
         return self.__adjacent_stations
 
-    @adjacent_stations.setter
-    def adjacent_stations(self, adjacent_stations: list[str]):
+    def set_adjacent_stations(self, adjacent_stations: list[str]):
         self.__adjacent_stations = adjacent_stations
 
-    @property
-    def connections(self) -> dict[str, str]:
+    def get_connections(self) -> dict[str, str]:
         return self.__connections
 
-    @connections.setter
-    def connections(self, connections: dict[str, str]):
+    def set_connections(self, connections: dict[str, str]):
         self.__connections = connections
 
-    @property
-    def station_code(self) -> str:
+    def get_station_code(self) -> str:
         return self.__station_code
 
-    @property
-    def station_name(self) -> str:
+    def get_station_name(self) -> str:
         return self.__station_name
 
-    @property
-    def line_color(self) -> str:
+    def get_line_color(self) -> str:
         return self.__line_colour
 
-    @property
-    def line_name(self) -> str:
+    def get_line_name(self) -> str:
         return self.__line_name
 
     def get_connection(self, station_code: str) -> str:
         return self.__connections.get(station_code)
+    
+    def get_lng(self) -> float:
+        return self.lng
+    
+    def get_lat(self) -> float:
+        return self.lat
 
     def add_connection(self, station_code: str, connection_info: str):
         if station_code not in self.__connections:

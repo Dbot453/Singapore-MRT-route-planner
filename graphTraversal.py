@@ -22,12 +22,7 @@ def GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) 
     else:
         data = shortest_path_calculator.k_shortest_path(2)
         
-    return (
-        f"{data[0]:.2f} km",
-        f"{data[1]//60:.2f} minutes {data[1]%60}s",
-        data[2],
-        data[3],
-    )
+    return (f"{data[0]:.2f} km", f"{data[1]//60:.2f} minutes {data[1]%60}s",data[2],data[3],)
 
 class ShortestPath:
     def __init__(self, start_station: str, end_station: str):
@@ -217,8 +212,9 @@ class ShortestPath:
         priority_queue.enqueue((0, self.start_station))
         
         # Get the coordinates of the end station
-        end_lng = float(self.stations_info[self.end_station].get_lng())
-        end_lat = float(self.stations_info[self.end_station].get_lat())
+        end_station_info = self.stations_info[self.end_station]
+        end_lng = float(end_station_info.get_lng())
+        end_lat = float(end_station_info.get_lat())
 
         # While the priority queue is not empty
         while not priority_queue.is_empty():

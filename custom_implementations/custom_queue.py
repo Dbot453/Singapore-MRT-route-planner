@@ -4,7 +4,6 @@ from custom_implementations.binary_heap import BinaryHeap
 # GROUP A Skill : Queue    #
 ############################
 
-
 class EmptyQueueError(Exception):
     pass
       

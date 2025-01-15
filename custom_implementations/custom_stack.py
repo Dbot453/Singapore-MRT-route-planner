@@ -17,9 +17,9 @@ class Stack:
     def pop(self):
         if self.is_empty():
             raise EmptyStackError("cannot pop from an empty stack!")
-        value = self.data[self.head - 1]
+        
         self.head -= 1
-        return value
+        return self.data.pop(self.head)
     
     def peek(self):
         if self.is_empty():

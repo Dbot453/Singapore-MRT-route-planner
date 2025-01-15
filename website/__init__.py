@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from os import path
@@ -17,16 +17,16 @@ def create_app():
     
     from .views import views
     from .auth import auth
-    from .models import User, Route
+    from .models import User
     from .map import map
     from .home import home
-    # from .settings import render_settings
+    from .settings import map_settings
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(map, url_prefix='/')
     app.register_blueprint(home, url_prefix='/')
-    # app.register_blueprint(render_settings, url_prefix='/')
+    app.register_blueprint(map_settings, url_prefix='/')
     
     
     with app.app_context():
@@ -35,8 +35,9 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
+
     @login_manager.user_loader
-    def load_user(id):
+    def load_user(user_id):
         return User.query.get(int(id))
     
     return app 
