@@ -7,9 +7,10 @@ class Graph:
         self.adjacency_list = {}
         self.station_info = {}
         self.interchange_stations = []
-        Graph.generate_station_data(self)
+        Graph.generate_station_data(self) 
 
     def generate_station_data(self):
+        self._add_stations()
         self._add_transfer_cost()
         self._add_connection_cost()
         self._populate_adjacency_list()

@@ -1,3 +1,5 @@
+#TODO: make it so that k_shortest paths usese a different function to get the shortest path
+
 import os
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
@@ -88,6 +90,8 @@ def calculate_route():
                 selectDest=destination_station
             )
         else:
+            result = GetShortestPathStatic(start_station, destination_station, algorithm)
+            
             distance_calc, time_calc, codes_calc, names_calc = GetShortestPathStatic(start_station, destination_station)
             path_codes = ','.join(codes_calc)
             path_names = ','.join(names_calc)

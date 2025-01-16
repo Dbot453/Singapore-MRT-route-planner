@@ -13,16 +13,24 @@ from custom_implementations.linked_list import LinkedList as LL
 
 def GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) -> Tuple[str, str, List[str], List[str]]:
     shortest_path_calculator = ShortestPath(start_station, end_station)
+    result = {}
+    
     if algorithm == '1':
         data = shortest_path_calculator.bfs()
+        result[1] = data
     elif algorithm == '2':
         data = shortest_path_calculator.dijkstra()
+        result[1] = data
     elif algorithm == '3':
         data = shortest_path_calculator.a_star()
+        result[1] = data
     else:
         data = shortest_path_calculator.k_shortest_path(2)
+        for j,k in enumerate(data):
+            result[j+1] = k
         
-    return (f"{data[0]:.2f} km", f"{data[1]//60:.2f} minutes {data[1]%60}s",data[2],data[3],)
+    return result
+    #TODO: make it so that k_shortest paths usese a different function to get the shortest path
 
 class ShortestPath:
     def __init__(self, start_station: str, end_station: str):
@@ -327,3 +335,14 @@ class ShortestPath:
             shortest_paths.append(possible_paths.dequeue())
 
         return shortest_paths
+
+
+station1 = ["NS1","EW24","CC5"]
+station2 = ["DT1","NS5","CC5"]
+
+for s1 in station1:
+    for s2 in station2:
+        print(f"Shortest path from {s1} to {s2}")
+        x = ShortestPath(s1,s2).a_star()
+        
+        

@@ -12,6 +12,7 @@ def save_settings():
     preferred_route = request.form.get('preferred_route')
     avoid_lines = request.form.get('avoid_lines')
     max_walking_distance = request.form.get('max_walking_distance')
+    #
 
     return redirect(url_for('settings_page'))
 

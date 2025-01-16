@@ -1,265 +1,255 @@
-<html lang="en"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="/static/icon/favicon-192.v1.png" sizes="192x192">
-<link rel="icon" type="image/png" href="/static/icon/favicon-180.v1.png" sizes="180x180">
-<link rel="icon" type="image/png" href="/static/icon/favicon-128.v1.png" sizes="128x128">
-<link rel="icon" type="image/png" href="/static/icon/favicon-96.v1.png" sizes="96x96">
-<link rel="icon" type="image/png" href="/static/icon/favicon-48.v1.png" sizes="48x48">
-<link rel="icon" type="image/png" href="/static/icon/favicon-32.v1.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/static/icon/favicon-16.v1.png" sizes="16x16">
-<!--
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16">
--->
-<link rel="apple-touch-icon" sizes="180x180" href="/static/icon/favicon-180.v1.png">
-<link rel="apple-touch-icon" sizes="120x120" href="/static/icon/favicon-120.v1.png">
-<meta name="msapplication-TileImage" content="/static/icon/favicon-192.v1.png">
-<meta name="msapplication-TileColor" content="#000040">
-
-<title>Map of Singapore MRT/LRT - MRT.SG</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<style>
-h1 {margin: 1rem}
-.row {margin: 0px;}
-.ctr {text-align: center}
-.notes {font-size: 80%}
-footer {background-color: #999; font-size:16px}
-footer a {color: #def}
-@font-face {
-    font-family: 'social-share';
-    /* src: url('/fontawesome-min.woff') format('woff'); */
-    src: url("data:application/x-font-woff;charset=utf-8;base64,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");
-    font-weight: normal;
-    font-style: normal;
-}
-.share-buttons {font-family: "social-share"; font-size: 4vw} 
-.share-buttons a:visited, .share-buttons a:hover, .share-buttons a:active {
-  text-decoration: none;}
-.share-button {padding: 0 1vw 0 0}
-
-@media all and (max-width: 601px) {
-  body {font-size: 16px}
-  h1 {font-size: 7vw}
-  .share-buttons {font-size: 16vw;}
-}
-
-@media all and (min-width: 602px) {
-  .navbar-inverse .navbar-brand {
-    color: #d8dfef;
-    font-size: 24px;
-    font-weight: 900;
-  }
-  .navbar-inverse .navbar-nav>li>a {
-    color: #b8cfdf;
-    font-size: 24px;
-    font-weight: 800;
-  }
-}
-</style>
-<script async="" src="//www.google-analytics.com/analytics.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script><style type="text/css" id="operaUserStyle"></style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css">
-<style>
-#overview-map {
-	width: 100%;
-	padding-bottom: 56%;
-	background: #bbf;
-	border: #ccc solid 4px;
-}
-
-#modal-close {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 64px;
-	height: 64px;
-	margin: 0;
-	padding: 0;
-	display: none;
-	z-index: 9999;
-	cursor: pointer;
-}
-
-.station-label {background: #333; font-size: 16px; font-weight:500; white-space: nowrap;}
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
-<script type="text/javascript">	
-	window.addEventListener("load", function(event) {
-		history.replaceState({mapmax: 0}, document.title, window.location.pathname); 
-		var e_map = document.getElementById('overview-map');
-		var e_modalx = document.getElementById('modal-close');
-		var imageUrl = "{{ url_for('static', filename='Singapore-MRT-Network.svg') }}"; // Use Flask url_for to generate correct static URL
-		var imageBounds = [[1.202, 103.6], [1.48, 104.095]];
-		var imageOptions = {alt: "Singapore MRT/LRT Map (Geographic)", attribution: 'CC-BY-SA 4.0 Wikipedia user:Seloloving'};
-		var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
-		var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
-		var zoomfit = mrtmap.getZoom();
-		mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
-		L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
-		L.control.zoom({position:'topright'}).addTo(mrtmap);
-		L.control.scale({imperial:false, position:'topleft'}).addTo(mrtmap);
-
-
-		function openMapMax(event) {
-			if (event) {
-				history.pushState({mapmax: 1}, document.title, window.location.pathname);
-			}
-
-			e_map.style.position = 'fixed';
-			e_map.style.top = '0';
-			e_map.style.left = 0;
-			e_map.style.bottom = '0';
-			e_map.style.paddingBottom = '0';
-			e_map.style.right = '0';
-			e_map.style.zIndex = '9995';
-			e_modalx.style.display = 'inline';
-			mrtmap.invalidateSize();
-			mrtmap.fitBounds(imageBounds);
-		}
-
-		document.getElementById("button-fs-map").addEventListener("click", openMapMax);
-		e_modalx.addEventListener("click", function() {
-			e_modalx.style.display = 'none';
-			history.back();
-		});
-
-		window.onpopstate = function(event) {
-			if (event.state && event.state.mapmax === 1) {
-				openMapMax();
-			}
-			else {
-				e_modalx.style.display = 'none';
-				e_map.style.position = 'relative';
-				e_map.style.top = 0;
-				e_map.style.paddingBottom = '56%';
-				mrtmap.invalidateSize();
-				mrtmap.fitBounds(imageBounds);
-			}
-		};
-
-	});
-	
-</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-840805-10', 'auto');
-  ga('send', 'pageview');
-
-</script>
-<body>
-<nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">MRT.SG</a>
-    </div>
-    <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/search" title="Find nearest MRT/LRT station to POIs">Search</a></li>
-        <li class="active"><a href="/map" title="MRT/LRT Maps">Maps</a></li>
-        <li><a href="/fare" title="MRT Fare &amp; Time Calculator">Fare Calculator</a></li>
-        <li><a href="/mrt-lines" title="MRT &amp; LRT Lines Connectivity Diagrams / Network Maps">Lines</a></li>
-        <li><a href="/news" title="MRT News &amp; Updates">News</a></li>
-      </ul>
-    </div><!--/.navbar-collapse -->
-  </div>
-</nav>
-<div id="main-body">
-<h1>Map of Singapore MRT and LRT lines</h1>
-<div class="row">
-<div class="col-sm-8">
-<p>This is a geographic overview map of Singapore's metropolitan MRT (Mass Rapid Transit) subway train networks and its suburban LRT (Light Rail Transit) transport systems. Zoom in with touch, mouse scrollwheel, or the [+] button to view more station names.</p>
-<div id="overview-map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;">
-	<svg id="modal-close" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
-		<circle cx="50" cy="50" r="40" fill="#ddf" stroke="#008" stroke-width="10"></circle>
-		<line x1="35" x2="65" y1="35" y2="65" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
-		<line x1="35" x2="65" y1="65" y2="35" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
-	</svg>
-<div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-388px, -217px, 0px);"><div class="leaflet-pane leaflet-tile-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-overlay-pane"><img class="leaflet-image-layer leaflet-zoom-animated" src="/static/image/mrtmap_geographic.v3.svg" alt="Singapore MRT/LRT Map (Geographic)" style="transform: translate3d(0px, 1px, 0px); width: 1297px; height: 729px;"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(743738px, 468122px, 0px) scale(1842.33);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-scale leaflet-control"><div class="leaflet-control-scale-line" style="width: 71px;">3 km</div></div></div><div class="leaflet-top leaflet-right"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out leaflet-disabled" href="#" title="Zoom out" role="button" aria-label="Zoom out">-</a></div></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="/map/about">More info</a> | CC-BY-SA 4.0 Wikipedia user:Seloloving</div></div></div></div>
-<button type="" id="button-fs-map" class="btn btn-primary pull-right">Full screen map</button>
-
-
-<span class="share-buttons">
-<span class="share-button"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmrt.sg&amp;t=Singapore%20MRT%2FLRT%20Fare%2C%20Travel%20Time%2C%20Network%20Map%20%26%20Information" title="Share on Facebook" target="_blank"></a></span><span class="share-button"><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fmrt.sg&amp;text=Singapore%20MRT%2FLRT%20Fare%2C%20Travel%20Time%2C%20Maps%20%26%20News:&amp;via=mrtsingapore&amp;hashtags=mrtsg,smrt,sbstransit,mrtsingapore" target="_blank" title="Tweet"></a></span><span class="share-button"><a href="whatsapp://send?text=https%3A%2F%2Fmrt.sg" title="Share on WhatsApp"></a></span><span class="share-button"><a href="mailto:?subject=Singapore%20MRT%2FLRT%20Fare%2C%20Travel%20Time%2C%20Network%20Map%20%26%20Information&amp;body=https%3A%2F%2Fmrt.sg" title="Email"></a></span></span>
-
-<h3>Other MRT Maps</h3>
-<h4>↳ Schematic Map of MRT/LRT Networks</h4>
-<p>Take a look also at the <a href="/map/schematic" title="Schematic map diagram of Singapore's MRT/LRT lines">schematic map of the MRT/LRT system</a>, an idealised map of Singapore's MRT/LRT lines and stations.</p>
-
-<h4>↳ Vertical Mobile-friendly MRT Map</h4>
-<p>For browsing on phones, there is also a <a href="/mrt-lines" title="Mobile-friendly simplified diagrammatic map of Singapore's MRT/LRT lines">text-only mobile-friendly network connectivity diagram</a> that's easier to scroll through with just vertical gestures.
-</p>
-
-
-</div><!-- /.col-sm-8 -->
-<div class="col-sm-4">
-	<span></span>
-</div><!-- /.col-sm-4 -->
-</div><!-- /.row -->
-</div><!-- /#main-body -->
-
-<footer><br>
-<div id="footer" class="footer ctr">© 2019 <a href="https://mrt.sg/">MRT.SG</a> | <a href="/terms-of-use">Terms &amp; Privacy</a></div><br>
-</footer>
-
-
-<iframe id="RMDyXdci" frameborder="0" src="chrome-extension://ekhagklcjbdpajgpjgmbionohlpdbjgc/translateSandbox/translateSandbox.html" style="width: 0px; height: 0px; display: none;"></iframe></body></html><body>
-    <nav class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">MRT.SG</a>
+{% extends "base.html" %}
+{% block title %}Map{% endblock %}
+{% block content %}
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+      .child {
+        border: 1px solid black;
+        float: left;
+        width: 80%;
+        margin-left: 20%;
+      }
+      .parent {
+        width: 100%;
+      }
+      @media (min-width: 768px) {
+        .parent {
+          display: flex;
+          flex-direction: row-reverse;
+        }
+        .sidebar {
+          width: 80%;
+        }
+      }
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+      }
+      .popup-content {
+        position: relative;
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-height: 70%;
+        overflow-y: auto;
+      }
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .scrollable-menu {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="parent">
+      <!-- Sidebar -->
+      <section class="child">
+        <div style="float:left;">
+          <form method="POST">
+            <div id="sidebar" class="section">
+              <div class="row"></div>
+              <div class="col-md-3 sidebar" style="background-color: #f8f9fa; padding: 20px; height: 100vh; position: fixed; left: 0; width: 25vw; overflow-y: auto;">
+                <h4>Journey Details</h4>
+                <div class="station-info">
+                  <ul>
+                    <li>
+                      <label>Start Station: </label>
+                      <select name="start">
+                        {% for d in all_station_codes %}
+                          {% if d == selectStart %}
+                            <option selected value="{{ d }}">{{ d }}</option>
+                          {% else %}
+                            <option value="{{ d }}">{{ d }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </li>
+                    <li>
+                      <label>End Station: </label>
+                      <select name="dest">
+                        {% for a in all_station_codes %}
+                          {% if a == selectDest %}
+                            <option selected value="{{ a }}">{{ a }}</option>
+                          {% else %}
+                            <option value="{{ a }}">{{ a }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </li>
+                  </ul>
+                  <p><label>Select Algorithm</label></p>
+                  <p>
+                    <select name="algorithm_selection">
+                      <option value="1">Breadth First Search</option>
+                      <option value="2">Dijkstra</option>
+                      <option value="3">K Shortest Path</option>
+                      <option value="4">A Star</option>
+                    </select>
+                  </p>
+                  <button type="submit" class="btn btn-primary">Calculate</button>
+                  <div id="distance">
+                    <p>Distance: </p>
+                    <p>{{ distance }}</p>
+                  </div>
+                  <div id="time">
+                    <p>Time: </p>
+                    <p>{{ time }}</p>
+                  </div>
+                  <label>Shortest Route (codes): </label>
+                  <ul>
+                    {% for code in path_codes %}
+                      <li>{{ code }}</li>
+                    {% endfor %}
+                  </ul>
+                  <br>
+                  <label>Shortest Route (names): </label>
+                  <ul>
+                    {% for name in path_names %}
+                      <li>{{ name }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <button id="show-old-route" class="btn btn-primary" type="button">Past Routes</button>
+                <button id="settings" class="btn btn-primary" type="button">Settings</button>
+                <div id="oldRoutesPopup" class="popup" style="display: none;">
+                  <div class="popup-content">
+                    <span class="close" id="closePopup">&times;</span>
+                    <h3>Your Recent Routes</h3>
+                    <div class="scrollable-menu">
+                      {% if past_routes %}
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>From</th>
+                              <th>To</th>
+                              <th>Distance</th>
+                              <th>Time</th>
+                              <th>Station Codes</th>
+                              <th>Station names</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for route in past_routes %}
+                              <tr>
+                                <td>{{ route.start }}</td>
+                                <td>{{ route.dest }}</td>
+                                <td>{{ route.distance }} km</td>
+                                <td>{{ route.time }} min</td>
+                                <td>
+                                  <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
+                                  <a href="{{ url_for('map.delete_route', route_id=route.id) }}" onclick="return confirm('Are you sure you want to delete this route?')" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      {% else %}
+                        <p>No past routes found.</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <script>
+                  document.getElementById('show-old-route').addEventListener('click', function() {
+                    document.getElementById('oldRoutesPopup').style.display = 'block';
+                  });
+                  document.getElementById('closePopup').addEventListener('click', function() {
+                    document.getElementById('oldRoutesPopup').style.display = 'none';
+                  });
+                  window.onclick = function(event) {
+                    if (event.target == document.getElementById('oldRoutesPopup')) {
+                      document.getElementById('oldRoutesPopup').style.display = 'none';
+                    }
+                  };
+                </script>
+              </div>
+            </div>
+          </form>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/search" title="Find nearest MRT/LRT station to POIs">Search</a></li>
-            <li class="active"><a href="/map" title="MRT/LRT Maps">Maps</a></li>
-            <li><a href="/fare" title="MRT Fare &amp; Time Calculator">Fare Calculator</a></li>
-            <li><a href="/mrt-lines" title="MRT &amp; LRT Lines Connectivity Diagrams / Network Maps">Lines</a></li>
-            <li><a href="/news" title="MRT News &amp; Updates">News</a></li>
-          </ul>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
-    <div id="main-body">
-    <h1>Map of Singapore MRT and LRT lines</h1>
-    <div class="row">
-    <div class="col-sm-8">
-    <p>This is a geographic overview map of Singapore's metropolitan MRT (Mass Rapid Transit) subway train networks and its suburban LRT (Light Rail Transit) transport systems. Zoom in with touch, mouse scrollwheel, or the [+] button to view more station names.</p>
-    <div id="overview-map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;">
-        <svg id="modal-close" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <circle cx="50" cy="50" r="40" fill="#ddf" stroke="#008" stroke-width="10"></circle>
-            <line x1="35" x2="65" y1="35" y2="65" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
-            <line x1="35" x2="65" y1="65" y2="35" stroke="#008" stroke-width="10" stroke-linecap="round"></line>
-        </svg>
-    <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-388px, -217px, 0px);"><div class="leaflet-pane leaflet-tile-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-overlay-pane"><img class="leaflet-image-layer leaflet-zoom-animated" src="/static/image/mrtmap_geographic.v3.svg" alt="Singapore MRT/LRT Map (Geographic)" style="transform: translate3d(0px, 1px, 0px); width: 1297px; height: 729px;"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(743738px, 468122px, 0px) scale(1842.33);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-scale leaflet-control"><div class="leaflet-control-scale-line" style="width: 71px;">3 km</div></div></div><div class="leaflet-top leaflet-right"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out leaflet-disabled" href="#" title="Zoom out" role="button" aria-label="Zoom out">-</a></div></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="/map/about">More info</a> | CC-BY-SA 4.0 Wikipedia user:Seloloving</div></div></div></div>
-    <button type="" id="button-fs-map" class="btn btn-primary pull-right">Full screen map</button>    
-    
-    </div><!-- /.col-sm-8 -->
-    <div class="col-sm-4">
-        <span></span>
-    </div><!-- /.col-sm-4 -->
-    </div><!-- /.row -->
-    </div><!-- /#main-body -->
-    
-    <footer><br>
-    <div id="footer" class="footer ctr">© 2019 <a href="https://mrt.sg/">MRT.SG</a> | <a href="/terms-of-use">Terms &amp; Privacy</a></div><br>
-    </footer>
-    
-    
-    <iframe id="RMDyXdci" frameborder="0" src="chrome-extension://ekhagklcjbdpajgpjgmbionohlpdbjgc/translateSandbox/translateSandbox.html" style="width: 0px; height: 0px; display: none;"></iframe></body>
+      </section>
+
+      <!-- Map -->
+      <section id="map-container" class="child">
+        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1-t3q073MDouBeQ8Y4XoCMaPGvqSMiB0&ehbc=2E312F" style="width: 100%; height: 100vh; border: none;"></iframe>
+        </script>
+        </script>
+      </section>
+    </section>
+    <div style="margin: 20px;">
+      {% if user.is_authenticated %}
+        <button class="btn btn-primary" type="button" onclick="togglePastRoutes()">
+          Show/Hide Past Routes
+        </button>
+        <div id="pastRoutesSection" style="display: none; margin-top: 20px;">
+          {% if past_routes %}
+            <div class="past-routes">
+              <h3>Your Recent Routes</h3>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Distance</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for route in past_routes %}
+                    <tr>
+                      <td>{{ route.start }}</td>
+                      <td>{{ route.dest }}</td>
+                      <td>{{ route.distance }} km</td>
+                      <td>{{ route.time }} min</td>
+                      <td>
+                        <button class="btn btn-info btn-sm" onclick="loadRoute('{{ route.start }}', '{{ route.dest }}')">Load</button>
+                        <a href="{{ url_for('map.delete_route', route_id=route.id) }}" onclick="return confirm('Are you sure you want to delete this route?')" class="btn btn-danger btn-sm">Delete</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p>No past routes found.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    <script>
+      function togglePastRoutes() {
+        const pastRoutes = document.getElementById('pastRoutesSection');
+        if (pastRoutes.style.display === 'none') {
+          pastRoutes.style.display = 'block';
+        } else {
+          pastRoutes.style.display = 'none';
+        }
+      }
+      function loadRoute(start, dest) {
+        const startSelect = document.querySelector('select[name="start"]');
+        const destSelect = document.querySelector('select[name="dest"]');
+        startSelect.value = start;
+        destSelect.value = dest;
+        startSelect.closest('form').submit();
+      }
+    </script>
+  </body>
 </html>
+{% endblock %}
