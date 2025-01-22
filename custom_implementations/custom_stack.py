@@ -8,7 +8,7 @@ class EmptyStackError(Exception):
 class Stack:
     def __init__(self):
         self.data = []
-        self.head = 0
+        self.head = -1
         
     def push(self, element):
         self.data.append(element)
@@ -18,8 +18,9 @@ class Stack:
         if self.is_empty():
             raise EmptyStackError("cannot pop from an empty stack!")
         
+        element = self.data.pop()
         self.head -= 1
-        return self.data.pop(self.head)
+        return element
     
     def peek(self):
         if self.is_empty():

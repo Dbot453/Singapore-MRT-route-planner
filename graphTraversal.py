@@ -117,9 +117,9 @@ class ShortestPath:
                     continue
                 
                 total_distance, total_time = self._calculate_travel_cost(code,
-                                                                         neighbour,
-                                                                         total_distance,
-                                                                         total_time)
+                                                                        neighbour,
+                                                                        total_distance,
+                                                                        total_time)
 
         return total_distance, total_time, path, station_names
 
@@ -344,5 +344,6 @@ for s1 in station1:
     for s2 in station2:
         print(f"Shortest path from {s1} to {s2}")
         x = ShortestPath(s1,s2).a_star()
+        print(x)
         
         
