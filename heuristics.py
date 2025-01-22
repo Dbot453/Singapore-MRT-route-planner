@@ -5,7 +5,7 @@ class DistanceHeuristic:
     def __init__(self):
         self.RADIUS = 6371
          
-    def haversine(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    def manhattan(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
             
             lat1_rad, lat2_rad, lng1_rad, lng2_rad = map(m.radians, [lat1, lat2, lng1, lng2])
             delta_lat = lat2_rad - lat1_rad
