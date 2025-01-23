@@ -33,7 +33,6 @@ def GetShortestPathStatic(
 
     return result
 
-
 class RoutePlanner:
     def __init__(
         self, graph: Graph, start: str, end: str, interchange_stations: set, stations_info: dict):

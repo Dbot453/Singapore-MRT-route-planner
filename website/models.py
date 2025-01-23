@@ -23,3 +23,21 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     password = db.Column(db.String(150))
     routes = db.relationship('Route')
+    settings = db.relationship('AccountSettings')
+    
+class AccountSettings(db.Model):
+    user = db.relationship('User')
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    preferred_route = db.Column(db.String(150))
+
+class Route(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    start = db.Column(db.String(150))
+    end = db.Column(db.String(150))
+    distance = db.Column(db.Float)
+    time = db.Column(db.Float)
+    path_codes = db.Column(db.String(10000))
+    path_names = db.Column(db.String(10000))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
