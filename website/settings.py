@@ -16,7 +16,6 @@ def save_settings():
 
 @map_settings.route('/save-account-settings', methods=['POST'])
 def save_account_settings():
-    preferred_route = request.form.get('preferred_route')
-    algorithm = request.form.get('algorithm')
+    
     return redirect(url_for('settings_page'))
 

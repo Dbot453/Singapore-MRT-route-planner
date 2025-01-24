@@ -30,6 +30,7 @@ class AccountSettings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     preferred_route = db.Column(db.String(150))
+    algorithm = db.Column(db.String(150))
 
 class Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -50,21 +50,27 @@ class RoutePlanner:
 
     def _evaluate_time_for_distance(self, distance_meters: float) -> float:
         accel_decel_distance = (self.CRUISE_SPEED ** 2) / self.ACCELERATION
+        
+        #This formula is used when the distance is greater than the acceleration distance
         if distance_meters >= accel_decel_distance:
             t_accel = self.CRUISE_SPEED / self.ACCELERATION
             accel_dist = 0.5 * self.ACCELERATION * (t_accel ** 2)
             cruise_dist = distance_meters - 2 * accel_dist
             cruise_time = cruise_dist / self.CRUISE_SPEED
             return 2 * t_accel + cruise_time
+        
+        #This formula is used when the distance is less than the acceleration distance
         else:
             return 2 * m.sqrt(distance_meters / self.ACCELERATION)
 
     def _calculate_travel_cost(self, code, neighbour, total_distance, total_time):
+        # Get the cost of the method of traveln 
         info = self.adjacency_list[code][neighbour]
         cost, method = info["cost"], info["method"]
 
         if method == "train":
             total_distance += cost
+            # Calculate the time taken to travel the distance
             total_time += self._evaluate_time_for_distance(cost)
             if code not in self.interchange_stations:
                 total_time += self.REGULAR_STOPPING_TIME
@@ -75,6 +81,7 @@ class RoutePlanner:
 
         return total_distance, total_time
 
+    # Reconstruct the path from the previous dictionary
     def _reconstruct_path(self, previous: dict) -> Tuple[float, float, list, list]:
         path = []
         curr = self.end
@@ -113,6 +120,7 @@ class RoutePlanner:
 
 
 class BFS_Algorithm(RoutePlanner):
+    # Run the BFS algorithm
     def run(self) -> Tuple[float, float, List[str], List[str]]:
         if self.start == self.end:
             return self.INVALID
