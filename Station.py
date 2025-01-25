@@ -1,6 +1,7 @@
-##########################
-# GROUP A Skill : OOP    #
-##########################
+#######################################
+# GROUP A Skill : Complex OOP model   #
+#######################################
+
 from Location import Location
 
 class Station(Location):
@@ -22,7 +23,6 @@ class Station(Location):
             raise ValueError("Invalid station code")
         if not self.__station_name or not isinstance(self.__station_name, str):
             raise ValueError("Invalid station name")
-        # Add more validation as needed
 
     def get_adjacent_stations(self) -> list[str]:
         return self.__adjacent_stations

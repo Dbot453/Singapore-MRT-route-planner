@@ -128,6 +128,16 @@ def calculate_route():
         past_routes=user_past_routes,
         all_station_codes=station_codes
     )
+    
+@map.route('/map/popup', methods=['GET'])
+@login_required
+def show_user_routes_popup():
+    user_routes = db.session.execute("""
+        SELECT * FROM route
+        WHERE user_id = :user_id
+        ORDER BY id DESC
+    """, {'user_id': current_user.id}).fetchall()
+    return render_template('popup.html', routes=user_routes)
 
 @map.route('/map/settings')
 @login_required

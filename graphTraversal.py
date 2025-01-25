@@ -363,52 +363,51 @@ class ShortestPath:
         return shortest_paths
 
 
-station1 = ["NS1","EW24","CC5"]
-station2 = ["DT1","NS5","CC5"]
+# station1 = ["NS1","EW24","CC5"]
+# station2 = ["DT1","NS5","CC5"]
 
-for s1 in station1:
-    for s2 in station2:
-        print(f"Shortest path from {s1} to {s2}")
-        x = ShortestPath(s1,s2).a_star()
-        print(x)
+# for s1 in station1:
+#     for s2 in station2:
+#         print(f"Shortest path from {s1} to {s2}")
+#         x = ShortestPath(s1,s2).a_star()
+#         print(x)
 
-if __name__ == "__main__":
-    station1 = ["NS1", "EW24", "CC5"]
-    station2 = ["DT1", "NS5", "CC5"]
+# if __name__ == "__main__":
+#     station1 = ["NS1", "EW24", "CC5"]
+#     station2 = ["DT1", "NS5", "CC5"]
 
-    for s1 in station1:
-        for s2 in station2:
-            print(f"Shortest path from {s1} to {s2}")
-            print("BFS:")
-            x = ShortestPath(s1, s2).bfs()
-            print(x)
-            print("Dijkstra:")
-            x = ShortestPath(s1, s2).a_star()
-            print(x)
-            print("A*:")
-            x = ShortestPath(s1, s2).dijkstra()
-            print(x)
+#     for s1 in station1:
+#         for s2 in station2:
+#             print(f"Shortest path from {s1} to {s2}")
+#             print("BFS:")
+#             x = ShortestPath(s1, s2).bfs()
+#             print(x)
+#             print("Dijkstra:")
+#             x = ShortestPath(s1, s2).dijkstra()
+#             print(x)
+#             print("A*:")
+#             x = ShortestPath(s1, s2).a_star()
+#             print(x)
 
+#             print("K Shortest Paths:")
+#             routes = []
+#             x = ShortestPath(s1, s2).k_shortest_path(5)
+#             for i, path in enumerate(x):
+#                 print(f"Path {i + 1}: {path}")
+#                 distance_calc, time_calc, codes_calc, names_calc = path
+#                 path_codes = ','.join(codes_calc)
+#                 path_names = ','.join(names_calc)
+#                 new_route = Route( 
+#                     start_station=s1,
+#                     dest_station=s2,
+#                     distance=distance_calc,
+#                     travel_time=time_calc,
+#                     path_codes=path_codes,
+#                     path_names=path_names,
+#                     user_id=0   # testing user id
+#                 )
 
-            print("K Shortest Paths:")
-            routes = [];
-            x = ShortestPath(s1, s2).k_shortest_path(5)
-            for i, path in enumerate(x):
-                print(f"Path {i + 1}: {path}")
-                distance_calc, time_calc, codes_calc, names_calc = path
-                path_codes = ','.join(codes_calc)
-                path_names = ','.join(names_calc)
-                new_route = Route( 
-                    start_station=s1,
-                    dest_station=s2,
-                    distance=distance_calc,
-                    travel_time=time_calc,
-                    path_codes=path_codes,
-                    path_names=path_names,
-                    user_id=0   # testing user id
-                )
-
-                routes.append(new_route)
+#                 routes.append(new_route)
             
-            SaveRouteToDBStatic( routes)
+#             SaveRouteToDBStatic( routes)
         

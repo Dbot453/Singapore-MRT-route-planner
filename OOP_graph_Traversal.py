@@ -1,8 +1,10 @@
 import numpy as np
 import math as m
 from typing import List, Tuple, Dict
+import sqlite3
 
 from Graph import Graph
+from Route import Route
 from Station import Station as S
 from Station import Location as L
 from heuristics import DistanceHeuristic as DH
@@ -33,28 +35,28 @@ def GetShortestPathStatic(
 
     return result
 
+def SaveRouteToDBStatic(routes: List[Route]):
 
-    # def GetShortestPath(
-    #     start_station: str, end_station: str, algorithm: str, graph: Graph, interchange_stations: set, stations_info: dict, heuristic: DH = None, k: int = 1
-    # ) -> Dict[int, Tuple[float, float, List[str], List[str]]]:
-    #     sp = ShortestPath(start_station, end_station, graph, interchange_stations, stations_info, heuristic)
-    #     result = {}
+    import datetime
 
-    #     if algorithm == "1":
-    #         data = sp.run_bfs()
-    #         result[1] = data
-    #     elif algorithm == "2":
-    #         data = sp.run_dijkstra()
-    #         result[1] = data
-    #     elif algorithm == "3":
-    #         data = sp.run_a_star()
-    #         result[1] = data
-    #     else:
-    #         data = sp.run_k_shortest_path(k)
-    #         for i, path in enumerate(data):
-    #             result[i + 1] = path
+    db_connection = sqlite3.connect("instance/database.db")
+    cursor = db_connection.cursor()
 
-    #     return result
+    # save route  data
+    for r in routes:
+        start = r.get_start_station()
+        dest = r.get_dest_station()
+        distance = r.get_distance()
+        travel_time = r.get_travel_time()
+        path_codes = r.get_path_codes()
+        path_names = r.get_path_names()
+        user_id = r.get_user_id()
+
+        sql_query = "INSERT INTO route (start, dest, distance, travel_time, path_codes, path_names, user_id, save_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(sql_query, ( start, dest, distance, travel_time, path_codes, path_names, user_id, datetime.datetime.now()))
+
+    db_connection.commit()
+    db_connection.close()
 
 class RoutePlanner:
     def __init__(

@@ -1,4 +1,6 @@
 # from sqlalchemy.sql import func
+# from . import db
+# from flask_login import UserMixin
 
 #########################################
 # GROUP A Skill : Complex Data model    #
@@ -41,17 +43,15 @@
 #     path_names = db.Column(db.String(10000))
 #     date = db.Column(db.DateTime(timezone=True), default=func.now())
 
-from . import db
-from flask_login import UserMixin
 import sqlite3
 
 #########################################
 # GROUP A Skill : Complex Data model    #
 #########################################
 def init_db():
-    conn = sqlite3.connect("app.db")
+    conn = sqlite3.connect("instance/database.db")
     c = conn.cursor()
-    
+    # Table for user
     c.execute("""
         CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +60,7 @@ def init_db():
             password TEXT
         )
     """)
-    
+    # Table for account settings
     c.execute("""
         CREATE TABLE IF NOT EXISTS account_settings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,7 +70,7 @@ def init_db():
             FOREIGN KEY(user_id) REFERENCES user(id)
         )
     """)
-    
+    # Table for route
     c.execute("""
         CREATE TABLE IF NOT EXISTS route (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +86,5 @@ def init_db():
         )
     """)
 
-    
-    
     conn.commit()
     conn.close()
