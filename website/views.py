@@ -86,7 +86,7 @@ def calculate_route():
             x = GetShortestPathStatic(start, dest, algorithm)
 
             if len(x)> 1:
-                # k shortest path, it is a dictionary
+                # k shortest path, it is a dictionary, use the first one temporarily
                 result = x[1]
                 d_distance, d_time, d_path_codes, d_path_names =  result[0], result[1], result[2], result[3]
             else:
