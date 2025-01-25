@@ -19,7 +19,7 @@ class Graph:
 
     def _add_stations(self):
         if self.__read_db:
-            db_connection = sqlite3.connect("instance/database.db")
+            db_connection = sqlite3.connect("website/database.db")
             cursor = db_connection.cursor()
             # # Get neighbour data
             neighbour_sql_query = "SELECT station_code, neighbour FROM adjacent_stations"
@@ -82,7 +82,7 @@ class Graph:
 
     def _add_connection_cost(self):
         if self.__read_db:
-            db_connection = sqlite3.connect("instance/database.db")
+            db_connection = sqlite3.connect("website/database.db")
             cursor = db_connection.cursor()
             # Get distance data
             sql_query = "SELECT station1, station2, distance FROM distance"
@@ -115,7 +115,7 @@ class Graph:
                     
     def _add_transfer_cost(self):
         if self.__read_db:
-            db_connection = sqlite3.connect("instance/database.db")
+            db_connection = sqlite3.connect("website/database.db")
             cursor = db_connection.cursor()
             # Get transfer time data
             sql_query = "SELECT start_code, end_code, transfer_time_seconds FROM transfer_time"

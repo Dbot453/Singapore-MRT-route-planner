@@ -2,9 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from os import path
-import sqlite3
-from .models import init_db
-
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -15,18 +12,21 @@ def create_app():
     app.config['SECRET_KEY'] = 'secret_key'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     
-    init_db()
+    db.init_app(app)
     
     from .views import views
     from .auth import auth
     from .map import map
     from .home import home
+    from .models import User, init_db
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(map, url_prefix='/')
     app.register_blueprint(home, url_prefix='/')
     
+    # create tables if missing
+    init_db()
 
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -34,12 +34,8 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        conn = sqlite3.connect("instance/database.db")
-        c = conn.cursor()
-        c.execute("SELECT * FROM user WHERE id = ?", (user_id,))
-        user = c.fetchone()
-        conn.close()
-        return user
+        pass
+        
     
     return app 
 

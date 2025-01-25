@@ -39,7 +39,7 @@ def SaveRouteToDBStatic(routes: List[Route]):
 
     import datetime
 
-    db_connection = sqlite3.connect("instance/database.db")
+    db_connection = sqlite3.connect("website/database.db")
     cursor = db_connection.cursor()
 
     # save route  data

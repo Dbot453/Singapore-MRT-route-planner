@@ -1,55 +1,50 @@
-# from sqlalchemy.sql import func
-# from . import db
-# from flask_login import UserMixin
-
-#########################################
-# GROUP A Skill : Complex Data model    #
-#########################################
-# class Route(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     start = db.Column(db.String(150))
-#     end = db.Column(db.String(150))
-#     distance = db.Column(db.Float)
-#     time = db.Column(db.Float)
-#     path_codes = db.Column(db.String(10000))
-#     path_names = db.Column(db.String(10000))
-#     date = db.Column(db.DateTime(timezone=True), default=func.now())
-
-
-# class User(db.Model, UserMixin):
-#     id = db.Column(db.Integer, primary_key=True)
-#     email = db.Column(db.String(150), unique=True)
-#     first_name = db.Column(db.String(150))
-#     password = db.Column(db.String(150))
-#     routes = db.relationship('Route')
-#     settings = db.relationship('AccountSettings')
-    
-# class AccountSettings(db.Model):
-#     user = db.relationship('User')
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     preferred_route = db.Column(db.String(150))
-#     algorithm = db.Column(db.String(150))
-
-# class Route(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     start = db.Column(db.String(150))
-#     end = db.Column(db.String(150))
-#     distance = db.Column(db.Float)
-#     time = db.Column(db.Float)
-#     path_codes = db.Column(db.String(10000))
-#     path_names = db.Column(db.String(10000))
-#     date = db.Column(db.DateTime(timezone=True), default=func.now())
-
+from sqlalchemy.sql import func
+from . import db
+from flask_login import UserMixin
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
+    first_name = db.Column(db.String(150))
+    password = db.Column(db.String(150))
+
+    # what these for?
+    #routes = db.relationship('Route')
+    #settings = db.relationship('AccountSettings')
+    
+    def __init__(self, id, email,  password, first_name):
+        self.id = id 
+        self.email = email
+        self.password = password
+        self.first_name = first_name
+
+
+    def __repr__(self):
+        return '<User %r>' % self.email
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.email)
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password, method='pbkdf2:sha256')
+    
 #########################################
 # GROUP A Skill : Complex Data model    #
 #########################################
 def init_db():
-    conn = sqlite3.connect("instance/database.db")
+    conn = sqlite3.connect("website/database.db")
     c = conn.cursor()
     # Table for user
     c.execute("""
@@ -77,11 +72,11 @@ def init_db():
             user_id INTEGER,
             start TEXT,
             end TEXT,
-            distance REAL,
-            time REAL,
+            distance NUMERIC,
+            travel_time NUMERIC,
             path_codes TEXT,
             path_names TEXT,
-            date TEXT DEFAULT CURRENT_TIMESTAMP,
+            SAVE_datetime datetime DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES user(id)
         )
     """)

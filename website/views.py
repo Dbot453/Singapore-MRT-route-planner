@@ -84,7 +84,13 @@ def calculate_route():
 
         if start != dest and len(start) > 1 and len(dest) >1 :
             x = GetShortestPathStatic(start, dest, algorithm)
-            d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
+
+            if len(x)> 1:
+                # k shortest path, it is a dictionary
+                result = x[1]
+                d_distance, d_time, d_path_codes, d_path_names =  result[0], result[1], result[2], result[3]
+            else:
+                d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
 
             d_path_names_temp = [g_station_list[c] for c in d_path_codes]
             new_d_path_codes = []
