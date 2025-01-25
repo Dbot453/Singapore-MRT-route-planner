@@ -2,28 +2,13 @@ from Station import Station
 from StationList import g_station_list
 import sqlite3
 
-##'''''' save data example
-#connection_obj = sqlite3.connect('test.db') 
-  
-# cursor object 
-#cursor_obj = connection_obj.cursor() 
-  
-#connection_obj.execute( 
-#    """INSERT INTO GEEK (Email,Name,Score) VALUES ("geekk1@gmail.com","Geek1",25)""") 
-  
-#connection_obj.commit() 
-  
-# Close the connection 
-#connection_obj.close() 
-#''''''
-
 class Graph:
     def __init__(self):
         self.__station_list = g_station_list.copy()
         self.adjacency_list = {}
         self.station_info = {}
         self.interchange_stations = []
-        self.__read_db = False
+        self.__read_db = True
         Graph.generate_station_data(self) 
 
     def generate_station_data(self):
@@ -36,7 +21,7 @@ class Graph:
         if self.__read_db:
             db_connection = sqlite3.connect("instance/database.db")
             cursor = db_connection.cursor()
-            # Get neighbour data
+            # # Get neighbour data
             neighbour_sql_query = "SELECT station_code, neighbour FROM adjacent_stations"
             cursor.execute(neighbour_sql_query)
             neighbour_output = cursor.fetchall()
@@ -44,10 +29,16 @@ class Graph:
             for row in neighbour_output:
                 station_code = row[0]
                 neighbour = row[1]
-                if neighbour not in neighbours:
+                if station_code not in neighbours:
                     neighbours[station_code] = [neighbour]
                 else:
-                    neighbours[station_code].append(neighbour)  
+                    neighbours[station_code].append(neighbour)
+                    
+                # Add reverse connection
+                if neighbour not in neighbours:
+                    neighbours[neighbour] = [station_code]
+                else:
+                    neighbours[neighbour].append(station_code)
 
             # Get station data
             station_sql_query = "SELECT station_code, station_name, line_colour,line_name, latitude, longitude  FROM station"

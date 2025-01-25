@@ -85,6 +85,8 @@ def init_db():
             FOREIGN KEY(user_id) REFERENCES user(id)
         )
     """)
+
+    
     
     conn.commit()
     conn.close()

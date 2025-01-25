@@ -4,9 +4,9 @@ import os
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 
-from .models import Route
+from  Route import Route
 from . import db
-from graphTraversal import GetShortestPathStatic
+from graphTraversal import GetShortestPathStatic, SaveRouteToDBStatic
 from StationList import g_station_list
 from custom_implementations.linked_list import LinkedList as LL
 
@@ -104,8 +104,11 @@ def calculate_route():
                 path_names=path_names,
                 user_id=current_user.id
             )
-            db.session.add(new_route)
-            db.session.commit()
+
+            # save route to database
+            # question: how to deal with k shortest paths? i.e. more than one route. Shoud use a list for save all routes
+            SaveRouteToDBStatic( [new_route])
+
             return render_template(
                 'map.html',
                 user=current_user,

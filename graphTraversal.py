@@ -10,6 +10,8 @@ from custom_implementations.custom_queue import PriorityQueue as PQ
 from custom_implementations.custom_queue import Queue as Q
 from custom_implementations.custom_stack import Stack as S
 from custom_implementations.linked_list import LinkedList as LL
+from Route import Route
+import sqlite3
 
 def GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) -> Tuple[str, str, List[str], List[str]]:
     shortest_path_calculator = ShortestPath(start_station, end_station)
@@ -31,6 +33,30 @@ def GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) 
         
     return result
     #TODO: make it so that k_shortest paths usese a different function to get the shortest path
+
+def SaveRouteToDBStatic(routes: List[Route]):
+
+    import datetime
+
+    db_connection = sqlite3.connect("instance/database.db")
+    cursor = db_connection.cursor()
+
+    # save route  data
+    for r in routes:
+        start = r.get_start_station()
+        dest = r.get_dest_station()
+        distance = r.get_distance()
+        travel_time = r.get_travel_time()
+        path_codes = r.get_path_codes()
+        path_names = r.get_path_names()
+        user_id = r.get_user_id()
+
+        sql_query = "INSERT INTO route (start, dest, distance, travel_time, path_codes, path_names, user_id, save_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(sql_query, ( start, dest, distance, travel_time, path_codes, path_names, user_id, datetime.datetime.now()))
+
+    db_connection.commit()
+    db_connection.close()
+
 
 class ShortestPath:
     def __init__(self, start_station: str, end_station: str):
@@ -345,5 +371,44 @@ for s1 in station1:
         print(f"Shortest path from {s1} to {s2}")
         x = ShortestPath(s1,s2).a_star()
         print(x)
-        
+
+if __name__ == "__main__":
+    station1 = ["NS1", "EW24", "CC5"]
+    station2 = ["DT1", "NS5", "CC5"]
+
+    for s1 in station1:
+        for s2 in station2:
+            print(f"Shortest path from {s1} to {s2}")
+            print("BFS:")
+            x = ShortestPath(s1, s2).bfs()
+            print(x)
+            print("Dijkstra:")
+            x = ShortestPath(s1, s2).a_star()
+            print(x)
+            print("A*:")
+            x = ShortestPath(s1, s2).dijkstra()
+            print(x)
+
+
+            print("K Shortest Paths:")
+            routes = [];
+            x = ShortestPath(s1, s2).k_shortest_path(5)
+            for i, path in enumerate(x):
+                print(f"Path {i + 1}: {path}")
+                distance_calc, time_calc, codes_calc, names_calc = path
+                path_codes = ','.join(codes_calc)
+                path_names = ','.join(names_calc)
+                new_route = Route( 
+                    start_station=s1,
+                    dest_station=s2,
+                    distance=distance_calc,
+                    travel_time=time_calc,
+                    path_codes=path_codes,
+                    path_names=path_names,
+                    user_id=0   # testing user id
+                )
+
+                routes.append(new_route)
+            
+            SaveRouteToDBStatic( routes)
         
