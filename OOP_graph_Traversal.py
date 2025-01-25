@@ -33,6 +33,29 @@ def GetShortestPathStatic(
 
     return result
 
+
+    # def GetShortestPath(
+    #     start_station: str, end_station: str, algorithm: str, graph: Graph, interchange_stations: set, stations_info: dict, heuristic: DH = None, k: int = 1
+    # ) -> Dict[int, Tuple[float, float, List[str], List[str]]]:
+    #     sp = ShortestPath(start_station, end_station, graph, interchange_stations, stations_info, heuristic)
+    #     result = {}
+
+    #     if algorithm == "1":
+    #         data = sp.run_bfs()
+    #         result[1] = data
+    #     elif algorithm == "2":
+    #         data = sp.run_dijkstra()
+    #         result[1] = data
+    #     elif algorithm == "3":
+    #         data = sp.run_a_star()
+    #         result[1] = data
+    #     else:
+    #         data = sp.run_k_shortest_path(k)
+    #         for i, path in enumerate(data):
+    #             result[i + 1] = path
+
+    #     return result
+
 class RoutePlanner:
     def __init__(
         self, graph: Graph, start: str, end: str, interchange_stations: set, stations_info: dict):
@@ -356,7 +379,7 @@ if __name__ == "__main__":
             x = ShortestPath(s1, s2).run_bfs()
             print(x)
             print("Dijkstra:")
-            x = ShortestPath(s1, s2).run_a_star()
+            x = ShortestPath(s1, s2).run_dijkstra()
             print(x)
             print("A*:")
             x = ShortestPath(s1, s2).run_a_star()
