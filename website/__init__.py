@@ -25,8 +25,8 @@ def create_app():
     app.register_blueprint(map, url_prefix='/')
     app.register_blueprint(home, url_prefix='/')
     
-    # create tables if missing
-    init_db()
+    with app.app_context():
+        db.create_all()
 
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -34,13 +34,13 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        pass
-        
+        #pass
+        return  User.query.get(13) 
     
     return app 
 
 def create_database(app):
-    if not path.exists('website/' + DB_NAME):
+    if not path.exists('instance/' + DB_NAME):
         db.create_all(app=app)
         print('Created Database!')
 

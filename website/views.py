@@ -52,7 +52,7 @@ def show_lines():
 
 @views.route('/actual-map')
 def show_map():
-    return render_template('map-test.html', user=current_user)
+    return render_template('map.html', user=current_user)
 
 #@views.route('/map')
 #def calculate_route():
