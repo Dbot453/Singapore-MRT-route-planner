@@ -19,6 +19,7 @@ def create_app():
     from .map import map
     from .home import home
     from .models import User, init_db
+    from .settings import map_settings
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
@@ -33,9 +34,8 @@ def create_app():
 
 
     @login_manager.user_loader
-    def load_user(user_id):
-        pass
-        
+    def load_user(email):
+        return User.query.get(email)
     
     return app 
 

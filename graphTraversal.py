@@ -1,6 +1,7 @@
 import numpy as np
 import math as m
 from typing import List, Tuple, Dict
+import datetime
 
 from Graph import Graph
 from Station import Station as S
@@ -36,7 +37,6 @@ def GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) 
 
 def SaveRouteToDBStatic(routes: List[Route]):
 
-    import datetime
 
     db_connection = sqlite3.connect("website/database.db")
     cursor = db_connection.cursor()

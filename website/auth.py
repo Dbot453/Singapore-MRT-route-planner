@@ -20,14 +20,13 @@ def login():
         user_password = user_record[2] if user_record else None
         conn.close()
         
-        #user = User.query.filter_by(email=email).first()
-        user = User(user_record[0], user_record[1], user_record[2], user_record[3]) if user_record else None
-        user_password = user.password if user else None
-        if user:
+        new_user = User(user_record[0], user_record[1], user_record[2], user_record[3]) if user_record else None
+        user_password = new_user.password if new_user else None
+        if new_user:
             if check_password_hash(user_password, entered_password):
                 flash('Logged in successfully!', category='success')
 
-                login_user(user, remember=True)
+                login_user(new_user, remember=True)
                 return redirect(url_for('views.calculate_route'))
             else:
                 flash('Incorrect password, try again.', category='error')

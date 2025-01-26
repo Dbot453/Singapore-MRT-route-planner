@@ -21,7 +21,6 @@ class User(db.Model, UserMixin):
         self.password = password
         self.first_name = first_name
 
-
     def __repr__(self):
         return '<User %r>' % self.email
 
@@ -78,6 +77,14 @@ def init_db():
             path_names TEXT,
             SAVE_datetime datetime DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES user(id)
+        )
+    """)
+    
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS user_settings (
+            user_id INTEGER,
+            preferred_route TEXT,
+            algorith_selection TEXT,
         )
     """)
 
