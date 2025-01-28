@@ -4,46 +4,44 @@ from flask_login import UserMixin
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
+#########################################
+# GROUP A Skill : Complex Data model    #
+#########################################
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-    first_name = db.Column(db.String(150))
-    password = db.Column(db.String(150))
-
-    # what these for?
-    #routes = db.relationship('Route')
-    #settings = db.relationship('AccountSettings')
+    __tablename__ = 'user'
     
-    def __init__(self, id, email,  password, first_name):
-        self.id = id 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    first_name = db.Column(db.String(150), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    
+    # Relationships
+    # account_settings = db.relationship('AccountSettings', backref='user', lazy=True)
+    # routes = db.relationship('Route', backref='user', lazy=True)
+    
+    def __init__(self, email, password, first_name):
         self.email = email
-        self.password = password
+        self.set_password(password)
         self.first_name = first_name
 
     def __repr__(self):
         return '<User %r>' % self.email
 
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
     def get_id(self):
-        return str(self.email)
+        return str(self.id)
     
     def set_password(self, password):
         self.password = generate_password_hash(password, method='pbkdf2:sha256')
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
     
-#########################################
-# GROUP A Skill : Complex Data model    #
-#########################################
+    def check_active(self):
+        return True
+    
 def init_db():
-    conn = sqlite3.connect("website/database.db")
+    conn = sqlite3.connect("instance/database.db")
     c = conn.cursor()
     # Table for user
     c.execute("""
@@ -84,7 +82,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS user_settings (
             user_id INTEGER,
             preferred_route TEXT,
-            algorith_selection TEXT,
+            algorith_selection TEXT
         )
     """)
 

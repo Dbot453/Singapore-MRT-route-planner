@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db
 from flask_login import login_user, login_required, logout_user, current_user, UserMixin
 import sqlite3
 from .models import User
@@ -13,19 +13,11 @@ def login():
         email = request.form.get('email')
         entered_password = request.form.get('password')
 
-        conn = sqlite3.connect("website/database.db")
-        c = conn.cursor()
-        c.execute("SELECT * FROM user WHERE email = ?", (email,))
-        user_record = c.fetchone()
-        user_password = user_record[2] if user_record else None
-        conn.close()
-        
-        new_user = User(user_record[0], user_record[1], user_record[2], user_record[3]) if user_record else None
+        new_user = User.query.filter_by(email=email).first()
         user_password = new_user.password if new_user else None
         if new_user:
             if check_password_hash(user_password, entered_password):
                 flash('Logged in successfully!', category='success')
-
                 login_user(new_user, remember=True)
                 return redirect(url_for('views.calculate_route'))
             else:
@@ -51,24 +43,16 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        conn = sqlite3.connect("website/database.db")
-        c = conn.cursor()
-        c.execute("SELECT * FROM user WHERE email = ?", (email,))
-        user = c.fetchone()
-        conn.close()
-
+        user = User.query.filter_by(email=email).first()
         if password1 != password2:
             flash('Passwords don\'t match.', category='error')
         else:
             if user:
                 flash('Email already exists.', category='error')
             else:
-                conn = sqlite3.connect("website/database.db")
-                c = conn.cursor()
-                c.execute("INSERT into user (email, first_name, password) values (?, ?, ?)", (email, first_name, generate_password_hash(password1, method='pbkdf2:sha256')))
-                conn.commit()
-                conn.close()
-                # login_user(new_user, remember=True)
+                new_user = User(email=email, first_name=first_name, password=password1)
+                db.session.add(new_user)
+                db.session.commit()
                 flash('Account created!', category='success')
                 return redirect(url_for('auth.login'))
 

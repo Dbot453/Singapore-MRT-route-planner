@@ -19,12 +19,13 @@ def create_app():
     from .map import map
     from .home import home
     from .models import User, init_db
-    from .settings import map_settings
+    # from .settings import settings
     
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(map, url_prefix='/')
     app.register_blueprint(home, url_prefix='/')
+    # app.register_blueprint(settings, url_prefix='/')
     
     # create tables if missing
     init_db()

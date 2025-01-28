@@ -185,12 +185,30 @@
         </div>
       </section>
 
+      const routeCoordinates = [
+        {% for coord in path_coords %}
+          [{{ coord[0] }}, {{ coord[1] }}],
+        {% endfor %}
+      ];
+      
       <!-- Map -->
-      <section id="map-container" class="child">
-        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1-t3q073MDouBeQ8Y4XoCMaPGvqSMiB0&ehbc=2E312F" style="width: 100%; height: 100vh; border: none;"></iframe>
-        </script>
-        </script>
-      </section>
+      <script>
+        const map = L.map('map').setView([1.3521, 103.8198], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(map);
+
+        const routeLine = L.polyline(routeCoordinates, {
+          color: 'blue',
+          weight: 5
+        }).addTo(map);
+
+        map.fitBounds(routeLine.getBounds());
+      </script>
+
+
+
+
     </section>
     <div style="margin: 20px;">
       {% if user.is_authenticated %}

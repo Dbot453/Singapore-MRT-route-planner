@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 
-from graphTraversal import GetShortestPathStatic  
+from graphTraversal import GraphTraversal  
 from StationList import g_station_list
 
 
@@ -83,7 +83,8 @@ def calculate_route():
             dest = ''
 
         if start != dest and len(start) > 1 and len(dest) >1 :
-            x = GetShortestPathStatic(start, dest, algorithm)
+            
+            x = GraphTraversal.get_shortest_path(start, dest, algorithm)
 
             if len(x)> 1:
                 # k shortest path, it is a dictionary, use the first one temporarily
