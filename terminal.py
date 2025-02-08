@@ -1,4 +1,4 @@
-from graphTraversal import GetShortestPathStatic
+from graphTraversal import GraphTraversal
 class Terminal:
     def __init__(self):
         self._output = ""
@@ -35,10 +35,11 @@ class Terminal:
             print("Invalid algorithm. Please try again.")
             Terminal.run(self)
 
-        x = GetShortestPathStatic(start, end, algorithm)
+        x = GraphTraversal.GetShortestPathStatic(start, end, algorithm)
         distance, time, codes, names =  x[0], x[1], x[2], x[3]
         
         print(f"Distance: {distance}")
+        print(f"Time: {time}")
         print("Path: ")
         for i in range(len(codes)):
             if i == 0:

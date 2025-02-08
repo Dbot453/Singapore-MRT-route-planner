@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input type="text" id="userText" placeholder="Please enter some text">
+
+<button type="button" onclick="submitText()">Submit!</button>
+
+<script type="text/javascript">
+function submitText() {
+	opener.document.getElementById('result').innerHTML = 'The text you\'ve entered is: ' + document.getElementById('userText').value;
+	self.close();
+}
+</script>
+
+</body>
+</html>

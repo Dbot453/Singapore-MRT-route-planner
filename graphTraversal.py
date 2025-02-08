@@ -1,7 +1,11 @@
+from Route import Route
+import csv
+from abc import abstractmethod
+
 class GraphTraversal:
-    """
-    Provides static-like methods to compute shortest paths and save routes to DB.
-    """
+
+    #Provides static-like methods to compute shortest paths and save routes to DB.
+       
     def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str):
         result = {}
         if algorithm == '1':
@@ -14,12 +18,12 @@ class GraphTraversal:
             data = AStar(start_station, end_station).run()
             result[1] = data
         else:
-            data = KShortestPath(start_station, end_station).run()
+            data = KShortestPath(start_station, end_station).run(3)
             for j, k in enumerate(data):
                 result[j + 1] = k
         return result
 
-    def SaveRouteToDBStatic(self, routes):
+    def save_route_to_db(self, routes: list[Route]):
         import sqlite3
         import datetime
 
@@ -72,6 +76,10 @@ class AlgorithmBase:
         self.ACCELERATION = 1.0
         self.REGULAR_STOPPING_TIME = 28
         self.INTERCHANGE_STOPPING_TIME = 35
+    
+    @abstractmethod
+    def run(self):
+        pass
 
     def _evaluate_time_for_distance(self, distance_meters: float) -> float:
         accel_decel_distance = (self.CRUISE_SPEED ** 2) / self.ACCELERATION
@@ -116,10 +124,11 @@ class AlgorithmBase:
 
         path_stack = S()
         while path:
-            path_stack.push(path.pop())
+            path_stack.push(path[0])
+            path.remove(path[0])
         while not path_stack.is_empty():
             path.append(path_stack.pop())
-
+            
         station_names = [self.stations_info[s].get_station_name() for s in path]
         total_distance = 0.0
         total_time = 0.0
@@ -131,13 +140,13 @@ class AlgorithmBase:
                     continue
                 total_distance, total_time = self._calculate_travel_cost(
                     code, neighbour, total_distance, total_time
-                )
+                )       
+                
         return total_distance, total_time, path, station_names
 
 class BFS(AlgorithmBase):
     def __init__(self, start_station: str, end_station: str):
-        super().__init__(start_station, end_station)
-        
+        super().__init__(start_station, end_station)    
     
     def run(self):
         from custom_implementations.custom_queue import Queue as Q
@@ -156,19 +165,25 @@ class BFS(AlgorithmBase):
             return self.INVALID
 
         while not queue.is_empty():
+            current_queue = queue.__repr__()
             current_station = queue.dequeue()
+
             if current_station == self.end_station:
                 break
             visited_stations[current_station] = True
 
-            for neighbour in self.adjacency_list[current_station]:
+            neighbours = list(self.adjacency_list[current_station].keys())
+            for neighbour in neighbours:
                 if not visited_stations[neighbour]:
                     cost = self.adjacency_list[current_station][neighbour]["cost"]
+
                     if distance_map[current_station] + cost < distance_map[neighbour]:
-                        distance_map[neighbour] = distance_map[current_station] + cost
+                        new_distance = distance_map[current_station] + cost
+                        distance_map[neighbour] = new_distance
                         previous[neighbour] = current_station
                         queue.enqueue(neighbour)
-        return self.reconstruct_path(previous)
+            
+            return self.reconstruct_path(previous)
 
 class Dijkstra(AlgorithmBase):
     def __init__(self, start_station: str, end_station: str):
@@ -183,34 +198,41 @@ class Dijkstra(AlgorithmBase):
 
         priority_queue = PQ()
         visited_stations = {node: False for node in self.adjacency_list}
-        distance_map = {node: m.inf for node in self.adjacency_list}
+        time_map = {node: m.inf for node in self.adjacency_list}
         previous_stations = {node: None for node in self.adjacency_list}
 
-        distance_map[self.start_station] = 0
+        time_map[self.start_station] = 0
         previous_stations[self.start_station] = None
         priority_queue.enqueue((0, self.start_station))
 
         while not priority_queue.is_empty():
+
+
             current_station = priority_queue.dequeue()[1]
+
             if current_station == self.end_station:
                 break
+            
             visited_stations[current_station] = True
 
             for neighbour, travel_info in self.adjacency_list[current_station].items():
                 travel_cost = travel_info["cost"]
                 if travel_info["method"] == "train":
                     travel_cost = self._evaluate_time_for_distance(travel_cost)
-                new_distance = distance_map[current_station] + travel_cost
-                if new_distance < distance_map[neighbour]:
-                    distance_map[neighbour] = new_distance
+                new_distance = time_map[current_station] + travel_cost
+
+                if new_distance < time_map[neighbour]:
+                    time_map[neighbour] = new_distance
                     previous_stations[neighbour] = current_station
                     priority_queue.enqueue((new_distance, neighbour))
+                                            
         return self.reconstruct_path(previous_stations)
 
 class AStar(AlgorithmBase):
     def __init__(self, start_station, end_station):
         super().__init__(start_station, end_station)
         
+       
     def run(self):
         from custom_implementations.custom_queue import PriorityQueue as PQ
         import math as m
@@ -231,12 +253,19 @@ class AStar(AlgorithmBase):
         end_lng = float(end_info.get_lng())
         end_lat = float(end_info.get_lat())
 
+
         while not priority_queue.is_empty():
+            
             current_station = priority_queue.dequeue()[1]
+
             if current_station == self.end_station:
                 break
+            
             visited_stations[current_station] = True
 
+            neighbours = list(self.adjacency_list[current_station].keys())
+            neigbours_distance = [self.adjacency_list[current_station][neighbour]["cost"] for neighbour in neighbours]
+            
             for neighbour, travel_info in self.adjacency_list[current_station].items():
                 if neighbour in closed_list:
                     continue
@@ -244,7 +273,7 @@ class AStar(AlgorithmBase):
                 if travel_info["method"] == "train":
                     travel_cost = self._evaluate_time_for_distance(travel_cost)
 
-                tentative_time = time_map[current_station] + travel_info["cost"]
+                tentative_time = time_map[current_station] + travel_cost
                 if tentative_time < time_map[neighbour]:
                     time_map[neighbour] = tentative_time
                     previous_stations[neighbour] = current_station
@@ -255,9 +284,10 @@ class AStar(AlgorithmBase):
                     )
                     heuristic_time = self._evaluate_time_for_distance(distance_estimate)
                     priority_queue.enqueue((time_map[neighbour] + heuristic_time, neighbour))
-
+                    
         if self.end_station not in previous_stations or current_station != self.end_station:
             return self.INVALID
+
         return self.reconstruct_path(previous_stations)
 
 class KShortestPath(AlgorithmBase):
@@ -270,49 +300,72 @@ class KShortestPath(AlgorithmBase):
         if self.start_station == self.end_station:
             return [self.INVALID]
 
-        first_path = self.a_star()
+        myAStar = AStar(self.start_station, self.end_station)
+        
+        first_path = myAStar.run()
         if not first_path[2]:
             return []
 
         shortest_paths = [first_path]
-        possible_paths = LL()
+        candidate_paths = LL()
 
-        for _ in range(1, k):
+        # Outer loop for finding kth shortest paths
+        for outer in range(1, k):
             previous_path = shortest_paths[-1]
             _, _, route, _ = previous_path
 
+            # Reverse the route as per the algorithm
+            route.reverse()
+
+            # Iterate through route segments
             for i in range(len(route) - 1):
                 removed_edges = []
-                for j in range(len(shortest_paths)):
-                    if j < len(shortest_paths) and shortest_paths[j][2][:i] == route[:i]:
-                        u = shortest_paths[j][2][i]
-                        v = shortest_paths[j][2][i + 1]
-                        if v in self.adjacency_list[u]:
-                            removed_edges.append((u, v, self.adjacency_list[u][v]))
-                            del self.adjacency_list[u][v]
 
-                new_path = self.a_star()
+                # Remove edges that are in previous shortest paths
+                for j in range(len(shortest_paths)):
+                    if shortest_paths[j][2][:i] == route[:i]:
+                        start_node = shortest_paths[j][2][i]
+                        destination_node = shortest_paths[j][2][i + 1]
+                        if destination_node in self.adjacency_list[start_node]:
+                            removed_edges.append((start_node, destination_node, self.adjacency_list[start_node][destination_node]))
+                            removed_edges.append((destination_node, start_node, self.adjacency_list[destination_node][start_node]))
+                            del myAStar.adjacency_list[start_node][destination_node]
+                            del myAStar.adjacency_list[destination_node][start_node]
+
+                new_path = myAStar.run()
                 spur_route = new_path[2]
-                for (u, v, edge_info) in removed_edges:
-                    self.adjacency_list[u][v] = edge_info
+
+                # Restore removed edges
+                for (start_node, destination_node, edge_info) in removed_edges:
+                    myAStar.adjacency_list[start_node][destination_node] = edge_info
 
                 if spur_route:
                     new_route = route[:i] + spur_route
                     distance, _, _, names = new_path
                     time = 0.0
+                    # Recompute distance and time for the new route
                     for n in range(len(new_route) - 1):
-                        u, v = new_route[n], new_route[n + 1]
-                        if v not in self.adjacency_list[u]:
+                        start_node, destination_node = new_route[n], new_route[n + 1]
+                        if destination_node not in myAStar.adjacency_list[start_node]:
                             continue
-                        distance, time = self._calculate_travel_cost(u, v, distance, time)
-                    possible_paths.append((distance, time, new_route, names))
-            if not possible_paths:
+                        distance, time = myAStar._calculate_travel_cost(
+                            start_node, destination_node, distance, time
+                        )
+                    candidate_paths.append((distance, time, new_route, names))
+            if not candidate_paths:
                 break
 
-        possible_paths.merge_sort()
+        candidate_paths.merge_sort()
         for _ in range(0, k - 1):
-            shortest_paths.append(possible_paths.dequeue())
+            shortest_paths.append(candidate_paths.dequeue())
 
         return shortest_paths
 
-
+# station1 = ["TE4"]
+# station2 = ["EW7"]
+# for s1, s2 in zip(station1, station2):
+#     print(f"Shortest path from {s1} to {s2}")
+#     print(BFS(s1, s2).run())
+#     print(Dijkstra(s1, s2).run())
+#     print(AStar(s1, s2).run())
+#     print(KShortestPath(s1, s2).run(3))

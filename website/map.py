@@ -6,9 +6,9 @@ from flask_login import current_user, login_required
 import sqlite3
 
 from graphTraversal import GraphTraversal
-from StationList import g_station_list
-from custom_implementations.linked_list import LinkedList as LL
-from .models import User
+from StationList import  g_station_codes, g_station_list
+from Station import Station
+from Route import Route
 
 map = Blueprint('map', __name__)
 
@@ -41,127 +41,129 @@ def calculate_route():
     start_station = ''
     destination_station = ''
 
-    # Collect station codes
-    station_codes = LL()
-    for station_code in g_station_list.keys():
-        station_codes.append(station_code)
-    station_codes.merge_sort()
-
-
     # Retrieve past routes if logged in
     user_past_routes = []
+    user_past_routes_string = []
+    # default  to 3 - A Star
+    algorithm_id = '3'
+    algorithm_name = "A Star"
+    preferred_route = 'fastest'
     if current_user.is_authenticated:
         conn = sqlite3.connect('instance/database.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT id, user_id, start, end, distance, travel_time, path_codes, path_names, SAVE_datetime FROM route WHERE user_id = ? ORDER BY id DESC LIMIT 5", (current_user.id,))
-        user_past_routes = cursor.fetchall()
+        cursor.execute("SELECT id, user_id, start, dest, distance, travel_time, path_codes, path_names, SAVE_datetime FROM route WHERE user_id = ? order by SAVE_datetime desc  ", (current_user.id,))
+        query_result = cursor.fetchall()
+
+        for r in query_result:
+            # start_station: str, dest_station: str, distance: float, travel_time: float, path_codes: str, path_names: str, user_id: int):
+            new_route=Route(r[2], r[3], r[4], r[5], r[6], r[7], current_user.id)
+            user_past_routes.append(new_route)
+            route_tuple = (r[2], r[3], r[4], r[5])
+            user_past_routes_string.append(route_tuple)
+
+        cursor.execute("SELECT preferred_route, algorithm_id, algorithm_name FROM account_settings WHERE user_id = ? ", (current_user.id,))
+        account_settings = cursor.fetchall()
+        if len(account_settings) > 0:
+            settings_result = account_settings[0]
+            preferred_route = settings_result[0]
+            algorithm_id = settings_result[1]
+            algorithm_name = settings_result[2]
+
         conn.close()
 
     # Handle form submission
     if request.method == 'POST':
         start_station = request.form.get('start') or ''
         destination_station = request.form.get('dest') or ''
-        algorithm = request.form.get('algorithm_selection')
-        
+             
         # Handle settings
-        if 'settings' in request.form:
-            return redirect(url_for('settings_page'))
-
-        # Handle show old routes button with a popup
-        if 'show_old_routes' in request.form:
+        post_action = request.form.get("action")
+        if post_action == 'Settings': 
+            #return redirect(url_for('views.settings'))
             return render_template(
-                'map.html',
-                user=current_user,
-                past_routes=user_past_routes,
-                all_station_codes=station_codes,
-                show_old_routes=True
-            )
+                    'settings.html',
+                    user=current_user,
+                    algorithm_selection = algorithm_id,
+                    algorithm_name = algorithm_name,
+                    preferred_route = preferred_route) 
+        
+        if post_action == 'Calculate':
+            #Ensure both start and destination are selected
+            if not start_station or not destination_station:
+                flash('Please select both start and destination', category='error')
+                return render_template(
+                    'map.html',
+                    user=current_user,
+                    all_station_codes=g_station_codes,
+                    past_routes=user_past_routes_string) 
 
-        #Ensure both start and destination are selected
-        if not start_station or not destination_station:
-            flash('Please select both start and destination', category='error')
-            return redirect(url_for('map.display_map'))
-
-        # Ensure start and destination are different
-        if start_station == destination_station:
-            flash('Start and destination cannot be the same', category='error')
-            return redirect(url_for('map.display_map'))
-        
-        #Check if route already exists
-        
-        conn = sqlite3.connect('instance/database.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, user_id, start, end, distance, travel_time, path_codes, path_names, SAVE_datetime FROM route WHERE user_id = ? ORDER BY id DESC LIMIT 5", (current_user.id,))
-        existing_route = cursor.fetchall()
-        conn.close()
-        
-        if existing_route:
-            return render_template(
-                #temp change to map-test.html
-                'map-test.html',
-                user=current_user,
-                distance=existing_route.distance,
-                time=existing_route.time,
-                path_names=existing_route.path_names,
-                path_codes=existing_route.path_codes,
-                past_routes=user_past_routes,
-                selectStart=start_station,
-                selectDest=destination_station,
-                path_coords=path_coords
-            )
+            # Ensure start and destination are different
+            if start_station == destination_station:
+                flash('Start and destination cannot be the same', category='error')
+                return render_template(
+                    'map.html',
+                    user=current_user,
+                    all_station_codes=g_station_codes,
+                    past_routes=user_past_routes_string,
+                    algorithm_selection = algorithm_name,
+                    prefferred_route = preferred_route) 
             
-        else:
-            distance_calc, time_calc, codes_calc, names_calc = GraphTraversal(start_station, destination_station, algorithm)
-            for code in path_codes:
-                path_coords.append(g_station_list.get_lat(code), g_station_list.get_lon(code))
+
+            myTraversal = GraphTraversal()
+            
+            result = myTraversal.GetShortestPathStatic(start_station.split(' - ')[0], destination_station.split(' - ' )[0], algorithm_id)
+
+            # k shortest path, it is a dictionary, use the first one temporarily
+            if len(result) > 1:
+                print("More than one result") 
+                
+            one_result = result[1]
+                
+            distance_calc, time_calc, codes_calc, names_calc =  one_result[0], one_result[1], one_result[2], one_result[3]
+
+            #distance_calc, time_calc, codes_calc, names_calc = myTraversal.GetShortestPathStatic(start_station, destination_station, algorithm)
+            
+            for code in codes_calc:
+                #path_coords.append((Station.get_lat(code), Station.get_lng(code)))
+                path_coords.append((g_station_list[code].get_lat(), g_station_list[code].get_lng()))
+                
             path_codes = ','.join(codes_calc)
             path_names = ','.join(names_calc)
             conn = sqlite3.connect('instance/database.db')
-            new_route = (current_user.id, start_station, destination_station, distance_calc, time_calc, path_codes, path_names)
+            ##start_station: str, dest_station: str, distance: float, travel_time: float, path_codes: str, path_names: str, user_id: int):
+            new_route = Route(start_station, destination_station, distance_calc, time_calc, path_codes, path_names, current_user.id)
 
+            create_highlighted_map(path_names.split(','), "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
+            
             # save route to database
             # question: how to deal with k shortest paths? i.e. more than one route. Shoud use a list for save all routes
-            GraphTraversal.save_route_to_db([new_route])
+            myTraversal.save_route_to_db([new_route])
 
-
+            code_name_tuple_list = zip(path_codes.split (','), path_names.split(','))
+            code_name_list = [ " - ".join(x) for x in code_name_tuple_list ]
             return render_template(
-                #temp change to map-test.html
-                'map-test.html',
+                'map.html',
                 user=current_user,
                 distance=distance_calc,
                 time=time_calc,
-                path_names=path_names,
-                path_codes=path_codes,
-                past_routes=user_past_routes,
-                all_station_codes=station_codes,
+                path_names=path_names.split(','),
+                path_codes=code_name_list[::-1],
+                past_routes=user_past_routes_string,
+                all_station_codes=g_station_codes,
                 selectStart=start_station,
                 selectDest=destination_station,
-                path_coords=path_coords
+                algorithm_selection = algorithm_name,
+                preferred_route = preferred_route
                 )
-            
-    return render_template(
-        #temp change to map-test.html
-        'map-test.html',
-        user=current_user,
-        past_routes=user_past_routes,
-        all_station_codes=station_codes,
-        path_coords=path_coords
-    )
     
-@map.route('/map/popup', methods=['GET'])
-@login_required
-def show_user_routes_popup():
-    conn = sqlite3.connect('instance/database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM route WHERE user_id = ? ORDER BY id DESC", (current_user.id,))
-    user_routes = cursor.fetchall()
-    conn.close()
-    return render_template('popup.html', routes=user_routes)
-
-@map.route('/settings')
-@login_required
-def settings_page():
-    return redirect(url_for('settings.settings_page'))
+    # default action     
+    return render_template(
+        'map.html',
+        user=current_user,
+        all_station_codes=g_station_codes,
+        past_routes=user_past_routes_string,
+        algorithm_selection = algorithm_name,
+        preferred_route = preferred_route) 
 
 @map.route('/delete-route/<int:route_id>')
 @login_required

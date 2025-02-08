@@ -25,4 +25,19 @@ def get_all_stations():
                 station_list[station_code] = Station(station_code, station_name, line_color, line_name, lat, lng, adj_stations)
     return station_list
 
+def get_all_station_codes(station_list):
+    station_codes = []
+    for s in g_station_list.values():
+        s_code = s.get_station_code()
+        s_name = s.get_station_name()
+        code_name = s_code + " - " + s_name
+        station_codes.append(code_name)
+
+    station_codes.sort()##
+
+    return station_codes
+    
 g_station_list = get_all_stations()
+
+g_station_codes = get_all_station_codes(g_station_list)
+

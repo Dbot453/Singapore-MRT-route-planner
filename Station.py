@@ -11,6 +11,8 @@ class Station(Location):
         self.__station_name = station_name
         self.__line_colour = line_colour
         self.__line_name = line_name
+        self.__lat = lat
+        self.__lng = lng
         self.__adjacent_stations = adjacent_stations
         self.__connections = {}
         self.validate_data()
@@ -52,10 +54,12 @@ class Station(Location):
         return self.__connections.get(station_code)
     
     def get_lng(self) -> float:
-        return self.lng
+        #return self.lng
+        return self.__lng
     
     def get_lat(self) -> float:
-        return self.lat
+        #return self.lat
+        return self.__lat
 
     def add_connection(self, station_code: str, connection_info: str):
         if station_code not in self.__connections:

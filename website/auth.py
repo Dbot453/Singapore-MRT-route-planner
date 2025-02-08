@@ -19,7 +19,7 @@ def login():
             if check_password_hash(user_password, entered_password):
                 flash('Logged in successfully!', category='success')
                 login_user(new_user, remember=True)
-                return redirect(url_for('views.calculate_route'))
+                return redirect(url_for('map.calculate_route'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:

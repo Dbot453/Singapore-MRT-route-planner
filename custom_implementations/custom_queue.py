@@ -10,6 +10,9 @@ class EmptyQueueError(Exception):
 class PriorityQueue:
     def __init__(self):
         self.data = BinaryHeap()
+        
+    def __repr__(self):
+        return self.data.__repr__()
 
     def enqueue(self, element):
         self.data.insert(element)
@@ -33,6 +36,13 @@ class Queue:
         self._list = []
         self._head = 0
         self._tail = 0
+        
+    def __repr__(self):
+        return self._list
+        
+    def enqueue(self, element):
+        self._list.append(element)
+        self._tail += 1
 
     def enqueue(self, element):
         self._list.append(element)

@@ -9,6 +9,9 @@ class BinaryHeap:
     def __init__(self):
         self.heap = []
 
+    def __repr__(self):
+        return self.heap
+    
     def parent(self, index):
         return (index - 1) // 2
 

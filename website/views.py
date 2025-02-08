@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 import json
 
-from graphTraversal import GraphTraversal  
+#from graphTraversal import GraphTraversal  
 from StationList import g_station_list
 
 
@@ -54,64 +54,6 @@ def show_lines():
 def show_map():
     return render_template('map-test.html', user=current_user)
 
-#@views.route('/map')
-#def calculate_route():
-#    return render_template('map.html', user=current_user)
-
-
-@views.route('/map', methods=['GET', 'POST'])
-def calculate_route():
-    d_distance = 0
-    d_time = 0
-    d_path_codes = []
-    d_path_names = []
-    start = ''
-    dest = ''
-
-    new_d_path_codes = []
-    
-    if request.method == 'POST':
-        start = request.form.get('start')
-        dest = request.form.get('dest')
-        algorithm = request.form.get('algorithm_selection')
-        
-        # htmo does not talk None
-        if start is None:
-            start = ''
-
-        if dest is None:
-            dest = ''
-
-        if start != dest and len(start) > 1 and len(dest) >1 :
-            
-            x = GraphTraversal.get_shortest_path(start, dest, algorithm)
-
-            if len(x)> 1:
-                # k shortest path, it is a dictionary, use the first one temporarily
-                result = x[1]
-                d_distance, d_time, d_path_codes, d_path_names =  result[0], result[1], result[2], result[3]
-            else:
-                d_distance, d_time, d_path_codes, d_path_names =  x[0], x[1], x[2], x[3]
-
-            d_path_names_temp = [g_station_list[c] for c in d_path_codes]
-            new_d_path_codes = []
-            for code in d_path_codes:
-                station_name = g_station_list[code].get_station_name()
-                new_d_path_codes.append(f"{code} - {station_name}")
-            
-            print(len(d_path_codes), len(d_path_names_temp))
-
-
-    create_highlighted_map(d_path_names, "website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
-
-    all_station_codes = [c  for  c in  g_station_list.keys()]
-    all_station_codes.sort()
-
-    return render_template('map.html', user=current_user,
-                            distance=d_distance,
-                            time = d_time,
-                            path_codes=new_d_path_codes,
-                            path_names=d_path_names,
-                            selectedStart = start,
-                            selectedDest = dest,
-                            all_station_codes = all_station_codes)
+@views.route('/save_settings')
+def settings():
+    return render_template('settings.html', user=current_user)

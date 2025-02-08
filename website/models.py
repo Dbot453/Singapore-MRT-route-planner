@@ -59,6 +59,7 @@ def init_db():
             user_id INTEGER,
             preferred_route TEXT,
             algorithm TEXT,
+            k INTEGER,
             FOREIGN KEY(user_id) REFERENCES user(id)
         )
     """)
