@@ -2,10 +2,10 @@ from Route import Route
 import csv
 from abc import abstractmethod
 
-class GraphTraversal:
 
-    #Provides static-like methods to compute shortest paths and save routes to DB.
-       
+class GraphTraversal:
+    # Provides static-like methods to compute shortest paths and save routes to DB.
+
     def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str):
         result = {}
         if algorithm == '1':
@@ -76,7 +76,7 @@ class AlgorithmBase:
         self.ACCELERATION = 1.0
         self.REGULAR_STOPPING_TIME = 28
         self.INTERCHANGE_STOPPING_TIME = 35
-    
+
     @abstractmethod
     def run(self):
         pass
@@ -128,7 +128,7 @@ class AlgorithmBase:
             path.remove(path[0])
         while not path_stack.is_empty():
             path.append(path_stack.pop())
-            
+
         station_names = [self.stations_info[s].get_station_name() for s in path]
         total_distance = 0.0
         total_time = 0.0
@@ -140,14 +140,18 @@ class AlgorithmBase:
                     continue
                 total_distance, total_time = self._calculate_travel_cost(
                     code, neighbour, total_distance, total_time
-                )       
-                
+                )
+
         return total_distance, total_time, path, station_names
+
+###########################################
+# GROUP A Skill:  Graph Traversal BFS     #
+###########################################
 
 class BFS(AlgorithmBase):
     def __init__(self, start_station: str, end_station: str):
-        super().__init__(start_station, end_station)    
-    
+        super().__init__(start_station, end_station)
+
     def run(self):
         from custom_implementations.custom_queue import Queue as Q
         import math as m
@@ -165,30 +169,32 @@ class BFS(AlgorithmBase):
             return self.INVALID
 
         while not queue.is_empty():
-            current_queue = queue.__repr__()
             current_station = queue.dequeue()
 
             if current_station == self.end_station:
                 break
-            visited_stations[current_station] = True
 
+            visited_stations[current_station] = True
             neighbours = list(self.adjacency_list[current_station].keys())
             for neighbour in neighbours:
                 if not visited_stations[neighbour]:
                     cost = self.adjacency_list[current_station][neighbour]["cost"]
-
                     if distance_map[current_station] + cost < distance_map[neighbour]:
                         new_distance = distance_map[current_station] + cost
                         distance_map[neighbour] = new_distance
                         previous[neighbour] = current_station
                         queue.enqueue(neighbour)
-            
-            return self.reconstruct_path(previous)
+
+        return self.reconstruct_path(previous)
+
+################################################
+# GROUP A Skill:  Graph Traversal Dijkstra     #
+################################################
 
 class Dijkstra(AlgorithmBase):
     def __init__(self, start_station: str, end_station: str):
         super().__init__(start_station, end_station)
-        
+
     def run(self):
         from custom_implementations.custom_queue import PriorityQueue as PQ
         import math as m
@@ -206,13 +212,11 @@ class Dijkstra(AlgorithmBase):
         priority_queue.enqueue((0, self.start_station))
 
         while not priority_queue.is_empty():
-
-
             current_station = priority_queue.dequeue()[1]
 
             if current_station == self.end_station:
                 break
-            
+
             visited_stations[current_station] = True
 
             for neighbour, travel_info in self.adjacency_list[current_station].items():
@@ -225,14 +229,18 @@ class Dijkstra(AlgorithmBase):
                     time_map[neighbour] = new_distance
                     previous_stations[neighbour] = current_station
                     priority_queue.enqueue((new_distance, neighbour))
-                                            
+
         return self.reconstruct_path(previous_stations)
+
+
+##########################################
+# GROUP A Skill:  Graph Traversal A*     #
+##########################################
 
 class AStar(AlgorithmBase):
     def __init__(self, start_station, end_station):
         super().__init__(start_station, end_station)
-        
-       
+
     def run(self):
         from custom_implementations.custom_queue import PriorityQueue as PQ
         import math as m
@@ -253,19 +261,14 @@ class AStar(AlgorithmBase):
         end_lng = float(end_info.get_lng())
         end_lat = float(end_info.get_lat())
 
-
         while not priority_queue.is_empty():
-            
             current_station = priority_queue.dequeue()[1]
 
             if current_station == self.end_station:
                 break
-            
-            visited_stations[current_station] = True
 
+            visited_stations[current_station] = True
             neighbours = list(self.adjacency_list[current_station].keys())
-            neigbours_distance = [self.adjacency_list[current_station][neighbour]["cost"] for neighbour in neighbours]
-            
             for neighbour, travel_info in self.adjacency_list[current_station].items():
                 if neighbour in closed_list:
                     continue
@@ -284,11 +287,15 @@ class AStar(AlgorithmBase):
                     )
                     heuristic_time = self._evaluate_time_for_distance(distance_estimate)
                     priority_queue.enqueue((time_map[neighbour] + heuristic_time, neighbour))
-                    
+
         if self.end_station not in previous_stations or current_station != self.end_station:
             return self.INVALID
 
         return self.reconstruct_path(previous_stations)
+
+##########################################################################################
+# GROUP A Skill:  Complex user defined algorithm – K shortest path / Yen’s algorithm     #
+##########################################################################################
 
 class KShortestPath(AlgorithmBase):
     def __init__(self, start_station, end_station):
@@ -301,7 +308,6 @@ class KShortestPath(AlgorithmBase):
             return [self.INVALID]
 
         myAStar = AStar(self.start_station, self.end_station)
-        
         first_path = myAStar.run()
         if not first_path[2]:
             return []
@@ -327,8 +333,12 @@ class KShortestPath(AlgorithmBase):
                         start_node = shortest_paths[j][2][i]
                         destination_node = shortest_paths[j][2][i + 1]
                         if destination_node in self.adjacency_list[start_node]:
-                            removed_edges.append((start_node, destination_node, self.adjacency_list[start_node][destination_node]))
-                            removed_edges.append((destination_node, start_node, self.adjacency_list[destination_node][start_node]))
+                            removed_edges.append(
+                                (start_node, destination_node, self.adjacency_list[start_node][destination_node])
+                            )
+                            removed_edges.append(
+                                (destination_node, start_node, self.adjacency_list[destination_node][start_node])
+                            )
                             del myAStar.adjacency_list[start_node][destination_node]
                             del myAStar.adjacency_list[destination_node][start_node]
 
@@ -361,6 +371,8 @@ class KShortestPath(AlgorithmBase):
 
         return shortest_paths
 
+
+# Example usage:
 # station1 = ["TE4"]
 # station2 = ["EW7"]
 # for s1, s2 in zip(station1, station2):
@@ -368,4 +380,4 @@ class KShortestPath(AlgorithmBase):
 #     print(BFS(s1, s2).run())
 #     print(Dijkstra(s1, s2).run())
 #     print(AStar(s1, s2).run())
-#     print(KShortestPath(s1, s2).run(3))
+    # print(KShortestPath(s1, s2).run(3))
