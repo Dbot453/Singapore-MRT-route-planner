@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Map{% endblock %}
+{% block title %}
+Map
+{% endblock %}
 {% block content %}
 <html>
   <head>
@@ -61,7 +63,7 @@
     <section class="parent">
       <!-- Sidebar -->
       <section class="child">
-        <div style="float:left;">
+        <div style="float: left;">
           <form method="POST">
             <div id="sidebar" class="section">
               <div class="row"></div>
@@ -88,29 +90,40 @@
                           {% if a == selectDest %}
                             <option selected value="{{ a }}">{{ a }}</option>
                           {% else %}
-                            <option value="{{ a }}">{{ a }}</option>
+                          <option value="{{ a }}">{{ a }}</option>
                           {% endif %}
-                        {% endfor %}
-                      </select>
-                    </li>
-                  </ul>
-
-                  <div id="Algorithm">
-                    <label>Algorithm :    </label> <span>{{ algorithm_selection }}</span>
+                          {% endfor %}
+                        </select>
+                      </li>
+                    </ul>
+                    <div class="form-group">
+                        <label for="departure_time">Set off time (format HH:MM):</label>
+                      <input id="departure_time" name="departure_time" class="form-control">
+                    </div>
+                    <div id="Algorithm">
+                    <label>Algorithm : </label>
+                    <span>{{ algorithm_selection }}</span>
                   </div>
                   <div>
-                  <label>Preferred Route: </label>  <span>{{ preferred_route }}</span>
+                    <label>Preferred Route: </label>
+                    <span>{{ preferred_route }}</span>
                   </div>
-
-                  <button type="submit" class="btn btn-primary", name = "action", value = "Calculate">Calculate</button>
+                  <button type="submit" class="btn btn-primary" name="action" value="Calculate">Calculate</button>
                   <div id="distance">
                     <p>Distance: </p>
                     <p>{{ distance }}</p>
                   </div>
-
+                <div id = "arrival_time">
+                    <p>Arrival Time: </p>
+                    <p>{{ arrival_time }}</p>
+                </div>
                   <div id="time">
-                    <p>Time: </p>
+                    <p>Journey time (seconds): </p>
                     <p>{{ time }}</p>
+                  </div>
+                  <div id = "cost">
+                    <p>Cost (cents): </p>
+                    <p>{{ cost }}</p>
                   </div>
                   <label>Shortest Route (Station Code - Station Name): </label>
                   <ul>
@@ -121,7 +134,6 @@
                   <br>
                 </div>
                 <button id="show-old-route" class="btn btn-primary" type="button">Past Routes</button>
-                
               </div>
             </div>
           </form>
@@ -134,7 +146,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
         <script type="text/javascript">
           window.addEventListener("load", function(event) {
-            history.replaceState({mapmax: 0}, document.title, window.location.pathname);
+            history.replaceState({ mapmax: 0 }, document.title, window.location.pathname);
             var e_map = document.getElementById('overview-map');
             var e_modalx = document.getElementById('modal-close');
             var imageUrl = "{{ url_for('static', filename='Singapore_MRT_Network_new.svg') }}";
@@ -147,20 +159,28 @@
               crossOrigin: true,
               className: 'map-overlay'
             };
-            var mrtmap = L.map('overview-map', {zoomSnap: 0, zoomDelta: 0.5, attributionControl: false, maxBounds: imageBounds, zoomControl: false, maxBoundsViscosity: 0.5}).fitBounds(imageBounds);
+            var mrtmap = L.map('overview-map', {
+              zoomSnap: 0,
+              zoomDelta: 0.5,
+              attributionControl: false,
+              maxBounds: imageBounds,
+              zoomControl: false,
+              maxBoundsViscosity: 0.5
+            }).fitBounds(imageBounds);
             var imageOverlay = L.imageOverlay(imageUrl, imageBounds, imageOptions).addTo(mrtmap);
             var zoomfit = mrtmap.getZoom();
             mrtmap.setMinZoom(zoomfit).setMaxZoom(zoomfit + 5);
-            L.control.attribution({prefix: '<a href="/map/about">More info</a>'}).addTo(mrtmap);
-            L.control.zoom({position: 'topright'}).addTo(mrtmap);
-            L.control.scale({imperial: false, position: 'topleft'}).addTo(mrtmap);
+            L.control.attribution({ prefix: '<a href="/map/about">More info</a>' }).addTo(mrtmap);
+            L.control.zoom({ position: 'topright' }).addTo(mrtmap);
+            L.control.scale({ imperial: false, position: 'topleft' }).addTo(mrtmap);
+
             function openMapMax(event) {
               if (event) {
-                history.pushState({mapmax: 1}, document.title, window.location.pathname);
+                history.pushState({ mapmax: 1 }, document.title, window.location.pathname);
               }
               e_map.style.position = 'fixed';
               e_map.style.top = '0';
-              e_map.style.left = 0;
+              e_map.style.left = '0';
               e_map.style.bottom = '0';
               e_map.style.paddingBottom = '0';
               e_map.style.right = '0';
@@ -169,6 +189,7 @@
               mrtmap.invalidateSize();
               mrtmap.fitBounds(imageBounds);
             }
+
             document.getElementById("button-fs-map").addEventListener("click", openMapMax);
             e_modalx.addEventListener("click", function() {
               e_modalx.style.display = 'none';
@@ -180,7 +201,7 @@
               } else {
                 e_modalx.style.display = 'none';
                 e_map.style.position = 'relative';
-                e_map.style.top = 0;
+                e_map.style.top = '0';
                 e_map.style.paddingBottom = '56%';
                 mrtmap.invalidateSize();
                 mrtmap.fitBounds(imageBounds);
@@ -200,6 +221,7 @@
           pastRoutes.style.display = 'none';
         }
       }
+
       function loadRoute(start, dest) {
         const startSelect = document.querySelector('select[name="start"]');
         const destSelect = document.querySelector('select[name="dest"]');
@@ -222,22 +244,18 @@
                   <th>To</th>
                   <th>Distance</th>
                   <th>Time</th>
-
                 </tr>
               </thead>
-              
-              
               <tbody>
                 {% for route in past_routes %}
                   <tr>
                     <td>{{ route[0] }}</td>
                     <td>{{ route[1] }}</td>
                     <td>{{ route[2] }} km</td>
-                    <td>{{ route[3] }} min</td>
+                    <td>{{ route[3] }} seconds</td>
                   </tr>
                 {% endfor %}
               </tbody>
-              
             </table>
           {% else %}
             <p>No past routes found.</p>
@@ -259,7 +277,6 @@
         }
       };
     </script>
-
   </body>
 </html>
 {% endblock %}

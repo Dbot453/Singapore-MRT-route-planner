@@ -9,7 +9,6 @@ def home_view():
             return redirect(url_for('auth.login'))
         
         elif 'signup' in request.form:
-            return redirect(url_for('auth.sign_up'))
-        
+            return redirect(url_for('auth.sign_up'))    
 
     return render_template('home.html', user=None)

@@ -142,7 +142,7 @@ class AlgorithmBase:
                     code, neighbour, total_distance, total_time
                 )
 
-        return total_distance, total_time, path, station_names
+        return float(total_distance), total_time, path, station_names
 
 ###########################################
 # GROUP A Skill:  Graph Traversal BFS     #

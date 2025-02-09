@@ -59,10 +59,15 @@ def init_db():
             user_id INTEGER,
             preferred_route TEXT,
             algorithm TEXT,
-            k INTEGER,
+            age INTEGER,
             FOREIGN KEY(user_id) REFERENCES user(id)
         )
     """)
+    try:
+        c.execute("ALTER TABLE account_settings ADD COLUMN age INTEGER")
+    except sqlite3.OperationalError as e:
+        if "duplicate column" not in str(e):
+            raise
     # Table for route
     c.execute("""
         CREATE TABLE IF NOT EXISTS route (
@@ -89,3 +94,4 @@ def init_db():
 
     conn.commit()
     conn.close()
+    
