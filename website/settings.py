@@ -8,9 +8,9 @@ settings = Blueprint('settings', __name__)
 
 
 def get_algorithm_name(algorithm_id):
-    """
-    Return the algorithm name based on the provided algorithm_id.
-    """
+
+    # Return the algorithm name based on the provided algorithm_id.
+
     if algorithm_id == '1':
         return "Breadth First Search"
     elif algorithm_id == '2':
@@ -59,9 +59,9 @@ def save_settings_to_db(user_id, preferred_route, algorithm_id, algorithm_name, 
 @settings.route('/settings', methods=['GET', 'POST'])
 @login_required
 def save_settings():
-    """
-    Route that allows the user to view and update their settings.
-    """
+
+    # Route that allows the user to view and update their settings.
+
     # Default settings values
     algorithm_id = '3'
     algorithm_name = "A Star"
@@ -81,7 +81,7 @@ def save_settings():
         # Get form data for preferred route and algorithm selection
         preferred_route = request.form.get('preferred_route')
         algorithm_id = request.form.get('algorithm_selection')
-        age = request.form.get('age')
+        age = request.form.get('age') or age
         
         
         # Determine the algorithm name based on selection

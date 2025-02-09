@@ -6,19 +6,20 @@ from abc import abstractmethod
 class GraphTraversal:
     # Provides static-like methods to compute shortest paths and save routes to DB.
 
-    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str, k):
-        result = {}
+    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str):
+        result = []
         if algorithm == '1':
             data = BFS(start_station, end_station).run()
-            result[1] = data
+            result.append(data)
         elif algorithm == '2':
             data = Dijkstra(start_station, end_station).run()
-            result[1] = data
+            result.append(data)
         elif algorithm == '3':
             data = AStar(start_station, end_station).run()
-            result[1] = data
+            result.append(data)
         else:
-            data = KShortestPath(start_station, end_station).run(k)
+            result = {}
+            data = KShortestPath(start_station, end_station).run(3)
             for j, k in enumerate(data):
                 result[j + 1] = k
         return result
@@ -38,12 +39,14 @@ class GraphTraversal:
             path_codes = r.get_path_codes()
             path_names = r.get_path_names()
             user_id = r.get_user_id()
-
+            
+            
             sql_query = (
                 "INSERT INTO route "
                 "(start, dest, distance, travel_time, path_codes, path_names, user_id, save_datetime) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             )
+            
             cursor.execute(
                 sql_query,
                 (
@@ -105,7 +108,7 @@ class AlgorithmBase:
             else:
                 total_time += self.INTERCHANGE_STOPPING_TIME
         elif travel_method == "transfer":
-            total_distance += total_distance
+            total_time += travel_cost
         return total_distance, total_time
 
     def reconstruct_path(self, previous):
@@ -142,7 +145,7 @@ class AlgorithmBase:
                     code, neighbour, total_distance, total_time
                 )
 
-        return float(total_distance), total_time, path, station_names
+        return total_distance, total_time, path, station_names
 
 ###########################################
 # GROUP A Skill:  Graph Traversal BFS     #
@@ -154,16 +157,13 @@ class BFS(AlgorithmBase):
 
     def run(self):
         from custom_implementations.custom_queue import Queue as Q
-        import math as m
 
         queue = Q()
         visited_stations = {node: False for node in self.adjacency_list}
-        distance_map = {node: m.inf for node in self.adjacency_list}
         previous = {node: None for node in self.adjacency_list}
 
         queue.enqueue(self.start_station)
         visited_stations[self.start_station] = True
-        distance_map[self.start_station] = 0
 
         if self.start_station == self.end_station:
             return self.INVALID
@@ -174,16 +174,11 @@ class BFS(AlgorithmBase):
             if current_station == self.end_station:
                 break
 
-            visited_stations[current_station] = True
-            neighbours = list(self.adjacency_list[current_station].keys())
-            for neighbour in neighbours:
+            for neighbour in self.adjacency_list[current_station].keys():
                 if not visited_stations[neighbour]:
-                    cost = self.adjacency_list[current_station][neighbour]["cost"]
-                    if distance_map[current_station] + cost < distance_map[neighbour]:
-                        new_distance = distance_map[current_station] + cost
-                        distance_map[neighbour] = new_distance
-                        previous[neighbour] = current_station
-                        queue.enqueue(neighbour)
+                    visited_stations[neighbour] = True
+                    previous[neighbour] = current_station
+                    queue.enqueue(neighbour)
 
         return self.reconstruct_path(previous)
 
@@ -268,7 +263,7 @@ class AStar(AlgorithmBase):
                 break
 
             visited_stations[current_station] = True
-            neighbours = list(self.adjacency_list[current_station].keys())
+            closed_list.append(current_station)
             for neighbour, travel_info in self.adjacency_list[current_station].items():
                 if neighbour in closed_list:
                     continue
@@ -372,7 +367,7 @@ class KShortestPath(AlgorithmBase):
         return shortest_paths
 
 
-# Example usage:
+# # Example usage:
 # station1 = ["TE4"]
 # station2 = ["EW7"]
 # for s1, s2 in zip(station1, station2):
@@ -380,4 +375,4 @@ class KShortestPath(AlgorithmBase):
 #     print(BFS(s1, s2).run())
 #     print(Dijkstra(s1, s2).run())
 #     print(AStar(s1, s2).run())
-    # print(KShortestPath(s1, s2).run(3))
+#     print(KShortestPath(s1, s2).run(3))

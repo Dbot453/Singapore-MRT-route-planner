@@ -92,6 +92,9 @@ def calculate_cost(distance: float, age: int, time: str) -> int:
         (23.3, float("inf")): (24, 74)
     }
 
+    if age is  None:
+        Age = 8
+        
     if age < 7:
         return 0
     elif 7 <= age <= 25:
@@ -212,11 +215,12 @@ def calculate_route():
                     prefferred_route=preferred_route
                 )
 
+            
             myTraversal = GraphTraversal()
             shortest_path_result = myTraversal.GetShortestPathStatic(
                 start_station.split(' - ')[0],
                 destination_station.split(' - ')[0],
-                algorithm_id
+                algorithm_id 
             )
 
             shortest_path_result = shortest_path_result[0]                
@@ -283,6 +287,12 @@ def calculate_route():
             )
 
     # Default action if not POST or no specific action
+    # Keep the original SVG file
+    import shutil
+    if os.path.isfile("website/static/Singapore_MRT_Network_new.svg"):
+        os.remove("website/static/Singapore_MRT_Network_new.svg")
+        shutil.copy("website/static/Singapore_MRT_Network_no_tspan.svg", "website/static/Singapore_MRT_Network_new.svg")
+        
     return render_template(
         'map.html',
         user=current_user,
