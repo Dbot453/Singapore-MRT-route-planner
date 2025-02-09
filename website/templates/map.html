@@ -104,13 +104,14 @@ Map
                     <label>Algorithm : </label>
                     <span>{{ algorithm_selection }}</span>
                   </div>
+                  {% endif %}
                   <div>
                     <label>Preferred Route: </label>
                     <span>{{ preferred_route }}</span>
                   </div>
                   <button type="submit" class="btn btn-primary" name="action" value="Calculate">Calculate</button>
                   <div id="distance">
-                    <p>Distance: </p>
+                    <p>Distance (km): </p>
                     <p>{{ distance }}</p>
                   </div>
                 <div id = "arrival_time">

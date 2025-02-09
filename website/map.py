@@ -166,6 +166,7 @@ def calculate_route():
         destination_station = request.form.get('dest') or ''
         set_off_time = request.form.get('departure_time') or ''
         set_off_time = set_off_time.strip()
+        kpath = request.form.get('kpathSelection') or ''
         
         try:
             off_time_obj = datetime.strptime(set_off_time, "%H:%M").time()
@@ -212,17 +213,15 @@ def calculate_route():
                 )
 
             myTraversal = GraphTraversal()
-            result = myTraversal.GetShortestPathStatic(
+            shortest_path_result = myTraversal.GetShortestPathStatic(
                 start_station.split(' - ')[0],
                 destination_station.split(' - ')[0],
                 algorithm_id
             )
 
-            result = result[1]
-            distance_calc, time_calc, codes_calc, names_calc = result[0], result[1], result[2], result[3]
-
-            for code in codes_calc:
-                path_coords.append((g_station_list[code].get_lat(), g_station_list[code].get_lng()))
+            shortest_path_result = shortest_path_result[0]                
+                
+            distance_calc, time_calc, codes_calc, names_calc = shortest_path_result[0], shortest_path_result[1], shortest_path_result[2], shortest_path_result[3]
 
             path_codes = ','.join(codes_calc)
             path_names = ','.join(names_calc)
