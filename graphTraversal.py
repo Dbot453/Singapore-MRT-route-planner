@@ -17,7 +17,7 @@ class GraphTraversal:
 
     """
 
-    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str,k :int ):
+    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str, k :int):
         """
         Get the shortest path between two stations using the specified algorithm.
         
