@@ -238,7 +238,6 @@ def calculate_route():
                     prefferred_route=preferred_route
                 )
                 
-                
 
             if algorithm_id == '4':
                 conn = sqlite3.connect('instance/database.db')
@@ -357,6 +356,7 @@ def delete_route(route_id):
     cursor = conn.cursor()
     cursor.execute("SELECT user_id FROM route WHERE id = ?", (route_id,))
     route = cursor.fetchone()
+    user_id = route[0] if route else None
 
     if route and route[0] == current_user.id:
         cursor.execute("DELETE FROM route WHERE id = ?", (route_id,))
