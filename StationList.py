@@ -1,6 +1,9 @@
 from Station import Station
 
 def get_all_stations():
+    """
+    Read the station data from the file and return a dictionary of station objects.
+    """
     station_list = {}
     with open("data/stations.csv", 'r') as stations_file:
         for line in stations_file:
@@ -26,6 +29,9 @@ def get_all_stations():
     return station_list
 
 def get_all_station_codes(station_list):
+    """
+    Return a list of station codes sorted in alphabetical order.
+    """
     station_codes = []
     for s in g_station_list.values():
         s_code = s.get_station_code()
@@ -33,10 +39,13 @@ def get_all_station_codes(station_list):
         code_name = s_code + " - " + s_name
         station_codes.append(code_name)
 
-    station_codes.sort()##
+    station_codes.sort()
 
     return station_codes
-    
+
+"""
+Global station list and station codes list
+"""
 g_station_list = get_all_stations()
 
 g_station_codes = get_all_station_codes(g_station_list)

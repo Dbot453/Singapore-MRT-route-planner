@@ -14,6 +14,9 @@ map = Blueprint('map', __name__)
 
 
 def create_highlighted_map(shortest_route, original_svg_file, new_svg_file):
+    """
+        Create a new SVG file highlighting the route in the original SVG.
+    """
     stations_in_route = list(shortest_route)
 
     # Remove existing file if present
@@ -36,6 +39,23 @@ def create_highlighted_map(shortest_route, original_svg_file, new_svg_file):
     print("Highlighting complete")
 
 def calculate_cost(distance: float, age: int, time: str) -> int:
+    """
+    Calculate the cost of a trip based on the distance, age, and time of departure.
+    
+    Parameters
+    ----------
+    distance : float
+        The distance of the trip.
+    age : int
+        The age of the passenger.
+    time : str
+        The time of departure.
+        
+    Returns
+    -------
+    int
+        The cost of the trip.
+    """
     adult_cost_table = {
         (0, 3.2): (69, 119),
         (3.3, 4.2): (79, 129),
@@ -119,6 +139,9 @@ def calculate_cost(distance: float, age: int, time: str) -> int:
 @map.route('/map', methods=['GET', 'POST'])
 @login_required
 def calculate_route():
+    """
+    Calculate the shortest path between two stations and display the result.
+    """
     path_codes = []
     path_names = []
     path_coords = []
@@ -306,6 +329,9 @@ def calculate_route():
 @map.route('/delete-route/<int:route_id>')
 @login_required
 def delete_route(route_id):
+    """
+    Delete a route from the database.
+    """
     conn = sqlite3.connect('instance/database.db')
     cursor = conn.cursor()
     cursor.execute("SELECT user_id FROM route WHERE id = ?", (route_id,))

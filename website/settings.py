@@ -8,6 +8,19 @@ settings = Blueprint('settings', __name__)
 
 
 def get_algorithm_name(algorithm_id):
+    """
+    Return the algorithm name based on the provided algorithm_id.
+    
+    Parameters
+    ----------
+    algorithm_id : str
+        The algorithm ID.
+                
+    Returns
+    -------
+    str
+        The algorithm name.
+    """
 
     # Return the algorithm name based on the provided algorithm_id.
 
@@ -27,7 +40,21 @@ def get_algorithm_name(algorithm_id):
 def save_settings_to_db(user_id, preferred_route, algorithm_id, algorithm_name, age):
     """
     Save or update account settings in the database for a given user.
+    
+    Parameters
+    ----------
+    user_id : int
+        The user ID.
+    preferred_route : str
+        The preferred route.
+    algorithm_id : str
+        The algorithm ID.
+    algorithm_name : str
+        The algorithm name.
+    age : int
+            
     """
+
     import sqlite3
 
     # Connect to the database
@@ -60,6 +87,9 @@ def save_settings_to_db(user_id, preferred_route, algorithm_id, algorithm_name, 
 @login_required
 def save_settings():
 
+    """
+    Route that allows the user to view and update their settings.
+    """
     # Route that allows the user to view and update their settings.
 
     # Default settings values

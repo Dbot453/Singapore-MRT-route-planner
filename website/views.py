@@ -8,6 +8,19 @@ views = Blueprint('views', __name__)
 
 
 def create_highlighted_map(shortest_route, original_svg_file, new_svg_file):
+    """
+    Create a new SVG file highlighting the route in the original SVG.
+    
+    Parameters
+    ----------
+    shortest_route : Route
+        The shortest route.
+    original_svg_file : str
+        The original SVG file.
+    new_svg_file : str  
+        The new SVG file.
+
+    """
     # Create a new SVG file highlighting the route in the original SVG.
     # Removes previous instance of the new_svg_file if it exists.
     
@@ -35,19 +48,31 @@ def create_highlighted_map(shortest_route, original_svg_file, new_svg_file):
 
 @views.route('/')
 def home():
+    """
+    Render the home page.
+    """
     return render_template('home.html', user=current_user)
 
 
 @views.route('/lines')
 def show_lines():
+    """
+    Render the lines page.
+    """
     return render_template('lines.svg')
 
 
 @views.route('/actual-map')
 def show_map():
+    """
+    Render the actual map page.
+    """
     return render_template('map-test.html', user=current_user)
 
 
 @views.route('/save_settings')
 def settings():
+    """
+    Render the settings page.
+    """
     return render_template('settings.html', user=current_user)

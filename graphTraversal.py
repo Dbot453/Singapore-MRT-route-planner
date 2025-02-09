@@ -5,8 +5,37 @@ from abc import abstractmethod
 
 class GraphTraversal:
     # Provides static-like methods to compute shortest paths and save routes to DB.
+    """
+    Class to provide static-like methods to compute shortest paths and save routes to the database.
+    
+    methods
+    -------
+    GetShortestPathStatic(start_station: str, end_station: str, algorithm: str) -> dict
+        Get the shortest path between two stations using the specified algorithm.
+    save_route_to_db(routes: list[Route])
+        Save the routes to the database.
+
+    """
 
     def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str):
+        """
+        Get the shortest path between two stations using the specified algorithm.
+        
+        Parameters
+        ----------
+        start_station : str
+            The starting station.
+        end_station : str
+            The destination station.
+        algorithm : str
+            The algorithm to use.
+
+        Returns
+        -------
+        dict
+            The shortest path between two stations.
+
+        """
         result = []
         if algorithm == '1':
             data = BFS(start_station, end_station).run()
@@ -25,6 +54,15 @@ class GraphTraversal:
         return result
 
     def save_route_to_db(self, routes: list[Route]):
+        """
+        Save the routes to the database.
+        
+        Parameters
+        ----------
+        routes : list[Route]
+            The list of routes to save
+        
+        """
         import sqlite3
         import datetime
 

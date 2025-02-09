@@ -9,6 +9,9 @@ app = Flask(__name__)
 login_manager = LoginManager()
 
 def create_app():
+    """
+    Create the Flask app.
+    """
     app.config['SECRET_KEY'] = 'secret_key'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     
@@ -41,6 +44,9 @@ def create_app():
     return app 
 
 def create_database(app):
+    """
+    Create the database if it does not exist.
+    """
     if not path.exists('instance/' + DB_NAME):
         db.create_all(app=app)
         print('Created Database!')

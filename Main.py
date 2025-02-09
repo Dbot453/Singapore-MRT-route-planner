@@ -1,6 +1,9 @@
 from Gui import Gui
 from terminal import Terminal
 
+"""
+Main program to run the program using GUI or Terminal output
+"""
 
 MESSAGE = """
 Usage: choose 'g' for GUI or 't' for Terminal output

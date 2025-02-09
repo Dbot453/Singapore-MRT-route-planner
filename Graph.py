@@ -3,7 +3,49 @@ from Station import Station
 from StationList import g_station_list
 
 class Graph:
+    """
+    Class to represent the graph of stations and connections in the MRT network.
+
+    Attributes
+    ----------
+
+    station_list : dict[str, Station]
+        The dictionary of station objects.
+    adjacency_list : dict[str, dict[str, float | str]]
+        The adjacency list of the graph.
+    station_info : dict[str, Station]
+        The detailed station information.
+    interchange_stations : list[str]    
+        The list of interchange stations.
+    __read_db : bool    
+        Flag indicating data source (DB vs CSV).
+
+    Methods
+    -------
+    generate_station_data()
+        Generate the station data.
+    _add_stations()
+        Add station details to the station list based on the data source.
+    _add_transfer_cost()    
+        Add transfer cost data between stations.
+    _add_connection_cost()  
+        Add connection cost data between stations based on the specified travel method.
+    _update_connections(station1: str, station2: str, distance: float, travel_method: str) -> None  
+        Update the connection information for a given station.
+    _populate_adjacency_list()  
+        Populate the adjacency list by mapping each station code to its connections.
+    get_adjacency_list() -> dict[str, dict[str, float | str]]   
+        Return the computed adjacency list of the graph.
+    get_station_info() -> dict[str, Station]    
+        Return the detailed station information.
+    get_interchange_stations() -> list[str] 
+        Return the list of interchange stations.
+
+    """
     def __init__(self):
+        """
+        Constructs all the necessary attributes for the Graph object.
+        """
         # Initialize station list using a global copy
         self.__station_list = g_station_list.copy()
         self.adjacency_list = {}
@@ -15,6 +57,9 @@ class Graph:
         self.generate_station_data()
 
     def generate_station_data(self):
+        """
+        Generate the station data by adding stations, transfer costs, connection costs, and populating the adjacency list.
+        """
 
         # Generate the station data by adding stations, transfer costs, connection costs, and populating the adjacency list.
 
@@ -24,6 +69,9 @@ class Graph:
         self._populate_adjacency_list()
 
     def _add_stations(self):
+        """
+        Add station details to the station list based on the data source.
+        """
 
         # Add station details to the station list based on the data source;reads from DB if __read_db is True, otherwise from CSV.
         
@@ -108,7 +156,9 @@ class Graph:
                     )
 
     def _add_connection_cost(self):
-        
+        """
+        Add connection cost data between stations based on the specified travel method.
+        """
         # Add connection cost data between stations based on the specified travel method.
         if self.__read_db:
             db_connection = sqlite3.connect("instance/database.db")
@@ -146,7 +196,9 @@ class Graph:
                         self._update_connections(station2, station1, distance, "train")
 
     def _add_transfer_cost(self):
-
+        """
+        Add transfer cost data between stations.
+        """
         # Add transfer cost data between stations.
 
         if self.__read_db:
@@ -184,7 +236,21 @@ class Graph:
                         self._update_connections(station2, station1, transfer_time, "transfer")
 
     def _update_connections(self, station1: str, station2: str, distance: float, travel_method: str) -> None:
+        """
+        Update the connection information for a given station.
         
+        Parameters
+        ----------
+        station1 : str
+            The starting station.
+        station2 : str
+            The destination station.
+        distance : float
+            The distance between the two stations.
+        travel_method : str
+            The travel method.
+            
+        """
         # Update the connection information for a given station.
         start_station: Station = self.__station_list[station1]
         # Get the current connections for the start station
@@ -194,18 +260,30 @@ class Graph:
         start_station.set_connections(start_connection)
 
     def _populate_adjacency_list(self):
+        """
+        Populate the adjacency list by mapping each station code to its connections.
+        """
         # Populate the adjacency list by mapping each station code to its connections.
         for station_code, station in self.__station_list.items():
             self.adjacency_list[station_code] = station.get_connections()
 
     def get_adjacency_list(self):
+        """
+        Return the computed adjacency list of the graph.
+        """
         #Return the computed adjacency list of the graph.
         return self.adjacency_list
 
     def get_station_info(self):
+        """
+        Return the detailed station information.
+        """
         #Return the detailed station information.
         return self.__station_list
 
     def get_interchange_stations(self):
+        """
+        Return the list of interchange stations.
+        """
         # Return the list of interchange stations.
         return self.interchange_stations
