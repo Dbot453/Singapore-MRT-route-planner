@@ -6,7 +6,7 @@ from abc import abstractmethod
 class GraphTraversal:
     # Provides static-like methods to compute shortest paths and save routes to DB.
 
-    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str):
+    def GetShortestPathStatic(self, start_station: str, end_station: str, algorithm: str, k):
         result = {}
         if algorithm == '1':
             data = BFS(start_station, end_station).run()
@@ -18,7 +18,7 @@ class GraphTraversal:
             data = AStar(start_station, end_station).run()
             result[1] = data
         else:
-            data = KShortestPath(start_station, end_station).run(3)
+            data = KShortestPath(start_station, end_station).run(k)
             for j, k in enumerate(data):
                 result[j + 1] = k
         return result

@@ -4,6 +4,3 @@ class Gui:
     def __init__(self):
         app = create_app()
         app.run(debug=False)
-        
-if __name__ == "__main__":
-    Gui()
