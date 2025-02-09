@@ -237,17 +237,38 @@ def calculate_route():
                     algorithm_selection=algorithm_name,
                     prefferred_route=preferred_route
                 )
-
-            
-            myTraversal = GraphTraversal()
-            shortest_path_result = myTraversal.GetShortestPathStatic(
-                start_station.split(' - ')[0],
-                destination_station.split(' - ')[0],
-                algorithm_id 
-            )
-
-            shortest_path_result = shortest_path_result[0]                
                 
+                
+
+            if algorithm_id == '4':
+                conn = sqlite3.connect('instance/database.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT k FROM account_settings WHERE user_id = ?", (current_user.id,))
+                result_k = cursor.fetchone()
+                conn.close()
+                try:
+                    k = int(result_k[0])
+                except TypeError:
+                    k = 1  # fallback default k
+                myTraversal = GraphTraversal()
+                shortest_path_result = myTraversal.GetShortestPathStatic(
+                    start_station.split(' - ')[0],
+                    destination_station.split(' - ')[0],
+                    algorithm_id,
+                    k
+                )
+                shortest_path_result = list(shortest_path_result.values())
+                
+            else:
+                myTraversal = GraphTraversal()
+                shortest_path_result = myTraversal.GetShortestPathStatic(
+                    start_station.split(' - ')[0],
+                    destination_station.split(' - ')[0],
+                    algorithm_id,
+                    1
+                )
+
+            shortest_path_result = shortest_path_result[0]
             distance_calc, time_calc, codes_calc, names_calc = shortest_path_result[0], shortest_path_result[1], shortest_path_result[2], shortest_path_result[3]
 
             path_codes = ','.join(codes_calc)

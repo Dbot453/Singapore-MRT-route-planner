@@ -82,19 +82,42 @@ class Terminal:
             except:
                 print("Invalid value of k. Please try again.")
                 Terminal.run(self)
-
-        x = GraphTraversal.GetShortestPathStatic(start, end, algorithm,k)
-        distance, time, codes, names =  x[0], x[1], x[2], x[3]
+        else:
+            k = 1
         
-        print(f"Distance: {distance}")
-        print(f"Time: {time}")
-        print("Path: ")
-        for i in range(len(codes)):
-            if i == 0:
-                res = res + f"{codes[i]} : {names[i]}"
-            else:
-                res = res + f" -> {codes[i]} : {names[i]}"
-        print(res)
+        myGraphTraversal = GraphTraversal()
+        if algorithm == "4":
+            result = myGraphTraversal.GetShortestPathStatic(start, end, algorithm,str(k))
+            for route_num,route in list(result.items()):
+                print(route_num)
+                distance = route[0]
+                time = route[1]
+                codes = route[2]
+                names = route[3]
+                print(f"Distance: {distance}")
+                print(f"Time: {time}")
+                print("Path: ")
+                res = ""
+                for i in range(min(len(codes),len(names))):
+                    if i == 0:
+                        res = res + f"{codes[i]} : {names[i]}"
+                    else:
+                        res = res + f" -> {codes[i]} : {names[i]}"
+                print(res)
+        else:
+            temp = myGraphTraversal.GetShortestPathStatic(start, end, algorithm, str(1))
+            result = temp[0]
+            distance,time,codes,names = result[0],result[1],result[2],result[3]
+            print(f"Distance: {distance}")
+            print(f"Time: {time}")
+            print("Path: ")
+            for i in range(len(codes)):
+                if i == 0:
+                    res = res + f"{codes[i]} : {names[i]}"
+                else:
+                    res = res + f" -> {codes[i]} : {names[i]}"
+            print(res)
+
         
         print("run again or quit? q/r")
         choice = input("Enter your choice: ")
@@ -102,3 +125,6 @@ class Terminal:
             Terminal.run(self)
         else:
             print("Program ended!")
+            
+if __name__ == "__main__":
+    Terminal()
